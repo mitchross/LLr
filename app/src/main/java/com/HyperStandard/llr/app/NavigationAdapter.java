@@ -1,6 +1,7 @@
 package com.HyperStandard.llr.app;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,7 @@ public class NavigationAdapter extends ArrayAdapter<BookmarkLink> {
         }
 
         // the view must be returned to our activity
+
         return v;
 
     }

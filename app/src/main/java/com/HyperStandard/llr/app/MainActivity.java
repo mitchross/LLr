@@ -93,15 +93,8 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         //mNavigationDrawerFragment.setOnClickItems
-        /*ListView mListView = (ListView) findViewById(R.id.leftNavigationDrawer);
-        if (mListView != null) {
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Log.e(mTag, Integer.toString(position));
-                }
-            });
-        }*/
+        ListView mListView = (ListView) findViewById(R.id.leftNavigationDrawer);
+
         mTitle = getTitle();
         //mNavigationDrawerFragment
         // Set up the drawer.
@@ -151,14 +144,19 @@ public class MainActivity extends Activity
     //using alternative overrire
     @Override
     public void onNavigationDrawerItemSelected(int position) {
+        Log.e("something", "something");
         // update the main content by replacing fragments
-        /*FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                 .commit();
-        mNavigationDrawerFragment.*/
         //mNavigationDrawerFragment.
+        //mNavigationDrawerFragment.
+
         Log.e(mTag, Integer.toString(position));
+        /*if (position == 4) {
+            loadPageURL("http://boards.endoftheinter.net/topics/Android");
+        }*/
     }
 
 
@@ -174,7 +172,12 @@ public class MainActivity extends Activity
                 mTitle = getString(R.string.title_section3);
                 break;
             //mNavigationDrawerFragment.get
-
+            case 4:
+                //loadPageURL("http://boards.endoftheinter.net/topics/Android");
+                break;
+            case 5:
+                //loadPageURL("http://boards.endoftheinter.net/topics/LUE");
+                break;
         }
     }
 
@@ -294,6 +297,62 @@ public class MainActivity extends Activity
     public void loadPage(View v) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/topics/LUE", cookies));
+        try {
+            Document page = request.get(5, TimeUnit.SECONDS);
+            Elements elements = page.select("tr:has(td)");
+            //TextView tV = (TextView) findViewById(R.id.longText);
+            //tV.setText(elements.first().text());
+            currentPage = page;
+            ArrayList<TopicLink> topics = new ArrayList<TopicLink>(elements.size());
+
+            int latestPost = 0;
+            mTitle = page.title();
+            restoreActionBar();
+            String[] tags = {"NWS", "test"};
+            for (Element e : elements) {
+                topics.add(
+                        new TopicLink(
+                                tags,
+                                //Get the topic ID then strip the first 50 characters
+                                Integer.parseInt(e.select("a").first().attr("href").substring(50)),
+
+                                //The user link seems to be the only A element directly under a td
+                                //Integer.parseInt(e.select("td > a").first().attr("href").substring(37)),
+                                0,
+                                //THe third TD element contains the number of messages in a post
+                                //Integer.parseInt(e.select("td:nth-child(3)").first().ownText()),
+                                0,
+                                //TODO fix this shit too
+                                latestPost,
+
+                                //Same as the user except get the inner text (username)
+                                e.select("td > a").text(),
+                                //"llamaguy",
+                                //Topic title should be same as topic ID
+                                e.select("a").first().text(),
+                                //"title",
+                                //TODO: get the date right ugh
+                                "today"
+                        )
+                );
+            }
+            TopicAdapter adapter = new TopicAdapter(this, R.id.listview, topics);
+            ListView listview = (ListView) findViewById(R.id.listview);
+            //Header isn't really needed because the actionbar contains the page title
+            /*View header = View.inflate(this, R.layout.listview_header_row, null);
+            listview.addHeaderView(header);*/
+            //listview.setOnI
+            listview.setAdapter(adapter);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            Toast.makeText(getApplicationContext(), "Page load timed out sucka", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void loadPageURL(String URL) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/topics/Android", cookies));
         try {
             Document page = request.get(5, TimeUnit.SECONDS);
             Elements elements = page.select("tr:has(td)");
