@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="Clear Login Data"
+        android:titleCondensed="Clear"
+        android:showAsAction="never"
+        android:onClick="clearData"
+        android:id="@+id/cleardata"/>
+
+</menu>

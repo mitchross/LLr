@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pre-dex-items>
+
+    <item
+        dex="C:\Users\nonex_000\SkyDrive\Development\AndroidStudioProjects\writer\LLR\app\build\intermediates\pre-dexed\debug\jsoup-1.7.2-aa3c6b69fd74068e2fa1fac4f01926a9a66bf7cb.jar"
+        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\org.jsoup\jsoup\1.7.2\d7e275ba05aa380ca254f72d0c0ffebaedc3adcf\jsoup-1.7.2.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="d7e275ba05aa380ca254f72d0c0ffebaedc3adcf"/>
+    <item
+        dex="C:\Users\nonex_000\SkyDrive\Development\AndroidStudioProjects\writer\LLR\app\build\intermediates\pre-dexed\debug\support-v4-19.1.0-e311e493b238b75da4095bd5ee7b69d76d73dc42.jar"
+        jar="C:\Program Files (x86)\Android\android-studio\sdk\extras\android\m2repository\com\android\support\support-v4\19.1.0\support-v4-19.1.0.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67"/>
+    <item
+        dex="C:\Users\nonex_000\SkyDrive\Development\AndroidStudioProjects\writer\LLR\app\build\intermediates\pre-dexed\debug\commons-io-1.3.2-cf6b11304bbdff2e99ec8a8c37f1dad251274e6b.jar"
+        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\commons-io\commons-io\1.3.2\b6dde38349ba9bb5e6ea6320531eae969985dae5\commons-io-1.3.2.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="b6dde38349ba9bb5e6ea6320531eae969985dae5"/>
+
+</pre-dex-items>
