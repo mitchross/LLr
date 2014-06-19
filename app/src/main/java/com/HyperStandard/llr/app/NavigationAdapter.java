@@ -11,7 +11,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * Created by nonex_000 on 6/17/2014.
+ * @author HyperStandard
+ * @since 6/17/2014
  */
 public class NavigationAdapter extends ArrayAdapter<BookmarkLink> {
     private ArrayList<BookmarkLink> objects;

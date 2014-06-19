@@ -4,6 +4,7 @@ package com.HyperStandard.llr.app;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.graphics.Typeface;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -66,8 +67,17 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mUserLearnedDrawer;
 
     private int UserID;
+    private String URL;
+
+    private final String mTag = "NavDAct debug";
+
+    BookmarkLink currentURL;
 
     public NavigationDrawerFragment() {
+    }
+
+    public String getURL() {
+        return URL;
     }
 
     @Override
@@ -100,14 +110,13 @@ public class NavigationDrawerFragment extends Fragment {
                              Bundle savedInstanceState) {
         mDrawerListView = (ListView) inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
-        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
-            }
-        });
-        //ArrayList
-        //TODO switch to arraylist bc arrays are dumb for this
+
+        /**
+         * Use this to set actions done with the Nav drawer why did I not see this oh my god I was literally duplicating it ugh
+         */
+
+
+        //TODO put this code somewhere else maybe?
         ArrayList<BookmarkLink> bookmarks = new ArrayList<>();
         bookmarks.add(
                 new BookmarkLink(
@@ -134,19 +143,11 @@ public class NavigationDrawerFragment extends Fragment {
         );
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.e(Integer.toString(i), Long.toString(l));
-            }
-        });
-        mDrawerListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.e(Integer.toString(i), Long.toString(l));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                currentURL = (BookmarkLink) parent.getItemAtPosition(position);
+                URL = currentURL.getBookmarkTags();
+                Log.e("Look here", URL);
+                selectItem(position);
             }
         });
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
@@ -315,16 +316,6 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     /**
-     * Callbacks interface that all activities using this fragment must implement.
-     */
-    public static interface NavigationDrawerCallbacks {
-        /**
-         * Called when an item in the navigation drawer is selected.
-         */
-        void onNavigationDrawerItemSelected(int position);
-    }
-
-    /**
      * Add an item to the nav drawer
      *
      * @param data the item to be added
@@ -342,6 +333,16 @@ public class NavigationDrawerFragment extends Fragment {
             bookmarks.add(adapter.getItem(i));
         }
         return bookmarks;
+    }
+
+    /**
+     * Callbacks interface that all activities using this fragment must implement.
+     */
+    public static interface NavigationDrawerCallbacks {
+        /**
+         * Called when an item in the navigation drawer is selected.
+         */
+        void onNavigationDrawerItemSelected(int position);
     }
 
 }

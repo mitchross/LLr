@@ -6,6 +6,7 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -38,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 
-public class MainActivity extends Activity
+public class MainActivity extends FragmentActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
@@ -150,9 +151,9 @@ public class MainActivity extends Activity
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                 .commit();
-        //mNavigationDrawerFragment.
-        //mNavigationDrawerFragment.
-
+        Log.e(mTag, "starting to load page");
+        //loadPageURL(mNavigationDrawerFragment.getURL());
+        loadPage(null);
         Log.e(mTag, Integer.toString(position));
         /*if (position == 4) {
             loadPageURL("http://boards.endoftheinter.net/topics/Android");
@@ -352,7 +353,7 @@ public class MainActivity extends Activity
 
     public void loadPageURL(String URL) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/topics/Android", cookies));
+        Future<Document> request = executor.submit(new LoadPage(URL, cookies));
         try {
             Document page = request.get(5, TimeUnit.SECONDS);
             Elements elements = page.select("tr:has(td)");
