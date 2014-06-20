@@ -91,6 +91,13 @@ public class MainActivity extends FragmentActivity
         //TODO fade in either the buttons or do a quick swap to alternate view and fade that in
 
         setContentView(R.layout.activity_main);
+
+        cookies = new HashMap<String, String>();
+        cookies.put("userid", getIntent().getStringArrayExtra("Cookies")[0]);
+        cookies.put("PHPSESSID", getIntent().getStringArrayExtra("Cookies")[1]);
+        cookies.put("session", getIntent().getStringArrayExtra("Cookies")[2]);
+        UserID = Integer.parseInt(cookies.get("userid"));
+
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         //mNavigationDrawerFragment.setOnClickItems
@@ -104,14 +111,9 @@ public class MainActivity extends FragmentActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout),
                 UserID);
 
-        //Get preference items for login info
-        //TODO make this not always true w shared prefs
+
         if (true) {
-            cookies = new HashMap<String, String>();
-            cookies.put("userid", getIntent().getStringArrayExtra("Cookies")[0]);
-            cookies.put("PHPSESSID", getIntent().getStringArrayExtra("Cookies")[1]);
-            cookies.put("session", getIntent().getStringArrayExtra("Cookies")[2]);
-            UserID = Integer.parseInt(cookies.get("userid"));
+
             ExecutorService executor = Executors.newSingleThreadExecutor();
             Future<Document> loader = executor.submit(new LoadPage(MAIN_PAGE, cookies));
             try {
@@ -153,7 +155,7 @@ public class MainActivity extends FragmentActivity
                 .commit();
         Log.e(mTag, "starting to load page");
         //loadPageURL(mNavigationDrawerFragment.getURL());
-        loadPage(null);
+        loadPage(findViewById(R.id.testbutton));
         Log.e(mTag, Integer.toString(position));
         /*if (position == 4) {
             loadPageURL("http://boards.endoftheinter.net/topics/Android");
@@ -348,6 +350,9 @@ public class MainActivity extends FragmentActivity
             e.printStackTrace();
         } catch (TimeoutException e) {
             Toast.makeText(getApplicationContext(), "Page load timed out sucka", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e(mTag, "Exception!");
+            e.printStackTrace();
         }
     }
 

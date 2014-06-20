@@ -9,6 +9,7 @@ import org.jsoup.nodes.Document;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.Callable;
 
 /**
@@ -29,7 +30,9 @@ public class LoadPage implements Callable<Document> {
      */
     public LoadPage(String URL, Map<String, String> cookies) {
         this.URL = URL;
-        this.cookies =  new HashMap<>(cookies);
+        this.cookies =  new TreeMap<>();
+        //this.cookies = cookies.c;
+        this.cookies.putAll(cookies);
     }
 
     public Document call() {
