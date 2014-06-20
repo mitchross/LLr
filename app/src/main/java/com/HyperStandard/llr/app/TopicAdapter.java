@@ -95,11 +95,11 @@ public class TopicAdapter extends ArrayAdapter<TopicLink> {
                     if (i.getTags()[j].equals("NWS")) {
                         if (redTags != null) {
                             String currentText = redTags.getText().toString();
-                            redTags.setText(currentText + i.getTags()[j]);
+                            redTags.setText(currentText + " " + i.getTags()[j]);
                         }
                     } else {
                         String currentText = blackTags.getText().toString();
-                        blackTags.setText(currentText + i.getTags()[j]);
+                        blackTags.setText(currentText + " " + i.getTags()[j]);
                     }
                 }
             }

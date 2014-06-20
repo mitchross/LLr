@@ -30,15 +30,15 @@ public class LoadPage implements Callable<Document> {
      */
     public LoadPage(String URL, Map<String, String> cookies) {
         this.URL = URL;
-        this.cookies =  new TreeMap<>();
+        //this.cookies =  new TreeMap<>();
         //this.cookies = cookies.c;
-        this.cookies.putAll(cookies);
+        //this.cookies.putAll(cookies);
     }
 
     public Document call() {
         try {
             Document doc = Jsoup.connect(URL)
-                    .cookies(cookies)
+                    .cookies(MainActivity.cookies)
                     .get();
             return doc;
         } catch (IOException e) {
