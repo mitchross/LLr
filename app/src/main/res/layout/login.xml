@@ -6,22 +6,29 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:visibility="visible"
+    android:background="@color/dark_grey"
     style="@android:style/Theme.Holo.NoActionBar">
 
-    <!--<Button
+    <Button
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:background="@*android:drawable/ic_menu_moreoverflow_normal_holo_light"
-        android:onClick="expandOptions" /> -->
-
+        android:background="@*android:drawable/ic_menu_moreoverflow_normal_holo_dark"
+        android:onClick="expandOptions" />
+    <ImageSwitcher
+        android:id="@+id/ImageSwitcher01"
+        android:layout_width="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg1">
+    </ImageSwitcher>
     <LinearLayout
         android:id="@+id/linearlayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@id/username"
         android:orientation="horizontal">
-
         <EditText
             android:id="@+id/password"
             android:layout_width="wrap_content"
@@ -29,22 +36,44 @@
             android:layout_weight="3"
             android:hint="@string/password"
             android:inputType="text"
-            android:password="true" />
-
-        <Button
-            android:id="@+id/loginbutton"
+            android:textColorHint="@color/faded_white"
+            android:textColor="@color/white"
+            android:password="true"
+            android:layout_below="@+id/username"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+        <CheckBox
+            android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="login"
-            android:text="Anmelden" />
+            android:text="Save login?"
+            android:onClick=""/>
+
+
     </LinearLayout>
 
     <EditText
+        android:textColorHint="@color/faded_white"
+        android:textColor="@color/white"
         android:id="@+id/username"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/linearlayout"
         android:hint="@string/username"
-        android:inputType="text" />
+        android:inputType="text"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/loginbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:onClick="login"
+        android:text="Anmelden"
+        android:layout_below="@+id/linearlayout"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 
-public class MainActivity extends FragmentActivity
+public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     //These are some static URLs for convenience
@@ -75,7 +75,6 @@ public class MainActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         cookies = new HashMap<String, String>();
         cookies.put("userid", getIntent().getStringArrayExtra("Cookies")[0]);
         cookies.put("PHPSESSID", getIntent().getStringArrayExtra("Cookies")[1]);
@@ -120,6 +119,11 @@ public class MainActivity extends FragmentActivity
             } catch (TimeoutException e) {
 
             }
+            try {
+                loadPageURL("http://boards.endoftheinter.net/topics/Posted");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -127,10 +131,10 @@ public class MainActivity extends FragmentActivity
     public void onNavigationDrawerItemSelected(int position) {
         Log.e("something", "something");
         // update the main content by replacing fragments
-        FragmentManager fragmentManager = getFragmentManager();
+        /*FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
+                .commit();*/
         Log.e(mTag, "starting to load page");
         try {
             loadPage(null);
@@ -145,9 +149,7 @@ public class MainActivity extends FragmentActivity
             Log.e("Exception thrown", "LoadPageURL");
         }
         Log.e(mTag, Integer.toString(position));
-
     }
-
 
     public void onSectionAttached(int number) {
         switch (number) {
@@ -333,7 +335,8 @@ public class MainActivity extends FragmentActivity
                         new TopicLink(
                                 tags,
                                 //Get the topic ID then strip the first 50 characters
-                                Integer.parseInt(e.select("a").first().attr("href").substring(50)),
+                                //Integer.parseInt(e.select("a").first().attr("href").substring(50)),
+                                0,
 
                                 //The user link seems to be the only A element directly under a td
                                 //Integer.parseInt(e.select("td > a").first().attr("href").substring(37)),

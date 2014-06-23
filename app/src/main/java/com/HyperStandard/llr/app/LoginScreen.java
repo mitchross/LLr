@@ -16,8 +16,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.PopupMenu;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,8 +61,13 @@ public class LoginScreen extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        String[] array = {"blah blah", "bluh bluh"};
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.login, menu);
+        Spinner s = (Spinner) menu.findItem(R.id.loginspinner).getActionView(); // find the spinner
+        SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this.getActionBar()
+                .getThemedContext(), R.array.debug, android.R.layout.simple_spinner_dropdown_item); //  create the adapter from a StringArray
+        s.setAdapter(mSpinnerAdapter); // set the adapter
         return true;
     }
 
@@ -76,7 +84,7 @@ public class LoginScreen extends Activity {
             Connection.Response response = loggedin.get(30, TimeUnit.SECONDS);
 
             //Check to see if we've got logged in correctly, and if so, set up the account.
-            if (response.body().equals("<script>document.location.href=\"/\";</script>")) {
+           if (response.body().equals("<script>document.location.href=\"/\";</script>")) {
                 final Intent intent = new Intent(this, MainActivity.class);
 
                 //Pass the cookies from the login page to the Main activity, where they get turned back into a map

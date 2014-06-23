@@ -21,4 +21,8 @@
     <string name="poll">Poll of the day</string>
     <string name="drama">Dramalinks</string>
 
+    <string-array name="debug">
+        <item>test</item>
+        <item>test2</item>
+    </string-array>
 </resources>
