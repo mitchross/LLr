@@ -8,12 +8,14 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -91,6 +93,7 @@ public class MainActivity extends Activity
                 (DrawerLayout) findViewById(R.id.drawer_layout),
                 UserID);
 
+        Log.e("cookies", cookies.get("session"));
         if (true) {
             ExecutorService executor = Executors.newSingleThreadExecutor();
             Future<Document> loader = executor.submit(new LoadPage(MAIN_PAGE, cookies));
@@ -248,6 +251,11 @@ public class MainActivity extends Activity
     public void loadPage(View v) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/topics/LUE", cookies));
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                //TODO figure out what the position variable does
+                .replace(R.id.container, PlaceholderFragment.newInstance(3))
+                .commit();
         try {
             Document page = request.get(5, TimeUnit.SECONDS);
             Elements elements = page.select("tr:has(td)");
@@ -336,7 +344,7 @@ public class MainActivity extends Activity
                                 tags,
                                 //Get the topic ID then strip the first 50 characters
                                 //Integer.parseInt(e.select("a").first().attr("href").substring(50)),
-                                0,
+                                50,
 
                                 //The user link seems to be the only A element directly under a td
                                 //Integer.parseInt(e.select("td > a").first().attr("href").substring(37)),
@@ -456,6 +464,7 @@ public class MainActivity extends Activity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
+
 
 
 }

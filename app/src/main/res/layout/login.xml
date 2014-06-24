@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/box"
     android:layout_width="match_parent"
@@ -7,7 +8,8 @@
     android:orientation="vertical"
     android:visibility="visible"
     android:background="@color/dark_grey"
-    style="@android:style/Theme.Holo.NoActionBar">
+    style="@style/login_style">
+
 
     <Button
         android:layout_width="48dp"
@@ -15,7 +17,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:background="@*android:drawable/ic_menu_moreoverflow_normal_holo_dark"
-        android:onClick="expandOptions" />
+        android:onClick="openOptions" />
     <ImageSwitcher
         android:id="@+id/ImageSwitcher01"
         android:layout_width="wrap_content"

@@ -12,10 +12,12 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.PopupMenu;
@@ -61,7 +63,6 @@ public class LoginScreen extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        String[] array = {"blah blah", "bluh bluh"};
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.login, menu);
         Spinner s = (Spinner) menu.findItem(R.id.loginspinner).getActionView(); // find the spinner
@@ -116,7 +117,7 @@ public class LoginScreen extends Activity {
                     startActivity(intent);
                 }
             } else {
-                Toast.makeText(this, "Failed to login", Toast.LENGTH_SHORT);
+                Toast.makeText(this, "Failed to login", Toast.LENGTH_SHORT).show();
             }
 
         } catch (TimeoutException | InterruptedException | ExecutionException e) {
@@ -158,10 +159,29 @@ public class LoginScreen extends Activity {
      * This clears any saved login information
      * TODO selective delete based on different accounts? Also, actually implement eheh heh
      *
-     * @param item
+     *
      */
     public void clearData(MenuItem item) {
-        return;
+        Toast.makeText(this, "buh", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Emulate the overflow button
+     * I could make it invisible w hardware menu buttons but eh only Samsung (more like samshit lol amirite) still uses those tbh
+     * @param button
+     */
+    public void openOptions(View button) {
+        PopupMenu popup = new PopupMenu(this, button);
+        popup.getMenuInflater().inflate(R.menu.login, popup.getMenu());
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                item.collapseActionView();
+                return true;
+            }
+        });
+
+        popup.show();
     }
 
 }

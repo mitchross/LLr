@@ -32,10 +32,10 @@
         </activity>
         <activity
             android:name=".LoginScreen"
-            android:label="LLr">
+            android:label="LLr"
+            android:theme="@style/login_style">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
