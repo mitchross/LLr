@@ -48,6 +48,7 @@ public class MainActivity extends Activity
     private static final String TOPICS_MOMENT = "http://iphone.endoftheinter.net/#___2__";
     private static final String MAIN_PAGE = "http://endoftheinter.net/main.php";
     private static final String CHECK_IP = "https://boards.endoftheinter.net/scripts/login.php?username=&ip=";
+    public static Map<String, String> cookies;
     private static String mTag = "debug";
     //Cookies
     public int UserID;
@@ -62,7 +63,6 @@ public class MainActivity extends Activity
     private boolean infoSaved = false;
     private String PHPSession;
     private String Session;
-    public static Map<String, String> cookies;
     private Document currentPage;
     private Document lastPage;
     //Just going to have a single duplicate of the bookmarks in the Main thread to keep from
@@ -270,7 +270,7 @@ public class MainActivity extends Activity
                 Elements el = e.select("div.fr > a");
                 String[] tags;
                 if (el.isEmpty()) {
-                     tags = new String[]{""};
+                    tags = new String[]{""};
                 } else {
 
                     tags = new String[el.size()];
@@ -425,6 +425,39 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.addItem(new BookmarkLink("Fuck that police", "test", "test"));
     }
 
+    public void loadTopic(View view) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/showmessages.php?topic=8898015&page=1", cookies));
+        try {
+            Document page = request.get(5, TimeUnit.SECONDS);
+            mTitle = page.title();
+            Elements elements = page.select("div.message-container");
+            ArrayList<TopicPost> posts = new ArrayList<TopicPost>(elements.size());
+            for (Element e : elements) {
+                posts.add(
+                        new TopicPost(
+                                e.select("div.message-top > a").first().html(),
+
+                                //TODO fix time handling
+                                null,
+
+                                e.select("table.message-body").text()
+                        )
+                );
+
+            }
+            PostAdapter adapter = new PostAdapter(this, R.id.listview, posts);
+            ListView listview = (ListView) findViewById(R.id.listview);
+            listview.setAdapter(adapter);
+        } catch (InterruptedException e) {
+
+        } catch (TimeoutException e) {
+
+        } catch (Exception e) {
+
+        }
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -464,7 +497,6 @@ public class MainActivity extends Activity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
-
 
 
 }
