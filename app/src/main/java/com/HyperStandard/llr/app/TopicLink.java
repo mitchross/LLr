@@ -13,7 +13,7 @@ public class TopicLink {
     private static final String format = "D/M/YYYY HH:mm";
 
     private String[] tags;
-    private int TopicID;
+    private final int TopicID;
     private int UserID;
     private String Username;
     private SimpleDateFormat lastPost;
@@ -28,7 +28,7 @@ public class TopicLink {
         return tags;
     }
 
-    public int getTopicID() {
+    public final int getTopicID() {
         return TopicID;
     }
 

@@ -70,7 +70,7 @@ public class PostAdapter extends ArrayAdapter<TopicPost> {
             // check to see if each individual textview is null.
             // if not, assign some text!
             if (username != null) {
-                username.setText(i.getUsername());
+                username.setText(i.getUsername() + " | " + Integer.toString(i.getEdits()) + " | " + Integer.toString(i.getUserId()));
             }
 
             if (message != null) {

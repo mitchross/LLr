@@ -13,11 +13,13 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:singleLine="false"
         android:id="@+id/post_message"
         android:layout_below="@id/post_username"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/post_signature"
-        android:layout_below="@id/post_message"/>
+        android:layout_below="@id/post_message"
+        android:textColor="@color/red"/>
 </RelativeLayout>

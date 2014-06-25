@@ -7,14 +7,18 @@ package com.HyperStandard.llr.app;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class TopicAdapter extends ArrayAdapter<TopicLink> {
     private ArrayList<TopicLink> objects;
+    private adapterCallback callback;
+
 
     public TopicAdapter(Context context, int textViewResourceId, ArrayList<TopicLink> objects) {
         super(context, textViewResourceId, objects);
@@ -26,6 +30,7 @@ public class TopicAdapter extends ArrayAdapter<TopicLink> {
 	 * list item will look.
 	 */
     public View getView(int position, View convertView, ViewGroup parent) {
+
 
         // assign the view we are converting to a local variable
         View v = convertView;
@@ -44,7 +49,7 @@ public class TopicAdapter extends ArrayAdapter<TopicLink> {
 		 *
 		 * Therefore, i refers to the current Item object.
 		 */
-        TopicLink i = objects.get(position);
+        final TopicLink i = objects.get(position);
 
         if (i != null) {
 
@@ -111,9 +116,30 @@ public class TopicAdapter extends ArrayAdapter<TopicLink> {
 
         }
 
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "topic is " + Integer.toString(i.getTopicID()), Toast.LENGTH_SHORT).show();
+                if (callback != null) {
+                    callback.topicPressed(i.getTopicID());
+                }
+
+            }
+
+
+        });
+
+
         // the view must be returned to our activity
         return v;
 
     }
+    public void setCallback (adapterCallback callback) {
+        this.callback = callback;
+    }
+    public interface adapterCallback {
+        public void topicPressed(int topicId);
+    }
+
 
 }

@@ -6,19 +6,14 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jsoup.HttpStatusException;
@@ -42,12 +37,10 @@ import java.util.concurrent.TimeoutException;
 
 
 public class MainActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, TopicAdapter.adapterCallback {
 
     //These are some static URLs for convenience
-    private static final String TOPICS_MOMENT = "http://iphone.endoftheinter.net/#___2__";
     private static final String MAIN_PAGE = "http://endoftheinter.net/main.php";
-    private static final String CHECK_IP = "https://boards.endoftheinter.net/scripts/login.php?username=&ip=";
     public static Map<String, String> cookies;
     private static String mTag = "debug";
     //Cookies
@@ -122,36 +115,21 @@ public class MainActivity extends Activity
             } catch (TimeoutException e) {
 
             }
-            try {
+            /*try {
                 loadPageURL("http://boards.endoftheinter.net/topics/Posted");
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            }*/
         }
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        Log.e("something", "something");
         // update the main content by replacing fragments
-        /*FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();*/
-        Log.e(mTag, "starting to load page");
-        try {
-            loadPage(null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e("Exception thrown", "loadPage");
-        }
-        try {
-            loadPageURL("http://boards.endoftheinter.net/topics/LUE");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e("Exception thrown", "LoadPageURL");
-        }
-        Log.e(mTag, Integer.toString(position));
+                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1), "MY_TAG" + position)
+                .commit();
     }
 
     public void onSectionAttached(int number) {
@@ -251,11 +229,11 @@ public class MainActivity extends Activity
     public void loadPage(View v) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/topics/LUE", cookies));
-        FragmentManager fragmentManager = getFragmentManager();
+        /*FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 //TODO figure out what the position variable does
                 .replace(R.id.container, PlaceholderFragment.newInstance(3))
-                .commit();
+                .commit();*/
         try {
             Document page = request.get(5, TimeUnit.SECONDS);
             Elements elements = page.select("tr:has(td)");
@@ -306,7 +284,8 @@ public class MainActivity extends Activity
                         )
                 );
             }
-            TopicAdapter adapter = new TopicAdapter(this, R.id.listview, topics);
+            TopicAdapter adapter = new TopicAdapter(getBaseContext(), R.id.listview, topics);
+            adapter.setCallback(this);
             ListView listview = (ListView) findViewById(R.id.listview);
             //Header isn't really needed because the actionbar contains the page title
             /*View header = View.inflate(this, R.layout.listview_header_row, null);
@@ -436,12 +415,20 @@ public class MainActivity extends Activity
             for (Element e : elements) {
                 posts.add(
                         new TopicPost(
-                                e.select("div.message-top > a").first().html(),
+                                //Get the username
+                                e.select("div.message-top > a").first().text(),
 
-                                //TODO fix time handling
-                                null,
+                                //Get the userId url
+                                e.select("div.message-top > a").attr("href"),
 
-                                e.select("table.message-body").text()
+                                //Get the time I guess whatever
+                                e.select("div.message-top:nth-child(3)").text(),
+
+                                //Get teh message body + signature
+                                e.select("table.message-body").text(),
+
+                                //Get the message detail maybe ? ? ?
+                                e.select("div.message-top:nth-child(6)").text()
                         )
                 );
 
@@ -486,8 +473,7 @@ public class MainActivity extends Activity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
+            return inflater.inflate(R.layout.fragment_main, container, false);
         }
 
         @Override
@@ -495,6 +481,47 @@ public class MainActivity extends Activity
             super.onAttach(activity);
             ((MainActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
+        }
+    }
+    @Override
+    public void topicPressed(int topicId) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/showmessages.php?topic=" + topicId, cookies));
+        try {
+            Document page = request.get(5, TimeUnit.SECONDS);
+            mTitle = page.title();
+            Elements elements = page.select("div.message-container");
+            ArrayList<TopicPost> posts = new ArrayList<TopicPost>(elements.size());
+            for (Element e : elements) {
+                posts.add(
+                        new TopicPost(
+                                //Get the username
+                                e.select("div.message-top > a").first().text(),
+
+                                //Get the userId url
+                                e.select("div.message-top > a").attr("href"),
+
+                                //Get the time I guess whatever
+                                e.select("div.message-top:nth-child(3)").text(),
+
+                                //Get teh message body + signature
+                                e.select("table.message-body").text(),
+
+                                //Get the message detail maybe ? ? ?
+                                e.select("div.message-top:nth-child(6)").text()
+                        )
+                );
+
+            }
+            PostAdapter adapter = new PostAdapter(this, R.id.listview, posts);
+            ListView listview = (ListView) findViewById(R.id.listview);
+            listview.setAdapter(adapter);
+        } catch (InterruptedException e) {
+
+        } catch (TimeoutException e) {
+
+        } catch (Exception e) {
+
         }
     }
 
