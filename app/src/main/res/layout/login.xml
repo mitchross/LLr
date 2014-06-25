@@ -11,13 +11,15 @@
     style="@style/login_style">
 
 
-    <Button
+    <ImageButton
+        android:id="@+id/login_menu"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:background="@*android:drawable/ic_menu_moreoverflow_normal_holo_dark"
-        android:onClick="openOptions" />
+        android:onClick="openOptions"
+        android:src="@drawable/login_menu"
+        android:background="@null"/>
     <ImageSwitcher
         android:id="@+id/ImageSwitcher01"
         android:layout_width="wrap_content"

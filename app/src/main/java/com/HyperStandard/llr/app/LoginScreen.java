@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
@@ -171,6 +172,7 @@ public class LoginScreen extends Activity {
      * @param button
      */
     public void openOptions(View button) {
+
         PopupMenu popup = new PopupMenu(this, button);
         popup.getMenuInflater().inflate(R.menu.login, popup.getMenu());
 

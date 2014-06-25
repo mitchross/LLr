@@ -115,6 +115,10 @@ public class MainActivity extends Activity
             } catch (TimeoutException e) {
 
             }
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, PlaceholderFragment.newInstance(1), "MY_TAG" + 1)
+                    .commit();
             /*try {
                 loadPageURL("http://boards.endoftheinter.net/topics/Posted");
             } catch (Exception e) {
@@ -124,12 +128,13 @@ public class MainActivity extends Activity
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(int position) {
+    public void onNavigationDrawerItemSelected(int position, String URL) {
         // update the main content by replacing fragments
-        FragmentManager fragmentManager = getFragmentManager();
+        /*FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1), "MY_TAG" + position)
                 .commit();
+        loadPageURL(URL);*/
     }
 
     public void onSectionAttached(int number) {
@@ -410,26 +415,12 @@ public class MainActivity extends Activity
         try {
             Document page = request.get(5, TimeUnit.SECONDS);
             mTitle = page.title();
+            restoreActionBar();
             Elements elements = page.select("div.message-container");
             ArrayList<TopicPost> posts = new ArrayList<TopicPost>(elements.size());
             for (Element e : elements) {
                 posts.add(
-                        new TopicPost(
-                                //Get the username
-                                e.select("div.message-top > a").first().text(),
-
-                                //Get the userId url
-                                e.select("div.message-top > a").attr("href"),
-
-                                //Get the time I guess whatever
-                                e.select("div.message-top:nth-child(3)").text(),
-
-                                //Get teh message body + signature
-                                e.select("table.message-body").text(),
-
-                                //Get the message detail maybe ? ? ?
-                                e.select("div.message-top:nth-child(6)").text()
-                        )
+                        new TopicPost(e)
                 );
 
             }
@@ -490,26 +481,12 @@ public class MainActivity extends Activity
         try {
             Document page = request.get(5, TimeUnit.SECONDS);
             mTitle = page.title();
+            restoreActionBar();
             Elements elements = page.select("div.message-container");
             ArrayList<TopicPost> posts = new ArrayList<TopicPost>(elements.size());
             for (Element e : elements) {
                 posts.add(
-                        new TopicPost(
-                                //Get the username
-                                e.select("div.message-top > a").first().text(),
-
-                                //Get the userId url
-                                e.select("div.message-top > a").attr("href"),
-
-                                //Get the time I guess whatever
-                                e.select("div.message-top:nth-child(3)").text(),
-
-                                //Get teh message body + signature
-                                e.select("table.message-body").text(),
-
-                                //Get the message detail maybe ? ? ?
-                                e.select("div.message-top:nth-child(6)").text()
-                        )
+                        new TopicPost(e)
                 );
 
             }
@@ -523,6 +500,39 @@ public class MainActivity extends Activity
         } catch (Exception e) {
 
         }
+    }
+
+    public void changeLocation(String URL) {
+        if(URL.contains(".net/topic")) {
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            Future<Document> request = executor.submit(new LoadPage(URL, cookies));
+            try {
+                Document page = request.get(5, TimeUnit.SECONDS);
+                mTitle = page.title();
+                Elements elements = page.select("div.message-container");
+                ArrayList<TopicPost> posts = new ArrayList<TopicPost>(elements.size());
+                for (Element e : elements) {
+                    posts.add(
+                            new TopicPost(e)
+                    );
+
+                }
+                PostAdapter adapter = new PostAdapter(this, R.id.listview, posts);
+                ListView listview = (ListView) findViewById(R.id.listview);
+                listview.setAdapter(adapter);
+            } catch (InterruptedException e) {
+                Log.e(mTag, "interrupted");
+            } catch (TimeoutException e) {
+                Log.e(mTag, "Timed out");
+            } catch (Exception e) {
+                Log.e(mTag, "Exception");
+                e.printStackTrace();
+
+            }
+        } else {
+            Toast.makeText(this, "failed to open link", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 

@@ -16,6 +16,7 @@ import java.util.ArrayList;
  */
 public class NavigationAdapter extends ArrayAdapter<BookmarkLink> {
     private ArrayList<BookmarkLink> objects;
+    private NavigationDrawerCallback callback;
 
     NavigationAdapter(Context context, int textViewResourceId, ArrayList<BookmarkLink> objects) {
         super(context, textViewResourceId, objects);
@@ -56,12 +57,25 @@ public class NavigationAdapter extends ArrayAdapter<BookmarkLink> {
             if (title != null) {
                 title.setText(i.getBookmarkName());
             }
+
+            Log.e("Callback", i.getBookmarkTags());
+            if (i.getBookmarkTags().contains("showmessages.php")) {
+                callback.changeLocation(i.getBookmarkTags());
+            }
         }
 
-        // the view must be returned to our activity
 
         return v;
 
+
+    }
+
+    public void setCallback(NavigationDrawerCallback callback) {
+        this.callback = callback;
+    }
+
+    public interface NavigationDrawerCallback {
+        public void changeLocation(String URL);
     }
 
 

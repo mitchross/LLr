@@ -10,5 +10,7 @@ public class C {
     public static final String PREFS_USELOGIN = "userlogin";
     public static final String PREFS_USERNAME = "username";
     public static final String PREFS_PASSWORD = "password";
+
+    public static final String LUE = "http://boards.endoftheinter.net/topics/LUE";
 }
 

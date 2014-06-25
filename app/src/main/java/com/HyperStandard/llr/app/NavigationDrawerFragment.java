@@ -95,7 +95,7 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         // Select either the default item (0) or the last selected item.
-        selectItem(mCurrentSelectedPosition);
+        selectItem(mCurrentSelectedPosition, C.LUE);
     }
 
     @Override
@@ -145,9 +145,7 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 currentURL = (BookmarkLink) parent.getItemAtPosition(position);
-                URL = currentURL.getBookmarkTags();
-                Log.e("Look here", URL);
-                selectItem(position);
+                selectItem(position, currentURL.getBookmarkTags());
             }
         });
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
@@ -233,7 +231,7 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
-    private void selectItem(int position) {
+    private void selectItem(int position, String URL) {
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);
@@ -242,7 +240,7 @@ public class NavigationDrawerFragment extends Fragment {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
         if (mCallbacks != null) {
-            mCallbacks.onNavigationDrawerItemSelected(position);
+            mCallbacks.onNavigationDrawerItemSelected(position, URL);
         }
     }
 
@@ -342,7 +340,7 @@ public class NavigationDrawerFragment extends Fragment {
         /**
          * Called when an item in the navigation drawer is selected.
          */
-        void onNavigationDrawerItemSelected(int position);
+        void onNavigationDrawerItemSelected(int position, String URL);
     }
 
 }
