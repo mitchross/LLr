@@ -12,5 +12,13 @@ public class C {
     public static final String PREFS_PASSWORD = "password";
 
     public static final String LUE = "http://boards.endoftheinter.net/topics/LUE";
+
+    //Font names, preface with FONT_
+    //Use a name that defines the purpose, not the file name
+    public static final String FONT_ROBOTOCONDENSED_LIGHT = "fonts/RobotoCondensed-Light.ttf";
+    public static final String FONT_LISTVIEW = "fonts/Roboto-Light.ttf";
+    public static final String FONT_TITLE = "fonts/RobotoSlab-Regular.ttf";
+    public static final String FONT_COMICRELIEF = "fonts/ComicRelief.ttf";
+
 }
 

@@ -15,6 +15,7 @@ import java.util.ArrayList;
  */
 public class PostAdapter extends ArrayAdapter<TopicPost> {
     private ArrayList<TopicPost> objects;
+    private adapterCallback callback;
 
     public PostAdapter(Context context, int textViewResourceId, ArrayList<TopicPost> objects) {
         super(context, textViewResourceId, objects);
@@ -82,8 +83,17 @@ public class PostAdapter extends ArrayAdapter<TopicPost> {
             }
         }
 
+
         // the view must be returned to our activity
         return v;
 
+
+
+    }
+    public void setCallback (adapterCallback callback) {
+        this.callback = callback;
+    }
+    public interface adapterCallback {
+        public void topicPressed(int topicId, int pageNumber);
     }
 }

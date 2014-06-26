@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -45,7 +46,7 @@ import java.util.concurrent.TimeoutException;
  */
 public class LoginScreen extends Activity {
     private final static String mTag = "debug loginscreen";
-
+    private Typeface Comic;
     private SharedPreferences prefs;
 
     @Override
@@ -60,23 +61,27 @@ public class LoginScreen extends Activity {
             Toast.makeText(this, "Logging in with saved credentials", Toast.LENGTH_SHORT).show();
             autoLogin(prefs.getString(C.PREFS_USERNAME, ""), prefs.getString(C.PREFS_PASSWORD, ""));
         }
+        Comic = Typeface.createFromAsset(getAssets(), C.FONT_COMICRELIEF);
+        EditText uN = (EditText) findViewById(R.id.username);
+        EditText pW = (EditText) findViewById(R.id.password);
+
+        uN.setTypeface(Comic);
+        pW.setTypeface(Comic);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.login, menu);
-        Spinner s = (Spinner) menu.findItem(R.id.loginspinner).getActionView(); // find the spinner
-        SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this.getActionBar()
-                .getThemedContext(), R.array.debug, android.R.layout.simple_spinner_dropdown_item); //  create the adapter from a StringArray
-        s.setAdapter(mSpinnerAdapter); // set the adapter
-        return true;
+         return true;
     }
 
     public void login(View view) {
         EditText uN = (EditText) findViewById(R.id.username);
         EditText pW = (EditText) findViewById(R.id.password);
 
+        uN.setTypeface(Comic);
+        pW.setTypeface(Comic);
         String username = uN.getText().toString();
         final String password = pW.getText().toString();
 

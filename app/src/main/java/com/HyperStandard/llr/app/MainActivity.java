@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import org.jsoup.HttpStatusException;
@@ -34,7 +35,7 @@ import java.util.concurrent.TimeoutException;
 
 
 public class MainActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, TopicAdapter.adapterCallback, NavigationAdapter.NavigationDrawerCallback {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, TopicAdapter.adapterCallback, NavigationAdapter.NavigationDrawerCallback, PostAdapter.adapterCallback {
 
     //These are some static URLs for convenience
     private static final String MAIN_PAGE = "http://endoftheinter.net/main.php";
@@ -52,9 +53,19 @@ public class MainActivity extends Activity
      */
     private CharSequence mTitle;
 
+    /**
+     * stores the tag of the active fragment
+     */
+    private String currentFragmentTag = "";
+
+    /**
+     * store whether all the fragments are instantiated or not
+     */
+    private String[] fragments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        fragments = new String[]{"", "", "", "", ""};
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         cookies = new HashMap<String, String>();
@@ -102,26 +113,36 @@ public class MainActivity extends Activity
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, PlaceholderFragment.newInstance(1), "MY_TAG" + 1)
-                    .commit();
-            /*try {
-                loadPageURL("http://boards.endoftheinter.net/topics/Posted");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }*/
+
         }
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position, String URL) {
-        // update the main content by replacing fragments
-        /*FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1), "MY_TAG" + position)
-                .commit();
-        loadPageURL(URL);*/
+        if (fragments[position].equals("")) {
+            // update the main content by replacing fragments
+            FragmentManager fragmentManager = getFragmentManager();
+            //Fragment newFragment = fragmentManager.findFragmentByTag("MY_TAG" + position);
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, PlaceholderFragment.newInstance(position + 1), "MY_TAG" + position)
+                    .commit();
+            Log.e("committed", "replaced");
+            fragments[position] = "MY_TAG" + position;
+            currentFragmentTag = "MY_TAG" + position;
+        } else {
+            // update the main content by replacing fragments
+            FragmentManager fragmentManager = getFragmentManager();
+            //Fragment newFragment = fragmentManager.findFragmentByTag("MY_TAG" + position);
+            Fragment tempFragment = fragmentManager.findFragmentByTag(currentFragmentTag);
+            fragmentManager.beginTransaction()
+                    .detach(tempFragment)
+                    .commit();
+            Fragment newFragment = fragmentManager.findFragmentByTag("MY_TAG" + position);
+            fragmentManager.beginTransaction().attach(newFragment).commit();
+            Log.e("detached", "replaced");
+            fragments[position] = "MY_TAG" + position;
+        }
     }
 
     public void onSectionAttached(int number) {
@@ -191,8 +212,8 @@ public class MainActivity extends Activity
             ArrayList<TopicLink> topics = new ArrayList<TopicLink>(elements.size());
 
             int latestPost = 0;
-            mTitle = page.title();
-            restoreActionBar();
+            //Strip the long text bc of long reasons
+            fixTitle(page.title());
             for (Element e : elements) {
                 Elements el = e.select("div.fr > a");
                 String[] tags;
@@ -274,10 +295,10 @@ public class MainActivity extends Activity
         Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/showmessages.php?topic=8898015&page=1", cookies));
         try {
             Document page = request.get(5, TimeUnit.SECONDS);
-            mTitle = page.title();
-            restoreActionBar();
+            //Strip the long text bc of long reasons
+            fixTitle(page.title());
             Elements elements = page.select("div.message-container");
-            ArrayList<TopicPost> posts = new ArrayList<TopicPost>(elements.size());
+            ArrayList<TopicPost> posts = new ArrayList<>(elements.size());
             for (Element e : elements)
                 posts.add(new TopicPost(e));
 
@@ -287,7 +308,7 @@ public class MainActivity extends Activity
         } catch (InterruptedException e) {
             Log.e(mTag, "Interrupted operation");
         } catch (TimeoutException e) {
-            Toast.makeText(this, "Operation timed out", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Operation timed out", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -299,9 +320,12 @@ public class MainActivity extends Activity
      * @param topicId The integer ID of the topic to be loaded, fortunately LL only needs this, not things like tags etc
      */
     @Override
-    public void topicPressed(int topicId) {
+    public void topicPressed(int topicId, int pageNumber) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/showmessages.php?topic=" + topicId, cookies));
+        Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/showmessages.php?topic="
+                + topicId + "?page=" + pageNumber,
+                cookies
+        ));
         try {
             Document page = request.get(5, TimeUnit.SECONDS);
 
@@ -309,20 +333,25 @@ public class MainActivity extends Activity
             fixTitle(page.title());
 
             Elements elements = page.select("div.message-container");
-            ArrayList<TopicPost> posts = new ArrayList<TopicPost>(elements.size());
+            ArrayList<TopicPost> posts = new ArrayList<>(elements.size());
 
             //Add post objects to arraylist, all the HTML processing is done within the object constructor itself
             for (Element e : elements)
                 posts.add(new TopicPost(e));
 
-            //If I ever want a header or footer here is the place to do it
             PostAdapter adapter = new PostAdapter(this, R.id.listview, posts);
             ListView listview = (ListView) findViewById(R.id.listview);
+            //TODO move this out of the topic, or augment ith an additional control maybe?
+            if (page.getElementById("nextpage") != null) {//Checks to see if there's more topics
+                View footer = getLayoutInflater().inflate(R.layout.listview_post_footer, null);
+                listview.addFooterView(footer, pageNumber + 1, true);
+
+            }
             listview.setAdapter(adapter);
         } catch (InterruptedException e) {
             Log.e(mTag, "Interrupted operation");
         } catch (TimeoutException e) {
-            Toast.makeText(this, "Operation timed out", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Operation timed out", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -353,6 +382,8 @@ public class MainActivity extends Activity
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
 
+        private static int position;
+
         public PlaceholderFragment() {
         }
 
@@ -361,6 +392,7 @@ public class MainActivity extends Activity
          * number.
          */
         public static PlaceholderFragment newInstance(int sectionNumber) {
+            position = sectionNumber;
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
@@ -371,7 +403,10 @@ public class MainActivity extends Activity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.fragment_main, container, false);
+            if (position == 3)
+                return inflater.inflate(R.layout.fragment_main, container, false);
+            else
+                return inflater.inflate(R.layout.fragment_settings, container, false);
         }
 
         @Override

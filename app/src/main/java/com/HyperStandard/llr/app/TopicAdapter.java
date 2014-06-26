@@ -7,7 +7,7 @@ package com.HyperStandard.llr.app;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.support.v4.app.FragmentManager;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +18,12 @@ import android.widget.Toast;
 public class TopicAdapter extends ArrayAdapter<TopicLink> {
     private ArrayList<TopicLink> objects;
     private adapterCallback callback;
-
+    private Typeface RobotoLight;
 
     public TopicAdapter(Context context, int textViewResourceId, ArrayList<TopicLink> objects) {
         super(context, textViewResourceId, objects);
         this.objects = objects;
+        this.RobotoLight = Typeface.createFromAsset(context.getAssets(), C.FONT_LISTVIEW);
     }
 
     /*
@@ -86,31 +87,39 @@ public class TopicAdapter extends ArrayAdapter<TopicLink> {
             // check to see if each individual textview is null.
             // if not, assign some text!
             if (title != null) {
+                title.setTypeface(RobotoLight);
                 title.setText(i.getTopicTitle());
             }
 
             if (tc != null) {
+                tc.setTypeface(RobotoLight);
                 tc.setText(i.getUsername());
             }
 
             if (blackTags != null) {
+                redTags.setTypeface(RobotoLight);
+                blackTags.setTypeface(RobotoLight);
                 redTags.setText("");
                 blackTags.setText("");
                 for (int j = 0; j < i.getTags().length; j++) {
-                    if (i.getTags()[j].equals("NWS")) {
+                    //TODO clean this stuff up
+                    if (i.getTags()[j].equals("NWS") || i.getTags()[j].equals("Spoiler")) {
                         if (redTags != null) {
                             String currentText = redTags.getText().toString();
+                            //The space goes after the individual tags
                             redTags.setText(currentText + i.getTags()[j] + " ");
                         }
                     } else {
                         String currentText = blackTags.getText().toString();
-                        blackTags.setText(currentText + " " + i.getTags()[j]);
+                        //The space goes after the individual tags
+                        blackTags.setText(currentText + i.getTags()[j] + " ");
                     }
                 }
             }
 
 
             if (posts != null) {
+                posts.setTypeface(RobotoLight);
                 posts.setText(Integer.toString(i.getTotalMessages()));
             }
 
@@ -119,9 +128,9 @@ public class TopicAdapter extends ArrayAdapter<TopicLink> {
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "topic is " + Integer.toString(i.getTopicID()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "topic is " + Integer.toString(i.getTopicId()), Toast.LENGTH_SHORT).show();
                 if (callback != null) {
-                    callback.topicPressed(i.getTopicID());
+                    callback.topicPressed(i.getTopicId(), 1);
                 }
 
             }
@@ -138,7 +147,7 @@ public class TopicAdapter extends ArrayAdapter<TopicLink> {
         this.callback = callback;
     }
     public interface adapterCallback {
-        public void topicPressed(int topicId);
+        public void topicPressed(int topicId, int pageNumber);
     }
 
 
