@@ -50,7 +50,7 @@ public class NavigationAdapter extends ArrayAdapter<BookmarkLink> {
             // These TextViews are created in the XML files we defined.
 
             /**
-             * Actin label (String)
+             * Action label (String)
              */
             TextView title = (TextView) v.findViewById(R.id.mainText);
 
@@ -58,7 +58,7 @@ public class NavigationAdapter extends ArrayAdapter<BookmarkLink> {
                 title.setText(i.getBookmarkName());
             }
 
-            Log.e("Callback", i.getBookmarkTags());
+            //Log.e("Callback", i.getBookmarkTags());
             if (i.getBookmarkTags().contains("showmessages.php")) {
                 callback.changeLocation(i.getBookmarkTags());
             }

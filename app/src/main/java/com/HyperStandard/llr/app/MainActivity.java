@@ -22,9 +22,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +34,7 @@ import java.util.concurrent.TimeoutException;
 
 
 public class MainActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, TopicAdapter.adapterCallback {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, TopicAdapter.adapterCallback, NavigationAdapter.NavigationDrawerCallback {
 
     //These are some static URLs for convenience
     private static final String MAIN_PAGE = "http://endoftheinter.net/main.php";
@@ -45,6 +42,7 @@ public class MainActivity extends Activity
     private static String mTag = "debug";
     //Cookies
     public int UserID;
+
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -53,18 +51,7 @@ public class MainActivity extends Activity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-    private boolean infoSaved = false;
-    private String PHPSession;
-    private String Session;
-    private Document currentPage;
-    private Document lastPage;
-    //Just going to have a single duplicate of the bookmarks in the Main thread to keep from
-    //casting/calling a getArraylist type method a lot
-    private ArrayList<BookmarkLink> bookmarks;
 
-    public int getUserID() {
-        return UserID;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,11 +96,11 @@ public class MainActivity extends Activity
                 }
 
             } catch (InterruptedException e) {
-
-            } catch (ExecutionException e) {
-
+                Log.e(mTag, "Interrupted operation");
             } catch (TimeoutException e) {
-
+                Toast.makeText(this, "Operation timed out", Toast.LENGTH_SHORT);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
@@ -160,9 +147,11 @@ public class MainActivity extends Activity
 
     public void restoreActionBar() {
         ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        if (actionBar != null) {
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(mTitle);
+        }
     }
 
 
@@ -188,49 +177,6 @@ public class MainActivity extends Activity
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
-    private void setUpAccount() {
-        try {
-            Log.e(mTag, "one");
-            Document mainPage = Jsoup.connect("http://endoftheinter.net/main.php").cookie("auth", "token").post();
-            Log.e(mTag, "two");
-            //Elements bookmarks = mainPage.select("div.bookmarks > span > a");
-            Log.e(mTag, "three");
-            /*if (bookmarks.isEmpty()) {
-                Log.e(mTag, "Bookmarks empty");
-            }
-            Log.e("size", Integer.toString(bookmarks.size()));
-            String[] urls = new String[bookmarks.size()];
-            for (int i = 0; i < bookmarks.size(); i++) {
-                urls[i] = bookmarks.get(i).text();
-                Log.e(mTag, urls[i]);
-            }*/
-            //mainPage.getElementById("bookmarks").;
-        } catch (MalformedURLException e) {
-            Log.e(mTag, "MalformedURLException");
-            e.printStackTrace();
-        } catch (HttpStatusException e) {
-            Log.e(mTag, "HttpStatusException");
-            e.printStackTrace();
-        } catch (UnsupportedOperationException e) {
-            Log.e(mTag, "UnsupportedOperationException");
-            e.printStackTrace();
-        } catch (SocketTimeoutException e) {
-            Log.e(mTag, "SocketTimeoutException");
-            e.printStackTrace();
-        } catch (IOException e) {
-            Log.e(mTag, "FATALITY blah");
-            e.printStackTrace();
-        } catch (Exception e) {
-            //e.printStackTrace();
-            Log.e(mTag, "Other exception");
-            e.printStackTrace();
-            Log.e(mTag, "" + e.getCause());
-
-        }
-
-        //ListView navView = "";
-    }
-
     public void loadPage(View v) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/topics/LUE", cookies));
@@ -242,16 +188,15 @@ public class MainActivity extends Activity
         try {
             Document page = request.get(5, TimeUnit.SECONDS);
             Elements elements = page.select("tr:has(td)");
-            currentPage = page;
             ArrayList<TopicLink> topics = new ArrayList<TopicLink>(elements.size());
 
             int latestPost = 0;
             mTitle = page.title();
             restoreActionBar();
-            //String[] tags = {"NWS", "test"};
             for (Element e : elements) {
                 Elements el = e.select("div.fr > a");
                 String[] tags;
+                //TODO put all this logic in the TopicLInk constructor and just pass an element
                 if (el.isEmpty()) {
                     tags = new String[]{""};
                 } else {
@@ -307,94 +252,6 @@ public class MainActivity extends Activity
         }
     }
 
-    public void loadPageURL(String URL) {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<Document> request = executor.submit(new LoadPage(URL, cookies));
-        try {
-            Document page = request.get(5, TimeUnit.SECONDS);
-            Elements elements = page.select("tr:has(td)");
-            //TextView tV = (TextView) findViewById(R.id.longText);
-            //tV.setText(elements.first().text());
-            currentPage = page;
-            ArrayList<TopicLink> topics = new ArrayList<TopicLink>(elements.size());
-
-            int latestPost = 0;
-            mTitle = page.title();
-            restoreActionBar();
-            String[] tags = {"NWS", "test"};
-            for (Element e : elements) {
-                topics.add(
-                        new TopicLink(
-                                tags,
-                                //Get the topic ID then strip the first 50 characters
-                                //Integer.parseInt(e.select("a").first().attr("href").substring(50)),
-                                50,
-
-                                //The user link seems to be the only A element directly under a td
-                                //Integer.parseInt(e.select("td > a").first().attr("href").substring(37)),
-                                0,
-                                //THe third TD element contains the number of messages in a post
-                                //Integer.parseInt(e.select("td:nth-child(3)").first().ownText()),
-                                0,
-                                //TODO fix this shit too
-                                latestPost,
-
-                                //Same as the user except get the inner text (username)
-                                e.select("td > a").text(),
-                                //"llamaguy",
-                                //Topic title should be same as topic ID
-                                e.select("a").first().text(),
-                                //"title",
-                                //TODO: get the date right ugh
-                                "today"
-                        )
-                );
-            }
-            TopicAdapter adapter = new TopicAdapter(this, R.id.listview, topics);
-            ListView listview = (ListView) findViewById(R.id.listview);
-            //Header isn't really needed because the actionbar contains the page title
-            /*View header = View.inflate(this, R.layout.listview_header_row, null);
-            listview.addHeaderView(header);*/
-            listview.setAdapter(adapter);
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            Toast.makeText(getApplicationContext(), "Page load timed out sucka", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private TopicLink parseForTopics(Element e) {
-        int latestPost;
-        if (e.select("span") != null) {
-            latestPost = 1;
-        } else
-            latestPost = 0;
-        String[] tags = new String[]{"NWS", "Fails"};
-        return new TopicLink(
-                tags,
-                //Get the topic ID then strip the first 50 characters
-                Integer.parseInt(e.select("a").first().attr("href").substring(50)),
-
-                //The user link seems to be the only A element directly under a td
-                Integer.parseInt(e.select("td > a").attr("href").substring(37)),
-
-                //THe third TD element contains the number of messages in a post
-                Integer.parseInt(e.select("td:nth-child(3)").text()),
-
-                //TODO fix this shit too
-                latestPost,
-
-                //Same as the user except get the inner text (username)
-                e.select("td > a").text(),
-
-                //Topic title should be same as topic ID
-                e.select("a").first().text(),
-
-                //TODO: get the date right ugh
-                "today"
-        );
-    }
-
     /**
      * Adds items to the navigation drawer (bookmarks)
      *
@@ -406,9 +263,12 @@ public class MainActivity extends Activity
     }
 
     public void addDrawer(View v) {
-        mNavigationDrawerFragment.addItem(new BookmarkLink("Fuck that police", "test", "test"));
+        mNavigationDrawerFragment.addItem(new BookmarkLink("Testing new drawer item", "test", "test"));
     }
 
+    /**
+     * @param view automatically generated variable from button press
+     */
     public void loadTopic(View view) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/showmessages.php?topic=8898015&page=1", cookies));
@@ -418,22 +278,69 @@ public class MainActivity extends Activity
             restoreActionBar();
             Elements elements = page.select("div.message-container");
             ArrayList<TopicPost> posts = new ArrayList<TopicPost>(elements.size());
-            for (Element e : elements) {
-                posts.add(
-                        new TopicPost(e)
-                );
+            for (Element e : elements)
+                posts.add(new TopicPost(e));
 
-            }
             PostAdapter adapter = new PostAdapter(this, R.id.listview, posts);
             ListView listview = (ListView) findViewById(R.id.listview);
             listview.setAdapter(adapter);
         } catch (InterruptedException e) {
-
+            Log.e(mTag, "Interrupted operation");
         } catch (TimeoutException e) {
-
+            Toast.makeText(this, "Operation timed out", Toast.LENGTH_SHORT);
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
+    }
+
+    /**
+     * Loads a topic, based on the Topic ID
+     *
+     * @param topicId The integer ID of the topic to be loaded, fortunately LL only needs this, not things like tags etc
+     */
+    @Override
+    public void topicPressed(int topicId) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/showmessages.php?topic=" + topicId, cookies));
+        try {
+            Document page = request.get(5, TimeUnit.SECONDS);
+
+            //Strip the long text bc of long reasons
+            fixTitle(page.title());
+
+            Elements elements = page.select("div.message-container");
+            ArrayList<TopicPost> posts = new ArrayList<TopicPost>(elements.size());
+
+            //Add post objects to arraylist, all the HTML processing is done within the object constructor itself
+            for (Element e : elements)
+                posts.add(new TopicPost(e));
+
+            //If I ever want a header or footer here is the place to do it
+            PostAdapter adapter = new PostAdapter(this, R.id.listview, posts);
+            ListView listview = (ListView) findViewById(R.id.listview);
+            listview.setAdapter(adapter);
+        } catch (InterruptedException e) {
+            Log.e(mTag, "Interrupted operation");
+        } catch (TimeoutException e) {
+            Toast.makeText(this, "Operation timed out", Toast.LENGTH_SHORT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Fixes the title for small devices
+     *
+     * @return the string without End Of The Internet
+     * TODO something different for tablets? Must acquire a tablet first
+     */
+    private void fixTitle(String title) {
+        mTitle = "ETI - " + title.substring(title.indexOf(" - ") + 3);
+        restoreActionBar();
+    }
+
+    public void changeLocation(String URL) {
+        loadPage(null);
     }
 
     /**
@@ -473,66 +380,6 @@ public class MainActivity extends Activity
             ((MainActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
-    }
-    @Override
-    public void topicPressed(int topicId) {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/showmessages.php?topic=" + topicId, cookies));
-        try {
-            Document page = request.get(5, TimeUnit.SECONDS);
-            mTitle = page.title();
-            restoreActionBar();
-            Elements elements = page.select("div.message-container");
-            ArrayList<TopicPost> posts = new ArrayList<TopicPost>(elements.size());
-            for (Element e : elements) {
-                posts.add(
-                        new TopicPost(e)
-                );
-
-            }
-            PostAdapter adapter = new PostAdapter(this, R.id.listview, posts);
-            ListView listview = (ListView) findViewById(R.id.listview);
-            listview.setAdapter(adapter);
-        } catch (InterruptedException e) {
-
-        } catch (TimeoutException e) {
-
-        } catch (Exception e) {
-
-        }
-    }
-
-    public void changeLocation(String URL) {
-        if(URL.contains(".net/topic")) {
-            ExecutorService executor = Executors.newSingleThreadExecutor();
-            Future<Document> request = executor.submit(new LoadPage(URL, cookies));
-            try {
-                Document page = request.get(5, TimeUnit.SECONDS);
-                mTitle = page.title();
-                Elements elements = page.select("div.message-container");
-                ArrayList<TopicPost> posts = new ArrayList<TopicPost>(elements.size());
-                for (Element e : elements) {
-                    posts.add(
-                            new TopicPost(e)
-                    );
-
-                }
-                PostAdapter adapter = new PostAdapter(this, R.id.listview, posts);
-                ListView listview = (ListView) findViewById(R.id.listview);
-                listview.setAdapter(adapter);
-            } catch (InterruptedException e) {
-                Log.e(mTag, "interrupted");
-            } catch (TimeoutException e) {
-                Log.e(mTag, "Timed out");
-            } catch (Exception e) {
-                Log.e(mTag, "Exception");
-                e.printStackTrace();
-
-            }
-        } else {
-            Toast.makeText(this, "failed to open link", Toast.LENGTH_SHORT).show();
-        }
-
     }
 
 
