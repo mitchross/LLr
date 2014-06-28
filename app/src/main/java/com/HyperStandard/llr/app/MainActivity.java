@@ -14,11 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import org.jsoup.HttpStatusException;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -109,7 +106,7 @@ public class MainActivity extends Activity
             } catch (InterruptedException e) {
                 Log.e(mTag, "Interrupted operation");
             } catch (TimeoutException e) {
-                Toast.makeText(this, "Operation timed out", Toast.LENGTH_SHORT);
+                Toast.makeText(this, "Operation timed out", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -130,17 +127,31 @@ public class MainActivity extends Activity
             Log.e("committed", "replaced");
             fragments[position] = "MY_TAG" + position;
             currentFragmentTag = "MY_TAG" + position;
+        } else if (fragments[position].equals(currentFragmentTag)) {
+            Log.e("doing", "nothing");
         } else {
-            // update the main content by replacing fragments
             FragmentManager fragmentManager = getFragmentManager();
-            //Fragment newFragment = fragmentManager.findFragmentByTag("MY_TAG" + position);
             Fragment tempFragment = fragmentManager.findFragmentByTag(currentFragmentTag);
-            fragmentManager.beginTransaction()
-                    .detach(tempFragment)
-                    .commit();
+            Log.e("detaching", "...");
+            if (tempFragment != null) {
+                fragmentManager.beginTransaction()
+                        .remove(fragmentManager.findFragmentByTag(currentFragmentTag + position))
+                        .add(TopicFragment.newInstance(URL), "MY_TAG" + position)
+                        .addToBackStack(null)
+                        .commit();
+                Log.e("detached", "...");
+            } else
+                Log.e("null variable", "tempFragment");
+            fragmentManager.executePendingTransactions();
             Fragment newFragment = fragmentManager.findFragmentByTag("MY_TAG" + position);
-            fragmentManager.beginTransaction().attach(newFragment).commit();
-            Log.e("detached", "replaced");
+            if (newFragment == null) {
+                newFragment = PlaceholderFragment.newInstance(position);
+                Log.e("null variable", "newFragment");
+            }
+            fragmentManager.beginTransaction()
+                    .attach(newFragment)
+                    .commit();
+            Log.e("currentFragment name", currentFragmentTag);
             fragments[position] = "MY_TAG" + position;
         }
     }
@@ -215,59 +226,22 @@ public class MainActivity extends Activity
             //Strip the long text bc of long reasons
             fixTitle(page.title());
             for (Element e : elements) {
-                Elements el = e.select("div.fr > a");
-                String[] tags;
-                //TODO put all this logic in the TopicLInk constructor and just pass an element
-                if (el.isEmpty()) {
-                    tags = new String[]{""};
-                } else {
-
-                    tags = new String[el.size()];
-                    for (int i = 0; i < tags.length; i++) {
-                        tags[i] = el.get(i).text();
-                    }
-                }
-                topics.add(
-                        new TopicLink(
-                                //Gotta figure out how to get the tags
-                                tags,
-
-                                //Get the topic ID then strip the first 50 characters
-                                Integer.parseInt(e.select("a").first().attr("href").substring(50)),
-
-                                //The user link seems to be the only A element directly under a td
-                                //Integer.parseInt(e.select("td > a").first().attr("href").substring(37)),
-                                0,
-                                //THe third TD element contains the number of messages in a post
-                                Integer.parseInt(e.select("td:nth-child(3)").first().ownText()),
-                                //0,
-                                //TODO fix this shit too
-                                latestPost,
-
-                                //Same as the user except get the inner text (username)
-                                e.select("td > a").text(),
-
-                                //Topic title should be same as topic ID
-                                e.select("a").first().text(),
-
-                                //TODO: get the date right ugh
-                                "today"
-                        )
-                );
+                topics.add(new TopicLink(e));
             }
             TopicAdapter adapter = new TopicAdapter(getBaseContext(), R.id.listview, topics);
             adapter.setCallback(this);
             ListView listview = (ListView) findViewById(R.id.listview);
-            //Header isn't really needed because the actionbar contains the page title
-            /*View header = View.inflate(this, R.layout.listview_header_row, null);
-            listview.addHeaderView(header);*/
-            //listview.setOnI
+
             listview.setAdapter(adapter);
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         } catch (TimeoutException e) {
             Toast.makeText(getApplicationContext(), "Page load timed out sucka", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
+            Log.e(mTag, "null pointer exception");
+            e.printStackTrace();
+        }
+        catch (Exception e) {
             Log.e(mTag, "Exception!");
             e.printStackTrace();
         }
@@ -360,7 +334,6 @@ public class MainActivity extends Activity
     /**
      * Fixes the title for small devices
      *
-     * @return the string without End Of The Internet
      * TODO something different for tablets? Must acquire a tablet first
      */
     private void fixTitle(String title) {
@@ -417,5 +390,29 @@ public class MainActivity extends Activity
         }
     }
 
+    public static class TopicFragment extends Fragment {
+        public TopicFragment() {
+        }
 
+        public static TopicFragment newInstance(String URL) {
+            TopicFragment fragment = new TopicFragment();
+            Bundle args = new Bundle();
+            args.putString("URL", URL);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.fragment_main, container, false);
+        }
+
+        @Override
+        public void onAttach(Activity activity) {
+            super.onAttach(activity);
+            ((MainActivity) activity).onSectionAttached(
+                    getArguments().getInt("URL"));
+        }
+    }
 }

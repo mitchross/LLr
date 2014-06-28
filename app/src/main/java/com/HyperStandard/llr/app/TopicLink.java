@@ -1,5 +1,7 @@
 package com.HyperStandard.llr.app;
 
+import android.util.Log;
+
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -12,37 +14,14 @@ import java.text.SimpleDateFormat;
  * @since 6/14/2014
  */
 public class TopicLink {
-    private static final String format = "D/M/YYYY HH:mm";
     private int topicId;
     private String[] tags;
     private int userId;
-    private String Username;
-    private SimpleDateFormat lastPost;
+    private String username;
     private int totalMessages;
-    private String TopicTitle;
+    private String topicTitle;
     private int lastRead;
 
-    /**
-     * @param tags
-     * @param TopicID
-     * @param UserID
-     * @param TotalMessages
-     * @param lastRead
-     * @param Username
-     * @param TopicTitle
-     * @param lastPost      pass null if this doesn't exist
-     */
-    TopicLink(String[] tags, int TopicID, int UserID, int TotalMessages, int lastRead, String Username, String TopicTitle, String lastPost) {
-        //this.lastPost = lastPost;
-        this.lastRead = lastRead;
-        this.topicId = TopicID;
-        this.userId = UserID;
-        this.TopicTitle = TopicTitle;
-        this.Username = Username;
-        this.totalMessages = TotalMessages;
-        //Clone cast is fastest I think who cares
-        this.tags = tags.clone();
-    }
 
     TopicLink(Element e) {
         Elements el = e.select("div.fr > a");
@@ -62,26 +41,26 @@ public class TopicLink {
         topicId = Integer.parseInt(id.substring(id.lastIndexOf("=") + 1));
 
         //Get the User ID number
-        String un = e.select("td > a").first().attr("href");
-        userId = Integer.parseInt(un.substring(un.lastIndexOf("=") + 1));
+        //String un = e.select("td > a").first().attr("href");
+        //userId = Integer.parseInt(un.substring(un.lastIndexOf("=") + 1));
+        Log.e(e.select("td > a").first().html(), "ugh");
 
         //Same as the user except get the inner text (username)
-        /*e.select("td > a").text(),
+        username = e.select("td > a").first().text();
 
-                //THe third TD element contains the number of messages in a post
-                Integer.parseInt(e.select("td:nth-child(3)").first().ownText()),
-                //0,
-                //TODO fix this shit too
-                latestPost,
+        totalMessages = Integer.parseInt(e.select("td:nth-child(3)").first().ownText());
 
+        //get teh amount of unread messages
+        /*if (e.select("td:has(span)") != null) {
+            Log.e("blah", e.select("td:has(span)").first().text().replaceAll("[^0-9]", ""));
+            lastRead = Integer.parseInt(e.select("td:has(span)").first().text().replaceAll("[^0-9]", ""));
+        } else {//negative one implies there's no extra messages
+            lastRead = -1;
+        }*/
+        lastRead = 20;
 
-
-                //Topic title should be same as topic ID
-                e.select("a").first().text(),
-
-                //TODO: get the date right ugh
-                "today"
-        )*/
+        //Topic title should be same as topic ID
+        topicTitle = e.select("a").first().text();
     }
 
     public int getLastRead() {
@@ -101,15 +80,11 @@ public class TopicLink {
     }
 
     public String getUsername() {
-        return Username;
+        return username;
     }
 
     public String getTopicTitle() {
-        return TopicTitle;
-    }
-
-    public SimpleDateFormat getLastPost() {
-        return lastPost;
+        return topicTitle;
     }
 
     public int getTotalMessages() {

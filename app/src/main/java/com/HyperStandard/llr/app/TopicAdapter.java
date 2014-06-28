@@ -121,6 +121,9 @@ public class TopicAdapter extends ArrayAdapter<TopicLink> {
             if (posts != null) {
                 posts.setTypeface(RobotoLight);
                 posts.setText(Integer.toString(i.getTotalMessages()));
+                if (i.getLastRead() > 0) {
+                    posts.setText(" (" + i.getLastRead() +") ");
+                }
             }
 
         }
