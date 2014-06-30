@@ -1,5 +1,7 @@
 package com.HyperStandard.llr.app;
 
+import android.util.Log;
+
 import org.jsoup.nodes.Element;
 
 /**
@@ -13,8 +15,10 @@ public class TopicPost {
     private String time;
     private String message;
     private String signature;
+    private int messageId;
     private int edits;
     private int userId;
+    //consider field for topic ID? Not sure if necessary
 
     TopicPost(Element el) {
         //Get the username
@@ -27,6 +31,7 @@ public class TopicPost {
 
         //Get the time I guess whatever
         this.time = el.select("div.message-top:nth-child(3)").text();
+        Log.v("time", this.time);
 
         //Get teh message body + signature
         String m = el.select("table.message-body").text();
