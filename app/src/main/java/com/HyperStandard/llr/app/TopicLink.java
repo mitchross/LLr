@@ -40,24 +40,27 @@ public class TopicLink {
         String id = e.select("a").first().attr("href");
         topicId = Integer.parseInt(id.substring(id.lastIndexOf("=") + 1));
 
-        //Get the User ID number
-        //String un = e.select("td > a").first().attr("href");
-        //userId = Integer.parseInt(un.substring(un.lastIndexOf("=") + 1));
-        Log.e(e.select("td > a").first().html(), "ugh");
+        //Check if it's an anonymous topic
+        String un = e.select("td > a").first().attr("href");
+        if (un == null) {
+            username = "Human";
+            userId = -1;
+        } else {//If there's a username
+            userId = Integer.parseInt(un.substring(un.lastIndexOf("=") + 1));
 
-        //Same as the user except get the inner text (username)
-        username = e.select("td > a").first().text();
-
+            //Same as the user except get the inner text (username)
+            username = e.select("td > a").first().text();
+        }
         totalMessages = Integer.parseInt(e.select("td:nth-child(3)").first().ownText());
 
         //get teh amount of unread messages
-        /*if (e.select("td:has(span)") != null) {
-            Log.e("blah", e.select("td:has(span)").first().text().replaceAll("[^0-9]", ""));
-            lastRead = Integer.parseInt(e.select("td:has(span)").first().text().replaceAll("[^0-9]", ""));
-        } else {//negative one implies there's no extra messages
+        if (e.select("td:has(span)") == null) {
             lastRead = -1;
-        }*/
-        lastRead = 20;
+            //lastRead = Integer.parseInt(e.select("td:has(span)").first().text().replaceAll("[^0-9]", ""));
+        } else {//negative one implies there's no extra messages
+            Log.v(e.select("td:has(span)").text(), "test");
+        }
+        //lastRead = 20;
 
         //Topic title should be same as topic ID
         topicTitle = e.select("a").first().text();

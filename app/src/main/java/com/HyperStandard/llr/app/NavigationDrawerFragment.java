@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -13,6 +14,8 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -68,6 +71,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     private int UserID;
     private String URL;
+    private Context context;
 
     private final String mTag = "NavDAct debug";
 
@@ -162,7 +166,8 @@ public class NavigationDrawerFragment extends Fragment {
      * @param fragmentId   The android:id of this fragment in its activity's layout.
      * @param drawerLayout The DrawerLayout containing this fragment's UI.
      */
-    public void setUp(int fragmentId, DrawerLayout drawerLayout, int UserID) {
+    public void setUp(int fragmentId, DrawerLayout drawerLayout, int UserID, Context context) {
+        this.context = context;
         mFragmentContainerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
         this.UserID = UserID;
@@ -306,7 +311,10 @@ public class NavigationDrawerFragment extends Fragment {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setTitle(R.string.app_name);
+        //Necessary to change font on the action bar
+        SpannableStringBuilder t = new SpannableStringBuilder(getString(R.string.app_name));
+        t.setSpan(new CustomTypefaceSpan(context, C.FONT_TITLE), 0, t.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        actionBar.setTitle(t);
     }
 
     private ActionBar getActionBar() {

@@ -11,13 +11,14 @@ public class C {
     public static final String PREFS_USERNAME = "username";
     public static final String PREFS_PASSWORD = "password";
 
-    public static final String LUE = "http://boards.endoftheinter.net/topics/LUE";
+    public static final String LL_HOME = "http://endoftheinter.net/main.php";
+    public static final String LL_LOGGEDOUT = "Das Ende des Internets";
 
     //Font names, preface with FONT_
     //Use a name that defines the purpose, not the file name
     public static final String FONT_ROBOTOCONDENSED_LIGHT = "fonts/RobotoCondensed-Light.ttf";
     public static final String FONT_LISTVIEW = "fonts/Roboto-Light.ttf";
-    public static final String FONT_TITLE = "fonts/RobotoSlab-Regular.ttf";
+    public static final String FONT_TITLE = "fonts/RobotoCondensed-Light.ttf";
     public static final String FONT_COMICRELIEF = "fonts/ComicRelief.ttf";
 
 }

@@ -6,6 +6,10 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,17 +38,15 @@ import java.util.concurrent.TimeoutException;
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, TopicAdapter.adapterCallback, NavigationAdapter.NavigationDrawerCallback, PostAdapter.adapterCallback {
 
-    //These are some static URLs for convenience
-    private static final String MAIN_PAGE = "http://endoftheinter.net/main.php";
     public static Map<String, String> cookies;
     private static String mTag = "debug";
-    //Cookies
     public int UserID;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
+
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
@@ -79,12 +81,12 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout),
-                UserID);
+                UserID,
+                this);
 
-        Log.e("cookies", cookies.get("session"));
         if (true) {
             ExecutorService executor = Executors.newSingleThreadExecutor();
-            Future<Document> loader = executor.submit(new LoadPage(MAIN_PAGE, cookies));
+            Future<Document> loader = executor.submit(new LoadPage(C.LL_HOME, cookies));
             try {
                 Document main = loader.get(5, TimeUnit.SECONDS);
                 Elements elements = main.select("#bookmarks > span");
@@ -182,7 +184,9 @@ public class MainActivity extends Activity
         if (actionBar != null) {
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
             actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setTitle(mTitle);
+            SpannableStringBuilder t = new SpannableStringBuilder(mTitle);
+            t.setSpan(new CustomTypefaceSpan(this, C.FONT_TITLE), 0, t.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            actionBar.setTitle(t);
         }
     }
 
@@ -211,7 +215,7 @@ public class MainActivity extends Activity
 
     public void loadPage(View v) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/topics/LUE", cookies));
+        Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/topics/LUE-Anonymous", cookies));
         /*FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 //TODO figure out what the position variable does

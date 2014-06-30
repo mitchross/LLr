@@ -1,6 +1,7 @@
 package com.HyperStandard.llr.app;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,11 @@ import java.util.ArrayList;
 public class PostAdapter extends ArrayAdapter<TopicPost> {
     private ArrayList<TopicPost> objects;
     private adapterCallback callback;
+    private static Typeface typeface;
 
     public PostAdapter(Context context, int textViewResourceId, ArrayList<TopicPost> objects) {
         super(context, textViewResourceId, objects);
+        typeface = Typeface.createFromAsset(context.getApplicationContext().getAssets(), C.FONT_LISTVIEW);
         this.objects = objects;
     }
 

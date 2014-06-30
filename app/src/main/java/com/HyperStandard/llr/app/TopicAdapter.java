@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,38 +19,24 @@ import android.widget.Toast;
 public class TopicAdapter extends ArrayAdapter<TopicLink> {
     private ArrayList<TopicLink> objects;
     private adapterCallback callback;
-    private Typeface RobotoLight;
+    private static Typeface RobotoLight;
 
     public TopicAdapter(Context context, int textViewResourceId, ArrayList<TopicLink> objects) {
         super(context, textViewResourceId, objects);
         this.objects = objects;
-        this.RobotoLight = Typeface.createFromAsset(context.getAssets(), C.FONT_LISTVIEW);
+        RobotoLight = Typeface.createFromAsset(context.getAssets(), C.FONT_LISTVIEW);
     }
 
-    /*
-     * we are overriding the getView method here - this is what defines how each
-	 * list item will look.
-	 */
+
     public View getView(int position, View convertView, ViewGroup parent) {
 
-
-        // assign the view we are converting to a local variable
         View v = convertView;
 
-        // first check to see if the view is null. if so, we have to inflate it.
-        // to inflate it basically means to render, or show, the view.
         if (v == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.listview_topic_row, null);
         }
 
-		/*
-         * Recall that the variable position is sent in as an argument to this method.
-		 * The variable simply refers to the position of the current object in the list. (The ArrayAdapter
-		 * iterates through the list we sent it)
-		 *
-		 * Therefore, i refers to the current Item object.
-		 */
         final TopicLink i = objects.get(position);
 
         if (i != null) {

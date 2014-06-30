@@ -46,7 +46,7 @@ import java.util.concurrent.TimeoutException;
  * @since 6/14/2014.
  */
 public class LoginScreen extends Activity {
-    private final static String mTag = "debug loginscreen";
+    private final static String mTag = "LLr Login";
     private Typeface Comic;
     private SharedPreferences prefs;
 
@@ -97,6 +97,7 @@ public class LoginScreen extends Activity {
 
             //Check to see if we've got logged in correctly, and if so, set up the account.
             if (response.body().equals("<script>document.location.href=\"/\";</script>")) {
+                Log.i(mTag, "Successful login, using manual login()");
                 final Intent intent = new Intent(this, MainActivity.class);
 
                 //Pass the cookies from the login page to the Main activity, where they get turned back into a map
@@ -114,28 +115,6 @@ public class LoginScreen extends Activity {
                             .commit();
                 }
                 startActivity(intent);
-                //Check to see if user wants to keep logged in info and use it
-                /*if (!prefs.getBoolean(C.PREFS_USELOGIN, false)) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setMessage("Would you like to use this login info in the future?")
-                            .setPositiveButton("Yes, I trust you not to phish", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    prefs.edit().putString(C.PREFS_PASSWORD, password).commit();
-                                    prefs.edit().putBoolean(C.PREFS_USELOGIN, true).commit();
-                                    startActivity(intent);
-                                }
-                            })
-                            .setNegativeButton("What am I, a chump? Nah.", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    prefs.edit().putBoolean(C.PREFS_USELOGIN, false).commit();
-                                    startActivity(intent);
-                                }
-                            })
-                            .create().show();
-
-                } else {
-                    startActivity(intent);
-                }*/
             } else {
                 Toast.makeText(this, "Failed to login", Toast.LENGTH_SHORT).show();
             }
@@ -156,15 +135,18 @@ public class LoginScreen extends Activity {
 
             //Check to see if we've got logged in correctly, and if so, set up the account.
             if (response.body().equals("<script>document.location.href=\"/\";</script>")) {
-                Log.v(mTag, response.body());
+                Log.v(mTag, "Successful login, using autoLogin()");
 
                 final Intent intent = new Intent(this, MainActivity.class);
                 //Pass the cookies from the login page to the Main activity, where they get turned back into a map
+                //I don't know how to parcel a Map so this is the best solution atm
                 String[] cookies = new String[3];
                 cookies[0] = response.cookie("userid");
                 cookies[1] = response.cookie("PHPSESSID");
                 cookies[2] = response.cookie("session");
                 intent.putExtra("Cookies", cookies);
+
+                //Actually start the main application proper
                 startActivity(intent);
             }
 
