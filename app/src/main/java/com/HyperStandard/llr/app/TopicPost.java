@@ -24,6 +24,7 @@ public class TopicPost {
         //Get the username
         this.username = el.select("div.message-top > a").first().text();
 
+
         //Get the userId
         String s = el.select("div.message-top > a").attr("href");
         this.userId = Integer.parseInt(s.substring(s.lastIndexOf("=") + 1));
@@ -55,6 +56,17 @@ public class TopicPost {
         if (this.userId < 0) {
             this.username = "Human #" + (-this.userId);
         }
+
+        //This gives a String in format t,XXXXXXX,YYYYYYYY@Z X is the Topic ID, Y is the Message ID, and Z is the number of revisions
+        //The "t" is for topic, private messages are "p" so deal w that later
+        String ms = el.select("td.message").attr("msgid");
+        //Get the number of revisions
+        this.edits = Integer.parseInt(ms.substring(ms.lastIndexOf("@") + 1));
+        this.messageId = Integer.parseInt(ms.substring(ms.lastIndexOf(",") + 1, m.indexOf("@")));
+    }
+
+    public int getMessageId() {
+        return messageId;
     }
 
     public int getEdits() {
