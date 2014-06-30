@@ -55,16 +55,11 @@ public class MainActivity extends Activity
     /**
      * stores the tag of the active fragment
      */
-    private String currentFragmentTag = "";
-
-    /**
-     * store whether all the fragments are instantiated or not
-     */
-    private String[] fragments;
+    private int currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        fragments = new String[]{"", "", "", "", ""};
+        currentFragment = -1;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         cookies = new HashMap<String, String>();
@@ -118,44 +113,39 @@ public class MainActivity extends Activity
 
     @Override
     public void onNavigationDrawerItemSelected(int position, String URL) {
-        if (fragments[position].equals("")) {
-            // update the main content by replacing fragments
-            FragmentManager fragmentManager = getFragmentManager();
-            //Fragment newFragment = fragmentManager.findFragmentByTag("MY_TAG" + position);
-
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, PlaceholderFragment.newInstance(position + 1), "MY_TAG" + position)
-                    .commit();
-            Log.e("committed", "replaced");
-            fragments[position] = "MY_TAG" + position;
-            currentFragmentTag = "MY_TAG" + position;
-        } else if (fragments[position].equals(currentFragmentTag)) {
-            Log.e("doing", "nothing");
-        } else {
-            FragmentManager fragmentManager = getFragmentManager();
-            Fragment tempFragment = fragmentManager.findFragmentByTag(currentFragmentTag);
-            Log.e("detaching", "...");
-            if (tempFragment != null) {
-                fragmentManager.beginTransaction()
-                        .remove(fragmentManager.findFragmentByTag(currentFragmentTag + position))
-                        .add(TopicFragment.newInstance(URL), "MY_TAG" + position)
-                        .addToBackStack(null)
-                        .commit();
-                Log.e("detached", "...");
-            } else
-                Log.e("null variable", "tempFragment");
-            fragmentManager.executePendingTransactions();
-            Fragment newFragment = fragmentManager.findFragmentByTag("MY_TAG" + position);
-            if (newFragment == null) {
-                newFragment = PlaceholderFragment.newInstance(position);
-                Log.e("null variable", "newFragment");
-            }
-            fragmentManager.beginTransaction()
-                    .attach(newFragment)
-                    .commit();
-            Log.e("currentFragment name", currentFragmentTag);
-            fragments[position] = "MY_TAG" + position;
+        String tag = "TAG_" + position;
+        if (position == currentFragment) {//No point in changing fragments if you're on the current one
+            return;
         }
+        FragmentManager manager = getFragmentManager();
+        if (currentFragment == -1) {//During first initilization
+            Fragment fragment = TopicFragment.newInstance(position, URL);
+            manager.beginTransaction()
+                    .add(R.id.container, fragment, tag)
+                    .addToBackStack(null)
+                    .commit();
+            currentFragment = position;
+            return;
+        }
+        Fragment newFragment = manager.findFragmentByTag(tag);
+        Fragment oldFragment = manager.findFragmentByTag("TAG_" + currentFragment);
+        if (newFragment == null) {//If the new Fragment is null then it needs to be inflated and added
+            newFragment = TopicFragment.newInstance(position, URL);
+            manager.beginTransaction()
+                    .add(R.id.container, newFragment, tag)
+                    .hide(oldFragment)
+                    .addToBackStack(null)
+                    .commit();
+            currentFragment = position;
+            return;
+        }//fallback to the new Fragment being already inflated and not the current one, therefore it's been hidden and can be shown
+        manager.beginTransaction()
+                .show(newFragment)
+                .hide(oldFragment)
+                .addToBackStack(null)
+                .commit();
+        currentFragment = position;
+
     }
 
     public void onSectionAttached(int number) {
@@ -398,10 +388,11 @@ public class MainActivity extends Activity
         public TopicFragment() {
         }
 
-        public static TopicFragment newInstance(String URL) {
+        public static TopicFragment newInstance(int position, String URL) {
             TopicFragment fragment = new TopicFragment();
             Bundle args = new Bundle();
             args.putString("URL", URL);
+            args.putInt("position", position);
             fragment.setArguments(args);
             return fragment;
         }
@@ -415,8 +406,7 @@ public class MainActivity extends Activity
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
-            ((MainActivity) activity).onSectionAttached(
-                    getArguments().getInt("URL"));
+            ((MainActivity) activity).onSectionAttached(getArguments().getInt("position"));
         }
     }
 }
