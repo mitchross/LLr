@@ -63,8 +63,7 @@ public class TopicPost {
             String ms = el.select("td.message").attr("msgid");
             //Get the number of revisions
             this.edits = Integer.parseInt(ms.substring(ms.lastIndexOf("@") + 1));
-            Log.v("edits", ms.substring(ms.lastIndexOf(",") + 1, m.indexOf("@")));
-            this.messageId = Integer.parseInt(ms.substring(ms.lastIndexOf(",") + 1, m.indexOf("@")));
+            this.messageId = Integer.parseInt(ms.substring(ms.lastIndexOf(",") + 1, m.lastIndexOf("@")));
         } catch (Exception e) {
             e.printStackTrace();
         }

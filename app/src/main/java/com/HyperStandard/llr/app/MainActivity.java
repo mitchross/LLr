@@ -6,10 +6,8 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,9 +32,17 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+interface Callback {
+    public void callbackThis();
+}
 
 public class MainActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, TopicAdapter.adapterCallback, NavigationAdapter.NavigationDrawerCallback, PostAdapter.adapterCallback {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks,
+        TopicAdapter.adapterCallback,
+        NavigationAdapter.NavigationDrawerCallback,
+        PostAdapter.adapterCallback,
+        Callback,
+ListFragment.ListCallback{
 
     public static Map<String, String> cookies;
     private static String mTag = "debug";
@@ -119,23 +125,25 @@ public class MainActivity extends Activity
         }
         FragmentManager manager = getFragmentManager();
         if (currentFragment == -1) {//During first initilization
-            Fragment fragment = TopicFragment.newInstance(position, URL);
+            Fragment fragment = ListFragment.newInstance(position, URL);
             manager.beginTransaction()
-                    .add(R.id.container, fragment, tag)
+                    .add(R.id.container, fragment, tag)//This needs to use the container found in activity_main.xml
                     .addToBackStack(null)
                     .commit();
             currentFragment = position;
             return;
         }
-        Fragment newFragment = manager.findFragmentByTag(tag);
+        ListFragment newFragment = (ListFragment) manager.findFragmentByTag(tag);
         Fragment oldFragment = manager.findFragmentByTag("TAG_" + currentFragment);
         if (newFragment == null) {//If the new Fragment is null then it needs to be inflated and added
-            newFragment = TopicFragment.newInstance(position, URL);
+            newFragment = ListFragment.newInstance(position, URL);
+            newFragment.setCallback(this);
             manager.beginTransaction()
                     .add(R.id.container, newFragment, tag)
                     .hide(oldFragment)
                     .addToBackStack(null)
                     .commit();
+
             currentFragment = position;
             return;
         }//fallback to the new Fragment being already inflated and not the current one, therefore it's been hidden and can be shown
@@ -234,8 +242,7 @@ public class MainActivity extends Activity
         } catch (NullPointerException e) {
             Log.e(mTag, "null pointer exception");
             e.printStackTrace();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Log.e(mTag, "Exception!");
             e.printStackTrace();
         }
@@ -327,7 +334,7 @@ public class MainActivity extends Activity
 
     /**
      * Fixes the title for small devices
-     *
+     * <p/>
      * TODO something different for tablets? Must acquire a tablet first
      */
     private void fixTitle(String title) {
@@ -337,6 +344,21 @@ public class MainActivity extends Activity
 
     public void changeLocation(String URL) {
         loadPage(null);
+    }
+
+    public void topicCallback(String URL) {
+        loadPage(null);
+    }
+
+    @Override
+    public void callbackThis() {
+        Log.e("working", "yay");
+    }
+
+    @Override
+    public void onFragmentLoad(String URL) {
+        Log.e(mTag, "in main!");
+        loadTopic(null);
     }
 
     /**
@@ -371,7 +393,7 @@ public class MainActivity extends Activity
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             if (position == 3)
-                return inflater.inflate(R.layout.fragment_main, container, false);
+                return inflater.inflate(R.layout.fragment_debug, container, false);
             else
                 return inflater.inflate(R.layout.fragment_settings, container, false);
         }
@@ -384,7 +406,12 @@ public class MainActivity extends Activity
         }
     }
 
+    /**
+     * Topics get put in this fragment
+     */
     public static class TopicFragment extends Fragment {
+        private Callback callback;
+
         public TopicFragment() {
         }
 
@@ -400,13 +427,23 @@ public class MainActivity extends Activity
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.fragment_main, container, false);
+            View v = inflater.inflate(R.layout.fragment_debug, container, false);
+            return v;
         }
 
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
             ((MainActivity) activity).onSectionAttached(getArguments().getInt("position"));
+
+        }
+
+        public void setCallback(Callback callback) {
+            this.callback = callback;
+        }
+
+        public static interface Callback {
+            public void topicCallback(String URL);
         }
     }
 }

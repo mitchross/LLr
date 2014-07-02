@@ -118,7 +118,7 @@ public class TopicAdapter extends ArrayAdapter<TopicLink> {
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "topic is " + Integer.toString(i.getTopicId()), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "topic is " + Integer.toString(i.getTopicId()), Toast.LENGTH_SHORT).show();
                 if (callback != null) {
                     callback.topicPressed(i.getTopicId(), 1);
                 }
