@@ -36,34 +36,54 @@ public class TopicLink {
             }
         }
 
-        //Get the Topic ID number
-        String id = e.select("a").first().attr("href");
-        topicId = Integer.parseInt(id.substring(id.lastIndexOf("=") + 1));
+        try {
+            //Get the Topic ID number
+            String id = e.select("a").first().attr("href");
+            topicId = Integer.parseInt(id.substring(id.lastIndexOf("=") + 1));
+        } catch (NumberFormatException e1) {
+            topicId = -1;
+            e1.printStackTrace();
+        }
 
-        //Check if it's an anonymous topic
-        String un = e.select("td > a").first().attr("href");
-        if (un == null) {
-            username = "Human";
-            userId = -1;
-        } else {//If there's a username
-            userId = Integer.parseInt(un.substring(un.lastIndexOf("=") + 1));
+        try {
+            //Topic title should be same as topic ID
+            topicTitle = e.select("a").first().text();
+        } catch (Exception e1) {
+            topicTitle = "Error";
+            e1.printStackTrace();
+        }
 
-            //Same as the user except get the inner text (username)
-            username = e.select("td > a").first().text();
+        try {
+            //Check if it's an anonymous topic
+            String un = e.select("td > a").first().attr("href");
+            if (un == null || un.equals("")) {
+                username = "Human";
+                userId = -1;
+            } else {//If there's a username
+                userId = Integer.parseInt(un.substring(un.lastIndexOf("=") + 1));
+
+                //Same as the user except get the inner text (username)
+                username = e.select("td > a").first().text();
+            }
+        } catch (NullPointerException e1) {
+            username = "ERROR PARSING NAME";
+            userId = -2;
+            e1.printStackTrace();
         }
         totalMessages = Integer.parseInt(e.select("td:nth-child(3)").first().ownText());
 
         //get teh amount of unread messages
-        if (e.select("td:has(span)") == null) {
+        if (e.select("td:has(span)") == null || e.select("td:has(span)").text().equals("")) {
             lastRead = -1;
             //lastRead = Integer.parseInt(e.select("td:has(span)").first().text().replaceAll("[^0-9]", ""));
         } else {//negative one implies there's no extra messages
-            Log.v(e.select("td:has(span)").text(), "test");
+            //lastRead = Integer.parseInt(e.select("td:has(span)").text().replaceAll("[^0-9]", ""));
+            lastRead = 20;
+            Log.v("test", Integer.toString(lastRead));
         }
         //lastRead = 20;
 
-        //Topic title should be same as topic ID
-        topicTitle = e.select("a").first().text();
+
     }
 
     public int getLastRead() {

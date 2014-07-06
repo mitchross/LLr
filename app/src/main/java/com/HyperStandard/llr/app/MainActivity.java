@@ -32,17 +32,12 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-interface Callback {
-    public void callbackThis();
-}
-
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
         TopicAdapter.adapterCallback,
         NavigationAdapter.NavigationDrawerCallback,
         PostAdapter.adapterCallback,
-        Callback,
-ListFragment.ListCallback{
+        TopicViewFragment.Callbacks {
 
     public static Map<String, String> cookies;
     private static String mTag = "debug";
@@ -72,6 +67,9 @@ ListFragment.ListCallback{
         cookies.put("userid", getIntent().getStringArrayExtra("Cookies")[0]);
         cookies.put("PHPSESSID", getIntent().getStringArrayExtra("Cookies")[1]);
         cookies.put("session", getIntent().getStringArrayExtra("Cookies")[2]);
+        //Very important, these cookies are going to be accessed by tons of stuff so they need to be sent to the
+        //static cookies class
+        Cookies.setCookies(cookies);
         UserID = Integer.parseInt(cookies.get("userid"));
 
         mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -125,7 +123,8 @@ ListFragment.ListCallback{
         }
         FragmentManager manager = getFragmentManager();
         if (currentFragment == -1) {//During first initilization
-            Fragment fragment = ListFragment.newInstance(position, URL);
+            TopicViewFragment fragment = TopicViewFragment.newInstance(position, URL);
+            fragment.setUp(this);
             manager.beginTransaction()
                     .add(R.id.container, fragment, tag)//This needs to use the container found in activity_main.xml
                     .addToBackStack(null)
@@ -133,11 +132,12 @@ ListFragment.ListCallback{
             currentFragment = position;
             return;
         }
-        ListFragment newFragment = (ListFragment) manager.findFragmentByTag(tag);
+        TopicViewFragment newFragment = (TopicViewFragment) manager.findFragmentByTag(tag);
         Fragment oldFragment = manager.findFragmentByTag("TAG_" + currentFragment);
         if (newFragment == null) {//If the new Fragment is null then it needs to be inflated and added
-            newFragment = ListFragment.newInstance(position, URL);
+            newFragment = TopicViewFragment.newInstance(position, URL);
             newFragment.setCallback(this);
+            newFragment.setUp(this);
             manager.beginTransaction()
                     .add(R.id.container, newFragment, tag)
                     .hide(oldFragment)
@@ -214,11 +214,7 @@ ListFragment.ListCallback{
     public void loadPage(View v) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/topics/LUE-Anonymous", cookies));
-        /*FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                //TODO figure out what the position variable does
-                .replace(R.id.container, PlaceholderFragment.newInstance(3))
-                .commit();*/
+
         try {
             Document page = request.get(5, TimeUnit.SECONDS);
             Elements elements = page.select("tr:has(td)");
@@ -266,10 +262,11 @@ ListFragment.ListCallback{
      * @param view automatically generated variable from button press
      */
     public void loadTopic(View view) {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
+        //ExecutorService executor = Executors.newSingleThreadExecutor();
+        ExecutorService executor = Executors.newFixedThreadPool(2);
         Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/showmessages.php?topic=8898015&page=1", cookies));
         try {
-            Document page = request.get(5, TimeUnit.SECONDS);
+            Document page = request.get(10, TimeUnit.SECONDS);
             //Strip the long text bc of long reasons
             fixTitle(page.title());
             Elements elements = page.select("div.message-container");
@@ -277,13 +274,13 @@ ListFragment.ListCallback{
             for (Element e : elements)
                 posts.add(new TopicPost(e));
 
-            PostAdapter adapter = new PostAdapter(this, R.id.listview, posts);
-            ListView listview = (ListView) findViewById(R.id.listview);
+            PostAdapter adapter = new PostAdapter(this, R.id.topic_listview, posts);
+            ListView listview = (ListView) findViewById(R.id.topic_listview);
             listview.setAdapter(adapter);
         } catch (InterruptedException e) {
             Log.e(mTag, "Interrupted operation");
         } catch (TimeoutException e) {
-            Toast.makeText(this, "Operation timed out", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Operation timed out", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -295,10 +292,11 @@ ListFragment.ListCallback{
      * @param topicId The integer ID of the topic to be loaded, fortunately LL only needs this, not things like tags etc
      */
     @Override
-    public void topicPressed(int topicId, int pageNumber) {
+    public void  topicPressed(int topicId, int pageNumber, View view) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/showmessages.php?topic="
-                + topicId + "?page=" + pageNumber,
+        Future<Document> request = executor.submit(new LoadPage(
+                "http://boards.endoftheinter.net/showmessages.php?topic="
+                        + topicId + "?page=" + pageNumber,
                 cookies
         ));
         try {
@@ -314,15 +312,16 @@ ListFragment.ListCallback{
             for (Element e : elements)
                 posts.add(new TopicPost(e));
 
-            PostAdapter adapter = new PostAdapter(this, R.id.listview, posts);
-            ListView listview = (ListView) findViewById(R.id.listview);
+            PostAdapter adapter = new PostAdapter(this, R.id.topic_listview, posts);
+            ListView listView = (ListView) view.findViewById(R.id.topic_listview);
+            //ListView listView = (ListView) findViewById(R.id.topic_listview);
             //TODO move this out of the topic, or augment ith an additional control maybe?
             if (page.getElementById("nextpage") != null) {//Checks to see if there's more topics
-                View footer = getLayoutInflater().inflate(R.layout.listview_post_footer, null);
-                listview.addFooterView(footer, pageNumber + 1, true);
+                //View footer = getLayoutInflater().inflate(R.layout.listview_post_footer, null);
+                //listview.addFooterView(footer, pageNumber + 1, true);
 
             }
-            listview.setAdapter(adapter);
+            listView.setAdapter(adapter);
         } catch (InterruptedException e) {
             Log.e(mTag, "Interrupted operation");
         } catch (TimeoutException e) {
@@ -346,19 +345,17 @@ ListFragment.ListCallback{
         loadPage(null);
     }
 
-    public void topicCallback(String URL) {
-        loadPage(null);
+
+
+
+    @Override
+    public void sendTitle(String title) {
+        fixTitle(title);
     }
 
     @Override
-    public void callbackThis() {
-        Log.e("working", "yay");
-    }
+    public void loadTopic(String URL) {
 
-    @Override
-    public void onFragmentLoad(String URL) {
-        Log.e(mTag, "in main!");
-        loadTopic(null);
     }
 
     /**

@@ -12,6 +12,7 @@ public class C {
     public static final String PREFS_PASSWORD = "password";
 
     public static final String LL_HOME = "http://endoftheinter.net/main.php";
+    public static final String LL_LUE = "http://boards.endoftheinter.net/topics/LUE";
     public static final String LL_LOGGEDOUT = "Das Ende des Internets";
 
     //Font names, preface with FONT_

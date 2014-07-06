@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -118,26 +119,24 @@ public class TopicAdapter extends ArrayAdapter<TopicLink> {
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.e("yo", "callback pressed");
                 //Toast.makeText(getContext(), "topic is " + Integer.toString(i.getTopicId()), Toast.LENGTH_SHORT).show();
                 if (callback != null) {
-                    callback.topicPressed(i.getTopicId(), 1);
+                    Log.e("callback not null", "yaya");
+                    callback.topicPressed(i.getTopicId(), 1, view);
                 }
-
             }
 
 
         });
-
-
         // the view must be returned to our activity
         return v;
-
     }
     public void setCallback (adapterCallback callback) {
         this.callback = callback;
     }
     public interface adapterCallback {
-        public void topicPressed(int topicId, int pageNumber);
+        public void topicPressed(int topicId, int pageNumber, View container);
     }
 
 

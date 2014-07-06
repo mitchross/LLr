@@ -97,6 +97,6 @@ public class PostAdapter extends ArrayAdapter<TopicPost> {
         this.callback = callback;
     }
     public interface adapterCallback {
-        public void topicPressed(int topicId, int pageNumber);
+        public void topicPressed(int topicId, int pageNumber, View view);
     }
 }

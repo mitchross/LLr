@@ -18,7 +18,7 @@ public class TopicPost {
     private int messageId;
     private int edits;
     private int userId;
-    //consider field for topic ID? Not sure if necessary
+    //consider field for topic ID? Not sure if that's necessary
 
     TopicPost(Element el) {
         try {
@@ -43,7 +43,8 @@ public class TopicPost {
                 this.message = m.replace("<br />", "\r\n");
                 this.signature = "";
             } else { //If there is a signature belt
-                this.message = m.replace("<br />", "\r\n").substring(0, m.lastIndexOf("---"));
+                String br = System.getProperty ("line.separator");
+                this.message = m.replace("<br />", br).substring(0, m.lastIndexOf("---"));
                 this.signature = m.substring((m.lastIndexOf("---") + 3));
             }
 
@@ -63,7 +64,7 @@ public class TopicPost {
             String ms = el.select("td.message").attr("msgid");
             //Get the number of revisions
             this.edits = Integer.parseInt(ms.substring(ms.lastIndexOf("@") + 1));
-            this.messageId = Integer.parseInt(ms.substring(ms.lastIndexOf(",") + 1, m.lastIndexOf("@")));
+            this.messageId = Integer.parseInt(ms.substring(ms.lastIndexOf(",") + 1, ms.lastIndexOf("@")));
         } catch (Exception e) {
             e.printStackTrace();
         }
