@@ -25,7 +25,6 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -34,10 +33,9 @@ import java.util.concurrent.TimeoutException;
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
-        TopicAdapter.adapterCallback,
         NavigationAdapter.NavigationDrawerCallback,
         PostAdapter.adapterCallback,
-        TopicViewFragment.Callbacks {
+        TopicListFragment.Callbacks {
 
     public static Map<String, String> cookies;
     private static String mTag = "debug";
@@ -123,7 +121,7 @@ public class MainActivity extends Activity
         }
         FragmentManager manager = getFragmentManager();
         if (currentFragment == -1) {//During first initilization
-            TopicViewFragment fragment = TopicViewFragment.newInstance(position, URL);
+            TopicListFragment fragment = TopicListFragment.newInstance(position, URL);
             fragment.setUp(this);
             manager.beginTransaction()
                     .add(R.id.container, fragment, tag)//This needs to use the container found in activity_main.xml
@@ -132,10 +130,10 @@ public class MainActivity extends Activity
             currentFragment = position;
             return;
         }
-        TopicViewFragment newFragment = (TopicViewFragment) manager.findFragmentByTag(tag);
+        TopicListFragment newFragment = (TopicListFragment) manager.findFragmentByTag(tag);
         Fragment oldFragment = manager.findFragmentByTag("TAG_" + currentFragment);
         if (newFragment == null) {//If the new Fragment is null then it needs to be inflated and added
-            newFragment = TopicViewFragment.newInstance(position, URL);
+            newFragment = TopicListFragment.newInstance(position, URL);
             newFragment.setCallback(this);
             newFragment.setUp(this);
             manager.beginTransaction()
@@ -156,6 +154,7 @@ public class MainActivity extends Activity
 
     }
 
+    //TODO what the hell is this I don't even know
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
@@ -211,38 +210,6 @@ public class MainActivity extends Activity
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
-    public void loadPage(View v) {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/topics/LUE-Anonymous", cookies));
-
-        try {
-            Document page = request.get(5, TimeUnit.SECONDS);
-            Elements elements = page.select("tr:has(td)");
-            ArrayList<TopicLink> topics = new ArrayList<TopicLink>(elements.size());
-
-            int latestPost = 0;
-            //Strip the long text bc of long reasons
-            fixTitle(page.title());
-            for (Element e : elements) {
-                topics.add(new TopicLink(e));
-            }
-            TopicAdapter adapter = new TopicAdapter(getBaseContext(), R.id.listview, topics);
-            adapter.setCallback(this);
-            ListView listview = (ListView) findViewById(R.id.listview);
-
-            listview.setAdapter(adapter);
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            Toast.makeText(getApplicationContext(), "Page load timed out sucka", Toast.LENGTH_SHORT).show();
-        } catch (NullPointerException e) {
-            Log.e(mTag, "null pointer exception");
-            e.printStackTrace();
-        } catch (Exception e) {
-            Log.e(mTag, "Exception!");
-            e.printStackTrace();
-        }
-    }
 
     /**
      * Adds items to the navigation drawer (bookmarks)
@@ -341,6 +308,7 @@ public class MainActivity extends Activity
         restoreActionBar();
     }
 
+    //TODO fix this shit
     public void changeLocation(String URL) {
         loadPage(null);
     }

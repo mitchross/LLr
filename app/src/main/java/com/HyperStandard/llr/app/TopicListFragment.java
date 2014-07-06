@@ -29,17 +29,17 @@ import java.util.concurrent.TimeoutException;
  * @author HyperStandard
  * @since /30/2014
  */
-public class TopicViewFragment extends Fragment {
+public class TopicListFragment extends Fragment {
     private static final String mTag = "LLr-> (TVF)";
     private Callbacks callback;
     private Context context;
 
-    public TopicViewFragment() {
+    public TopicListFragment() {
 
     }
 
-    public static TopicViewFragment newInstance(int position, String URL) {
-        TopicViewFragment fragment = new TopicViewFragment();
+    public static TopicListFragment newInstance(int position, String URL) {
+        TopicListFragment fragment = new TopicListFragment();
         Bundle args = new Bundle();
         args.putString("URL", URL);
         args.putInt("position", position);
@@ -61,7 +61,7 @@ public class TopicViewFragment extends Fragment {
         try {
             Document page = request.get(5, TimeUnit.SECONDS);
             final Elements elements = page.select("tr:has(td)");
-            Future<ArrayList<TopicLink>> arrayListFuture= executor.submit(new Callable<ArrayList<TopicLink>>() {
+            Future<ArrayList<TopicLink>> arrayListFuture = executor.submit(new Callable<ArrayList<TopicLink>>() {
                 @Override
                 public ArrayList<TopicLink> call() throws Exception {
                     ArrayList<TopicLink> array = new ArrayList<>(elements.size());
@@ -91,6 +91,7 @@ public class TopicViewFragment extends Fragment {
 
     public interface Callbacks {
         public void sendTitle(String title);
+
         public void loadTopic(String URL);
     }
 
