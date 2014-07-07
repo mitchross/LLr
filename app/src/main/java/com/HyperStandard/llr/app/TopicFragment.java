@@ -3,62 +3,121 @@ package com.HyperStandard.llr.app;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * @author HyperStandard
  * @since 7/6/2014
  */
 public class TopicFragment extends Fragment {
-    public class PostAdapter extends ArrayAdapter<com.HyperStandard.llr.app.TopicPost> {
-        private ArrayList<com.HyperStandard.llr.app.TopicPost> objects;
-        private adapterCallback callback;
-        private static Typeface typeface;
+    private static final String mTag = "LLr -> (TF)";
+    private Callbacks callbacks;
+    private Context context;
 
-        public PostAdapter(Context context, int textViewResourceId, ArrayList<com.HyperStandard.llr.app.TopicPost> objects) {
+    public TopicFragment() {
+
+    }
+
+    public static TopicFragment newInstance(String URL) {
+        TopicFragment fragment = new TopicFragment();
+        Bundle args = new Bundle();
+        args.putString("URL", URL);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public void setUp(Context context) {
+        this.context = context;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_container, container, false);
+        //ExecutorService executor = Executors.newSingleThreadExecutor();
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/showmessages.php?topic=" + getArguments().getString("URL"), Cookies.getCookies()));
+        try {
+            Document page = request.get(10, TimeUnit.SECONDS);
+            callbacks.sendTitle(page.title());
+            final Elements elements = page.select("div.message-container");
+
+            Future<ArrayList<TopicPost>> arrayListFuture = executor.submit(new Callable<ArrayList<TopicPost>>() {
+                @Override
+                public ArrayList<TopicPost> call() throws Exception {
+                    ArrayList<TopicPost> array = new ArrayList<>(elements.size());
+                    for (Element e : elements)
+                        array.add(new TopicPost(e));
+                    return array;
+                }
+            });
+            ArrayList<TopicPost> posts = arrayListFuture.get();
+           PostAdapter adapter = new PostAdapter(context, R.id.topic_listview, posts);
+            ListView listview = (ListView) container.findViewById(R.id.topic_listview);
+            listview.setAdapter(adapter);
+        } catch (InterruptedException e) {
+            Log.e(mTag, "Interrupted operation");
+        } catch (TimeoutException e) {
+            Toast.makeText(context, "Operation timed out", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return v;
+    }
+
+    public void setCallbacks(Callbacks callbacks) {
+        this.callbacks = callbacks;
+    }
+
+    public interface Callbacks {
+        public void sendTitle(String title);
+    }
+
+    public class PostAdapter extends ArrayAdapter<TopicPost> {
+        private ArrayList<TopicPost> objects;
+        private Typeface typeface;
+
+        public PostAdapter(Context context, int textViewResourceId, ArrayList<TopicPost> objects) {
             super(context, textViewResourceId, objects);
             typeface = Typefaces.getTypface(context, C.FONT_LISTVIEW);
             this.objects = objects;
         }
 
-        /*
-         * we are overriding the getView method here - this is what defines how each
-         * list item will look.
-         */
+
         public View getView(int position, View convertView, ViewGroup parent) {
 
             // assign the view we are converting to a local variable
             View v = convertView;
 
-            // first check to see if the view is null. if so, we have to inflate it.
-            // to inflate it basically means to render, or show, the view.
+
             if (v == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = inflater.inflate(R.layout.listview_post_row, null);
             }
 
-		/*
-         * Recall that the variable position is sent in as an argument to this method.
-		 * The variable simply refers to the position of the current object in the list. (The ArrayAdapter
-		 * iterates through the list we sent it)
-		 *
-		 * Therefore, i refers to the current Item object.
-		 */
-            com.HyperStandard.llr.app.TopicPost i = objects.get(position);
+            TopicPost i = objects.get(position);
 
             if (i != null) {
 
-                // This is how you obtain a reference to the TextViews.
-                // These TextViews are created in the XML files we defined.
 
                 /**
                  * Username (String)
@@ -75,9 +134,6 @@ public class TopicFragment extends Fragment {
                  */
                 TextView signature = (TextView) v.findViewById(R.id.post_signature);
 
-
-                // check to see if each individual textview is null.
-                // if not, assign some text!
                 if (username != null) {
                     username.setText(i.getUsername() + " | " + Integer.toString(i.getEdits()) + " | " + Integer.toString(i.getUserId()));
                 }
@@ -91,20 +147,14 @@ public class TopicFragment extends Fragment {
                 }
             }
 
-
-            // the view must be returned to our activity
             return v;
 
 
+        }
 
-        }
-        public void setCallback (adapterCallback callback) {
-            this.callback = callback;
-        }
-        public interface adapterCallback {
-            public void topicPressed(int topicId, int pageNumber, View view);
-        }
+
     }
+
     public class TopicPost {
 
         //TODO add support for spoilers, images, links, and quotes
@@ -140,7 +190,7 @@ public class TopicFragment extends Fragment {
                     this.message = m.replace("<br />", "\r\n");
                     this.signature = "";
                 } else { //If there is a signature belt
-                    String br = System.getProperty ("line.separator");
+                    String br = System.getProperty("line.separator");
                     this.message = m.replace("<br />", br).substring(0, m.lastIndexOf("---"));
                     this.signature = m.substring((m.lastIndexOf("---") + 3));
                 }

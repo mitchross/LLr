@@ -20,6 +20,8 @@ import java.util.concurrent.Callable;
 public class LoadPage implements Callable<Document> {
     private String URL;
 
+    //TODO fix the mess that is cookies, maybe send them at login time, skip that whole array garbage
+    //
     //I'm not sure about map constructrs since you can't instantiate a Map but Jsoup uses it? ? ?
     private Map<String, String> cookies;
 
@@ -30,15 +32,12 @@ public class LoadPage implements Callable<Document> {
      */
     public LoadPage(String URL, Map<String, String> cookies) {
         this.URL = URL;
-        //this.cookies =  new TreeMap<>();
-        //this.cookies = cookies.c;
-        //this.cookies.putAll(cookies);
     }
 
     public Document call() {
         try {
             Document doc = Jsoup.connect(URL)
-                    .cookies(MainActivity.cookies)
+                    .cookies(Cookies.getCookies())
                     .get();
             return doc;
         } catch (IOException e) {

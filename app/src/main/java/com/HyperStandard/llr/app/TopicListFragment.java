@@ -27,11 +27,11 @@ import java.util.concurrent.TimeoutException;
 
 /**
  * @author HyperStandard
- * @since /30/2014
+ * @since 6/30/2014
  */
 public class TopicListFragment extends Fragment {
     private static final String mTag = "LLr-> (TVF)";
-    private Callbacks callback;
+    private Callbacks callbacks;
     private Context context;
 
     public TopicListFragment() {
@@ -85,13 +85,12 @@ public class TopicListFragment extends Fragment {
 
     }
 
-    public void setCallback(Callbacks callback) {
-        this.callback = callback;
+    public void setCallbacks(Callbacks callbacks) {
+        this.callbacks = callbacks;
     }
 
     public interface Callbacks {
         public void sendTitle(String title);
-
         public void loadTopic(String URL);
     }
 
@@ -300,7 +299,9 @@ public class TopicListFragment extends Fragment {
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    callback.loadTopic(Integer.toString(i.getTopicId()));
+                    if (callbacks != null){
+                        callbacks.loadTopic(Integer.toString(i.getTopicId()));
+                    }
                 }
             });
             return v;

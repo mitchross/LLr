@@ -34,11 +34,11 @@ import java.util.concurrent.TimeoutException;
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
         NavigationAdapter.NavigationDrawerCallback,
-        PostAdapter.adapterCallback,
-        TopicListFragment.Callbacks {
+        TopicListFragment.Callbacks,
+        TopicFragment.Callbacks {
 
     public static Map<String, String> cookies;
-    private static String mTag = "debug";
+    private static String mTag = "LLr -> (Main)";
     public int UserID;
 
     /**
@@ -55,6 +55,8 @@ public class MainActivity extends Activity
      * stores the tag of the active fragment
      */
     private int currentFragment;
+
+    private String workingFragment = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,12 +89,12 @@ public class MainActivity extends Activity
             try {
                 Document main = loader.get(5, TimeUnit.SECONDS);
                 Elements elements = main.select("#bookmarks > span");
-                ArrayList<BookmarkLink> bookmarks = new ArrayList<BookmarkLink>(elements.size());
+                ArrayList<BookmarkLink> bookmarks = new ArrayList<>(elements.size());
 
                 /**
                  * Get the bookmarks, to populate the Navigation drawer with links
                  */
-                for (Element e : elements) {
+                for (Element e : elements) {//TODO fix this thing what's the deal with it
                     bookmarks.add(populateDrawer(new BookmarkLink(
                             e.select("span > a").first().ownText(),
                             e.select("span > a").attr("abs:href"),
@@ -122,7 +124,9 @@ public class MainActivity extends Activity
         FragmentManager manager = getFragmentManager();
         if (currentFragment == -1) {//During first initilization
             TopicListFragment fragment = TopicListFragment.newInstance(position, URL);
+            //TODO merge these calls maybe? ? ? ? they both have 'this' but 'this' means diff things
             fragment.setUp(this);
+            fragment.setCallbacks(this);
             manager.beginTransaction()
                     .add(R.id.container, fragment, tag)//This needs to use the container found in activity_main.xml
                     .addToBackStack(null)
@@ -134,7 +138,7 @@ public class MainActivity extends Activity
         Fragment oldFragment = manager.findFragmentByTag("TAG_" + currentFragment);
         if (newFragment == null) {//If the new Fragment is null then it needs to be inflated and added
             newFragment = TopicListFragment.newInstance(position, URL);
-            newFragment.setCallback(this);
+            newFragment.setCallbacks(this);
             newFragment.setUp(this);
             manager.beginTransaction()
                     .add(R.id.container, newFragment, tag)
@@ -228,75 +232,9 @@ public class MainActivity extends Activity
     /**
      * @param view automatically generated variable from button press
      */
-    public void loadTopic(View view) {
-        //ExecutorService executor = Executors.newSingleThreadExecutor();
-        ExecutorService executor = Executors.newFixedThreadPool(2);
-        Future<Document> request = executor.submit(new LoadPage("http://boards.endoftheinter.net/showmessages.php?topic=8898015&page=1", cookies));
-        try {
-            Document page = request.get(10, TimeUnit.SECONDS);
-            //Strip the long text bc of long reasons
-            fixTitle(page.title());
-            Elements elements = page.select("div.message-container");
-            ArrayList<TopicPost> posts = new ArrayList<>(elements.size());
-            for (Element e : elements)
-                posts.add(new TopicPost(e));
 
-            PostAdapter adapter = new PostAdapter(this, R.id.topic_listview, posts);
-            ListView listview = (ListView) findViewById(R.id.topic_listview);
-            listview.setAdapter(adapter);
-        } catch (InterruptedException e) {
-            Log.e(mTag, "Interrupted operation");
-        } catch (TimeoutException e) {
-            Toast.makeText(this, "Operation timed out", Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
-    /**
-     * Loads a topic, based on the Topic ID
-     *
-     * @param topicId The integer ID of the topic to be loaded, fortunately LL only needs this, not things like tags etc
-     */
-    @Override
-    public void  topicPressed(int topicId, int pageNumber, View view) {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<Document> request = executor.submit(new LoadPage(
-                "http://boards.endoftheinter.net/showmessages.php?topic="
-                        + topicId + "?page=" + pageNumber,
-                cookies
-        ));
-        try {
-            Document page = request.get(5, TimeUnit.SECONDS);
 
-            //Strip the long text bc of long reasons
-            fixTitle(page.title());
-
-            Elements elements = page.select("div.message-container");
-            ArrayList<TopicPost> posts = new ArrayList<>(elements.size());
-
-            //Add post objects to arraylist, all the HTML processing is done within the object constructor itself
-            for (Element e : elements)
-                posts.add(new TopicPost(e));
-
-            PostAdapter adapter = new PostAdapter(this, R.id.topic_listview, posts);
-            ListView listView = (ListView) view.findViewById(R.id.topic_listview);
-            //ListView listView = (ListView) findViewById(R.id.topic_listview);
-            //TODO move this out of the topic, or augment ith an additional control maybe?
-            if (page.getElementById("nextpage") != null) {//Checks to see if there's more topics
-                //View footer = getLayoutInflater().inflate(R.layout.listview_post_footer, null);
-                //listview.addFooterView(footer, pageNumber + 1, true);
-
-            }
-            listView.setAdapter(adapter);
-        } catch (InterruptedException e) {
-            Log.e(mTag, "Interrupted operation");
-        } catch (TimeoutException e) {
-            Toast.makeText(this, "Operation timed out", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * Fixes the title for small devices
@@ -308,14 +246,6 @@ public class MainActivity extends Activity
         restoreActionBar();
     }
 
-    //TODO fix this shit
-    public void changeLocation(String URL) {
-        loadPage(null);
-    }
-
-
-
-
     @Override
     public void sendTitle(String title) {
         fixTitle(title);
@@ -323,6 +253,31 @@ public class MainActivity extends Activity
 
     @Override
     public void loadTopic(String URL) {
+        Log.e("Callback worked", URL);
+        FragmentManager manager = getFragmentManager();
+
+        //If I use the topic ID as the tag,  that clears up a lot of difficulties with stuff
+        TopicFragment fragment = (TopicFragment) manager.findFragmentByTag(URL);
+
+        //Get the current fragment (the one being replaced/hidden)
+        Fragment oldFragment = manager.findFragmentByTag("TAG_" + currentFragment);
+
+        if (fragment == null) {
+            fragment = TopicFragment.newInstance(URL);
+        }
+
+        fragment.setUp(this);
+        fragment.setCallbacks(this);
+        manager.beginTransaction()
+                .add(R.id.container, fragment, URL)
+                .hide(oldFragment)
+                .addToBackStack(null)
+                .commit();
+
+    }
+
+    @Override
+    public void changeLocation(String URL) {
 
     }
 
@@ -371,44 +326,4 @@ public class MainActivity extends Activity
         }
     }
 
-    /**
-     * Topics get put in this fragment
-     */
-    public static class TopicFragment extends Fragment {
-        private Callback callback;
-
-        public TopicFragment() {
-        }
-
-        public static TopicFragment newInstance(int position, String URL) {
-            TopicFragment fragment = new TopicFragment();
-            Bundle args = new Bundle();
-            args.putString("URL", URL);
-            args.putInt("position", position);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View v = inflater.inflate(R.layout.fragment_debug, container, false);
-            return v;
-        }
-
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            ((MainActivity) activity).onSectionAttached(getArguments().getInt("position"));
-
-        }
-
-        public void setCallback(Callback callback) {
-            this.callback = callback;
-        }
-
-        public static interface Callback {
-            public void topicCallback(String URL);
-        }
-    }
-}
+ }
