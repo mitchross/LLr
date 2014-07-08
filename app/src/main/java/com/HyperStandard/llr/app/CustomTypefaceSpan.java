@@ -11,26 +11,31 @@ import android.util.LruCache;
  * @author HyperStandard
  * @since 6/28/2014
  */
-public class CustomTypefaceSpan extends MetricAffectingSpan {
-    private static LruCache<String, Typeface> cache = new LruCache<>(4);
-    private Typeface typeface;
+public class CustomTypefaceSpan extends MetricAffectingSpan
+{
+	private static LruCache<String, Typeface> cache = new LruCache<>( 4 );
+	private Typeface typeface;
 
-    CustomTypefaceSpan(Context context, String typefaceName) {
-        typeface = cache.get(typefaceName);
-        if (typeface == null) {
-            typeface = Typeface.createFromAsset(context.getApplicationContext().getAssets(), typefaceName);
-        }
-    }
+	public CustomTypefaceSpan( Context context, String typefaceName )
+	{
+		typeface = cache.get( typefaceName );
+		if ( typeface == null )
+		{
+			typeface = Typeface.createFromAsset( context.getApplicationContext().getAssets(), typefaceName );
+		}
+	}
 
-    @Override
-    public void updateMeasureState(final TextPaint textPaint) {
-        textPaint.setTypeface(typeface);
-        textPaint.setFlags(textPaint.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
-    }
+	@Override
+	public void updateMeasureState( final TextPaint textPaint )
+	{
+		textPaint.setTypeface( typeface );
+		textPaint.setFlags( textPaint.getFlags() | Paint.SUBPIXEL_TEXT_FLAG );
+	}
 
-    @Override
-    public void updateDrawState(final TextPaint textPaint) {
-        textPaint.setTypeface(typeface);
-        textPaint.setFlags(textPaint.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
-    }
+	@Override
+	public void updateDrawState( final TextPaint textPaint )
+	{
+		textPaint.setTypeface( typeface );
+		textPaint.setFlags( textPaint.getFlags() | Paint.SUBPIXEL_TEXT_FLAG );
+	}
 }

@@ -3,26 +3,31 @@ package com.HyperStandard.llr.app;
 /**
  * Created by nonex_000 on 6/17/2014.
  */
-public class BookmarkLink {
-    private String bookmarkName;
-    private String bookmarkTags;
-    private String action;
+public class BookmarkLink
+{
+	private String bookmarkName;
+	private String bookmarkTags;
+	private String action;
 
-    public String getBookmarkTags() {
-        return bookmarkTags;
-    }
+	public BookmarkLink( String bookmarkName, String bookmarkTags, String action )
+	{
+		this.bookmarkTags = bookmarkTags;
+		this.bookmarkName = bookmarkName;
+		this.action = action;
+	}
 
-    public String getBookmarkName() {
-        return bookmarkName;
-    }
+	public String getBookmarkTags()
+	{
+		return bookmarkTags;
+	}
 
-    public String getAction() {
-        return action;
-    }
+	public String getBookmarkName()
+	{
+		return bookmarkName;
+	}
 
-    BookmarkLink(String bookmarkName, String bookmarkTags, String action) {
-        this.bookmarkTags = bookmarkTags;
-        this.bookmarkName = bookmarkName;
-        this.action = action;
-    }
+	public String getAction()
+	{
+		return action;
+	}
 }
