@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/LLR.iml" filepath="$PROJECT_DIR$/LLR.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LL-fork.iml" filepath="$PROJECT_DIR$/LL-fork.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LL-fork.iml" filepath="$PROJECT_DIR$/LL-fork.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

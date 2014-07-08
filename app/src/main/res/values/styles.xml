@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
     </style>
     <style name="login_style">
-        <item name="android:windowActionBar">false</item>
+        <item name="android:windowActionBar">true</item>
         <item name="android:windowTitleSize">0dp</item>
     </style>
 

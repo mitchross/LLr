@@ -1,83 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/box"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:visibility="visible"
-    android:background="@color/dark_grey"
-    style="@style/login_style">
+<RelativeLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:tools="http://schemas.android.com/apk/tools"
+		android:id="@+id/box"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+		android:visibility="visible"
+		android:background="@color/dark_grey"
+		style="@style/login_style"
+		tools:ignore="MissingPrefix">
 
 
-    <ImageButton
-        android:id="@+id/login_menu"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:onClick="openOptions"
-        android:src="@drawable/login_menu"
-        android:background="@null"/>
-    <ImageSwitcher
-        android:id="@+id/ImageSwitcher01"
-        android:layout_width="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg1">
-    </ImageSwitcher>
-    <LinearLayout
-        android:id="@+id/linearlayout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/username"
-        android:orientation="horizontal">
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:hint="@string/password"
-            android:inputType="text"
-            android:textColorHint="@color/faded_white"
-            android:textColor="@color/white"
-            android:password="true"
-            android:layout_below="@+id/username"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-        <CheckBox
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Save login?"
-            android:id="@+id/login_checkbox"/>
+	<ImageSwitcher
+			android:id="@+id/ImageSwitcher01"
+			android:layout_width="wrap_content"
+			android:layout_centerInParent="true"
+			android:layout_height="wrap_content"
+			android:background="@drawable/bg1">
+	</ImageSwitcher>
+	<LinearLayout
+			android:id="@+id/linearlayout"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/username"
+			android:orientation="horizontal">
+		<EditText
+
+				android:id="@+id/password"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="3"
+				android:hint="@string/password"
+				android:inputType="text"
+				android:textColorHint="@color/faded_white"
+				android:textColor="@color/white"
+				android:password="true"
+				android:layout_below="@+id/username"
+				android:layout_alignParentLeft="true"
+				android:layout_alignParentStart="true"
+				fontPath="fonts/ComicRelief.ttf"/>
+		<CheckBox
+				android:textColor="@color/white"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Save login?"
+				android:id="@+id/login_checkbox"/>
 
 
-    </LinearLayout>
+	</LinearLayout>
 
-    <EditText
-        android:textColorHint="@color/faded_white"
-        android:textColor="@color/white"
-        android:id="@+id/username"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/username"
-        android:inputType="text"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+	<EditText
+			android:textColorHint="@color/faded_white"
+			android:textColor="@color/white"
+			android:id="@+id/username"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/username"
+			android:inputType="text"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+	        fontPath="fonts/ComicRelief.ttf"
+			/>
 
-    <Button
-        android:id="@+id/loginbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:onClick="login"
-        android:text="Anmelden"
-        android:layout_below="@+id/linearlayout"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+	<Button
+			android:id="@+id/loginbutton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:text="Anmelden"
+			android:layout_below="@+id/linearlayout"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			fontPath="fonts/ComicRelief.ttf"/>
 </RelativeLayout>
