@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.HyperStandard.llr.app.Activity.Adapters.TopicAdapter;
 import com.HyperStandard.llr.app.Activity.MainActivity;
-import com.HyperStandard.llr.app.Data.C;
 import com.HyperStandard.llr.app.LoadPage;
 import com.HyperStandard.llr.app.Models.TopicLink;
 import com.HyperStandard.llr.app.R;
@@ -88,7 +87,7 @@ public class TopicListFragment extends Fragment
 	protected void getTopics()
 	{
 		ExecutorService executor = Executors.newFixedThreadPool( 2 );
-		Future<Document> request = executor.submit( new LoadPage( C.LL_LUE, MainActivity.cookies ) );
+		Future<Document> request = executor.submit( new LoadPage( "http://boards.endoftheinter.net/topics/LUE", MainActivity.cookies ) );
 
 		try
 		{

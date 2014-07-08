@@ -13,7 +13,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.HyperStandard.llr.app.Data.C;
 import com.HyperStandard.llr.app.Data.Cookies;
 import com.HyperStandard.llr.app.LoadPage;
 import com.HyperStandard.llr.app.R;
@@ -124,7 +123,7 @@ public class TopicFragment extends Fragment
 		public PostAdapter( Context context, int textViewResourceId, ArrayList<TopicPost> objects )
 		{
 			super( context, textViewResourceId, objects );
-			typeface = Typefaces.getTypface( context, C.FONT_LISTVIEW );
+			typeface = Typefaces.getTypface( context, getString(R.string.font_listview) );
 			this.objects = objects;
 		}
 

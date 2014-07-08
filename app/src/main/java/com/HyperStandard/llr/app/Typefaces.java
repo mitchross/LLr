@@ -3,8 +3,6 @@ package com.HyperStandard.llr.app;
 import android.content.Context;
 import android.graphics.Typeface;
 
-import com.HyperStandard.llr.app.Data.C;
-
 import java.util.HashMap;
 
 /**
@@ -13,7 +11,7 @@ import java.util.HashMap;
  */
 public class Typefaces
 {
-	private static HashMap<String, Typeface> cache = new HashMap<>( C.FONT_AMOUNT );
+	private static HashMap<String, Typeface> cache = new HashMap<>();
 
 	public static Typeface getTypface( Context context, String name )
 	{

@@ -26,7 +26,6 @@ import android.widget.Toast;
 
 import com.HyperStandard.llr.app.BookmarkLink;
 import com.HyperStandard.llr.app.CustomTypefaceSpan;
-import com.HyperStandard.llr.app.Data.C;
 import com.HyperStandard.llr.app.R;
 
 import java.util.ArrayList;
@@ -97,7 +96,7 @@ public class NavigationDrawerFragment extends Fragment
 		}
 
 		// Select either the default item (0) or the last selected item.
-		selectItem( mCurrentSelectedPosition, C.LL_HOME );
+		selectItem( mCurrentSelectedPosition, "http://boards.endoftheinter.net/topics/LUE" );
 	}
 
 	@Override
@@ -343,7 +342,7 @@ public class NavigationDrawerFragment extends Fragment
 		actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_STANDARD );
 		//Necessary to change font on the action bar
 		SpannableStringBuilder t = new SpannableStringBuilder( getString( R.string.app_name ) );
-		t.setSpan( new CustomTypefaceSpan( context, C.FONT_TITLE ), 0, t.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE );
+		t.setSpan( new CustomTypefaceSpan( context, getString( R.string.font_title ) ), 0, t.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE );
 		actionBar.setTitle( t );
 	}
 

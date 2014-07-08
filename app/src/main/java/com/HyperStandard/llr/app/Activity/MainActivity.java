@@ -19,8 +19,6 @@ import android.widget.Toast;
 
 import com.HyperStandard.llr.app.BookmarkLink;
 import com.HyperStandard.llr.app.CustomTypefaceSpan;
-import com.HyperStandard.llr.app.Data.C;
-import com.HyperStandard.llr.app.Data.Cookies;
 import com.HyperStandard.llr.app.Fragment.TopicFragment;
 import com.HyperStandard.llr.app.Fragment.TopicListFragment;
 import com.HyperStandard.llr.app.LoadPage;
@@ -33,7 +31,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -79,14 +76,8 @@ public class MainActivity extends BaseActivity
 		currentFragment = -1;
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_main );
-		cookies = new HashMap<String, String>();
-		cookies.put( "userid", getIntent().getStringArrayExtra( "Cookies" )[ 0 ] );
-		cookies.put( "PHPSESSID", getIntent().getStringArrayExtra( "Cookies" )[ 1 ] );
-		cookies.put( "session", getIntent().getStringArrayExtra( "Cookies" )[ 2 ] );
-		//Very important, these cookies are going to be accessed by tons of stuff so they need to be sent to the
-		//static cookies class
-		Cookies.setCookies( cookies );
-		UserID = Integer.parseInt( cookies.get( "userid" ) );
+
+        UserID = getIntent().getIntExtra("userId", -1);
 
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById( R.id.navigation_drawer );
 
@@ -101,7 +92,7 @@ public class MainActivity extends BaseActivity
 		if ( true )
 		{
 			ExecutorService executor = Executors.newSingleThreadExecutor();
-			Future<Document> loader = executor.submit( new LoadPage( C.LL_HOME, cookies ) );
+			Future<Document> loader = executor.submit( new LoadPage( getString(R.string.ll_main), cookies ) );
 			try
 			{
 				Document main = loader.get( 5, TimeUnit.SECONDS );
@@ -218,7 +209,7 @@ public class MainActivity extends BaseActivity
 			actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_STANDARD );
 			actionBar.setDisplayShowTitleEnabled( true );
 			SpannableStringBuilder t = new SpannableStringBuilder( mTitle );
-			t.setSpan( new CustomTypefaceSpan( this, C.FONT_TITLE ), 0, t.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE );
+			t.setSpan( new CustomTypefaceSpan( this, getString(R.string.font_title) ), 0, t.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE );
 			actionBar.setTitle( t );
 		}
 	}

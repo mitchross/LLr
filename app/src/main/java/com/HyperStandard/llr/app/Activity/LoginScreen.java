@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import com.HyperStandard.llr.app.Data.C;
+import com.HyperStandard.llr.app.Data.Cookies;
 import com.HyperStandard.llr.app.Login;
 import com.HyperStandard.llr.app.R;
 
@@ -68,10 +68,10 @@ public class LoginScreen extends BaseActivity
 		//TODO change this to possibly encrypted login info, and support for multiple accounts
 		prefs = PreferenceManager.getDefaultSharedPreferences( this );
 		//TODO figure out how to get external IP and use LL check login instead of just logging in again
-		if ( prefs.contains( C.PREFS_PASSWORD ) && prefs.contains( C.PREFS_USERNAME ) && prefs.getBoolean( C.PREFS_USELOGIN, false ) )
+		if ( prefs.contains( getString( R.string.prefs_password ) ) && prefs.contains( getString( R.string.prefs_username ) ) && prefs.getBoolean( getString( R.string.prefs_login ), false ) )
 		{
 			Toast.makeText( this, "Logging in with saved credentials", Toast.LENGTH_SHORT ).show();
-			autoLogin( prefs.getString( C.PREFS_USERNAME, "" ), prefs.getString( C.PREFS_PASSWORD, "" ) );
+			autoLogin( prefs.getString( getString(R.string.prefs_username), "" ), prefs.getString( getString(R.string.prefs_password), "" ) );
 		}
 
 	}
@@ -125,19 +125,18 @@ public class LoginScreen extends BaseActivity
 				Log.i( mTag, "Successful login, using manual login()" );
 				final Intent intent = new Intent( this, MainActivity.class );
 
-				//Pass the cookies from the login page to the Main activity, where they get turned back into a map
-				String[] cookies = new String[ 3 ];
-				cookies[ 0 ] = response.cookie( "userid" );
-				cookies[ 1 ] = response.cookie( "PHPSESSID" );
-				cookies[ 2 ] = response.cookie( "session" );
-				intent.putExtra( "Cookies", cookies );
-				CheckBox checkBox = (CheckBox) findViewById( R.id.login_checkbox );
+
+                //Using global cookie cache
+                Cookies.setCookies(response.cookies());
+
+                intent.putExtra("userId", response.cookie("userid"));
+                CheckBox checkBox = (CheckBox) findViewById( R.id.login_checkbox );
 				if ( checkBox.isChecked() )
 				{
 					prefs.edit()
-							.putString( C.PREFS_PASSWORD, password )
-							.putString( C.PREFS_USERNAME, username )
-							.putBoolean( C.PREFS_USELOGIN, true )
+							.putString(getString(R.string.prefs_password), password)
+							.putString(getString(R.string.prefs_username), username)
+							.putBoolean(getString(R.string.prefs_login), true)
 							.apply();
 				}
 				startActivity( intent );
