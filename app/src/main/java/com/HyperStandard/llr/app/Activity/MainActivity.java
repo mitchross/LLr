@@ -282,7 +282,6 @@ public class MainActivity extends BaseActivity
 	@Override
 	public void loadTopic( String URL )
 	{
-		Log.e( "Callback worked", URL );
 		FragmentManager manager = getFragmentManager();
 
 		//If I use the topic ID as the tag,  that clears up a lot of difficulties with stuff
@@ -303,7 +302,8 @@ public class MainActivity extends BaseActivity
 				.hide( oldFragment )
 				.addToBackStack( null )
 				.commit();
-
+        //TODO better fragment managing, need to hide all types of fragments, currently only switching via nav drawer hides properly
+        workingFragment = URL;
 	}
 
 	@Override

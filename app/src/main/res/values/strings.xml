@@ -20,6 +20,7 @@
     <string name="account">My Account</string>
     <string name="logout">Logout</string>
     <string name="poll">Poll of the day</string>
+    <string name="poll_submit">Submit answer</string>
     <string name="drama">Dramalinks</string>
 
     <string-array name="debug">

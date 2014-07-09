@@ -5,8 +5,15 @@
         <!-- Customize your theme here. -->
     </style>
     <style name="login_style">
+        <item name="android:actionBarStyle">@style/login_actionbar</item>
+        <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowActionBar">true</item>
         <item name="android:windowTitleSize">0dp</item>
+    </style>
+    <style name="login_actionbar" parent="android:Widget.Holo.ActionBar">
+
+        <item name="android:background">@drawable/blank</item>
+
     </style>
 
 </resources>

@@ -1,81 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<RelativeLayout
-		xmlns:android="http://schemas.android.com/apk/res/android"
-		xmlns:tools="http://schemas.android.com/apk/tools"
-		android:id="@+id/box"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:orientation="vertical"
-		android:visibility="visible"
-		android:background="@color/dark_grey"
-		style="@style/login_style"
-		tools:ignore="MissingPrefix">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/apk/tools"
+    android:id="@+id/box"
+    style="@style/login_style"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_grey"
+    android:orientation="vertical"
+    android:visibility="visible"
+    tools:ignore="MissingPrefix">
 
 
-	<ImageSwitcher
-			android:id="@+id/ImageSwitcher01"
-			android:layout_width="wrap_content"
-			android:layout_centerInParent="true"
-			android:layout_height="wrap_content"
-			android:background="@drawable/bg1">
-	</ImageSwitcher>
-	<LinearLayout
-			android:id="@+id/linearlayout"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:layout_below="@id/username"
-			android:orientation="horizontal">
-		<EditText
+    <ImageSwitcher
+        android:id="@+id/ImageSwitcher01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/bg1"/>
 
-				android:id="@+id/password"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_weight="3"
-				android:hint="@string/password"
-				android:inputType="text"
-				android:textColorHint="@color/faded_white"
-				android:textColor="@color/white"
-				android:password="true"
-				android:layout_below="@+id/username"
-				android:layout_alignParentLeft="true"
-				android:layout_alignParentStart="true"
-				fontPath="fonts/ComicRelief.ttf"/>
-		<CheckBox
-				android:textColor="@color/white"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="Save login?"
-				android:id="@+id/login_checkbox"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp">
+
+        <LinearLayout
+            android:id="@+id/linearlayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/username"
+            android:orientation="horizontal">
+
+            <EditText
+
+                android:id="@+id/password"
+                fontPath="fonts/ComicRelief.ttf"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_weight="3"
+                android:hint="@string/password"
+                android:inputType="text"
+                android:password="true"
+                android:textColor="@color/white"
+                android:textColorHint="@color/faded_white" />
+
+            <CheckBox
+                android:id="@+id/login_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save login?"
+                android:textColor="@color/white" />
 
 
-	</LinearLayout>
+        </LinearLayout>
 
-	<EditText
-			android:textColorHint="@color/faded_white"
-			android:textColor="@color/white"
-			android:id="@+id/username"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:hint="@string/username"
-			android:inputType="text"
-			android:layout_alignParentTop="true"
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
-	        fontPath="fonts/ComicRelief.ttf"
-			/>
+        <EditText
+            android:id="@+id/username"
+            fontPath="fonts/ComicRelief.ttf"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:hint="@string/username"
+            android:inputType="text"
+            android:textColor="@color/white"
+            android:textColorHint="@color/faded_white" />
 
-	<Button
-			android:id="@+id/loginbutton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:text="Anmelden"
-			android:layout_below="@+id/linearlayout"
-			android:layout_alignParentRight="true"
-			android:layout_alignParentEnd="true"
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
-			fontPath="fonts/ComicRelief.ttf"/>
+        <Button
+            android:id="@+id/loginbutton"
+            fontPath="fonts/ComicRelief.ttf"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/linearlayout"
+            android:background="@drawable/login_button"
+            android:text="Anmelden"
+            android:layout_margin="8dp"/>
+    </RelativeLayout>
 </RelativeLayout>

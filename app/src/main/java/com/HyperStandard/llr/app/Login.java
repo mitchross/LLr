@@ -18,7 +18,7 @@ import java.util.concurrent.Callable;
  */
 public class Login implements Callable<Connection.Response>
 {
-	private final static String mTag = "Login debug";
+	private final static String mTag = "LLr -> Login";
 	private String username;
 	private String password;
 
