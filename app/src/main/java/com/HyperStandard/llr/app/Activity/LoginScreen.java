@@ -169,14 +169,10 @@ public class LoginScreen extends BaseActivity
 			{
 				Log.v( mTag, "Successful login, using autoLogin()" );
 
+                //Using global cookie cache
+                Cookies.setCookies(response.cookies());
+
 				final Intent intent = new Intent( this, MainActivity.class );
-				//Pass the cookies from the login page to the Main activity, where they get turned back into a map
-				//I don't know how to parcel a Map so this is the best solution atm
-				String[] cookies = new String[ 3 ];
-				cookies[ 0 ] = response.cookie( "userid" );
-				cookies[ 1 ] = response.cookie( "PHPSESSID" );
-				cookies[ 2 ] = response.cookie( "session" );
-				intent.putExtra( "Cookies", cookies );
 
 				//Actually start the main application proper
 				startActivity( intent );

@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.text.SpannableStringBuilder;
@@ -47,6 +48,9 @@ public class MainActivity extends BaseActivity
 		TopicListFragment.Callbacks,
 		TopicFragment.Callbacks
 {
+    private static final int TYPE_TOPICLIST = 1;
+    private static final int TYPE_TOPIC = 2;
+    private static final int TYPE_POLL = 3;
 	public static Map<String, String> cookies;
 	private static String mTag = "LLr -> (Main)";
 	public int UserID;
@@ -57,18 +61,15 @@ public class MainActivity extends BaseActivity
 	 * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
 	 */
 	private NavigationDrawerFragment mNavigationDrawerFragment;
-
 	/**
 	 * Used to store the last screen title. For use in {@link #restoreActionBar()}.
 	 */
 	private CharSequence mTitle;
-
 	/**
 	 * stores the tag of the active fragment
 	 */
 	private int currentFragment;
-
-	private String workingFragment = "";
+	private String currentFragmentTag = "";
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -133,6 +134,8 @@ public class MainActivity extends BaseActivity
 	@Override
 	public void onNavigationDrawerItemSelected( int position, String URL )
 	{
+        FragmentOverlord(TYPE_TOPICLIST, URL);
+        /*
 		String tag = "TAG_" + position;
 		if ( position == currentFragment )
 		{//No point in changing fragments if you're on the current one
@@ -173,7 +176,7 @@ public class MainActivity extends BaseActivity
 				.hide( oldFragment )
 				.addToBackStack( null )
 				.commit();
-		currentFragment = position;
+		currentFragment = position;*/
 
 	}
 
@@ -213,6 +216,59 @@ public class MainActivity extends BaseActivity
 			actionBar.setTitle( t );
 		}
 	}
+
+    public void FragmentOverlord(int type, String URL)
+    {
+        FragmentManager manager = getFragmentManager();
+        Fragment currentFragment = manager.findFragmentByTag(currentFragmentTag);
+        FragmentTransaction transaction = manager.beginTransaction();
+        if (currentFragment != null) {
+            //TODO figure out why this won't hide sometimes
+            transaction.hide(currentFragment);
+            transaction.addToBackStack(null);
+        }
+        //TODO sliding animations
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        switch (type) {
+            case TYPE_TOPICLIST:
+                TopicListFragment topicListFragment = (TopicListFragment) manager.findFragmentByTag(URL);
+                if (topicListFragment == null) {
+                    topicListFragment = TopicListFragment.newInstance(0, URL);
+                    topicListFragment.setUp( getApplicationContext() );
+                    topicListFragment.setCallbacks(this);
+                    transaction.add(R.id.container, topicListFragment, URL);
+                }
+                    else transaction.show(topicListFragment);
+                {
+
+                }
+                break;
+            case TYPE_TOPIC:
+                TopicFragment topicFragment = (TopicFragment) manager.findFragmentByTag(URL);
+                if (topicFragment == null)
+                {
+                    topicFragment = TopicFragment.newInstance(URL);
+                    topicFragment.setCallbacks(this);
+                    topicFragment.setUp( getApplicationContext() );
+                    transaction.add(R.id.container, topicFragment, URL);
+                }
+                else
+                {
+                    transaction.show(topicFragment);
+                }
+
+                break;
+            case TYPE_POLL:
+                break;
+            default:
+                break;
+
+        }
+        Log.e(mTag, URL);
+        currentFragmentTag = URL;
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
 
 
 	@Override
@@ -282,6 +338,9 @@ public class MainActivity extends BaseActivity
 	@Override
 	public void loadTopic( String URL )
 	{
+
+        FragmentOverlord(TYPE_TOPIC, URL);
+	/*
 		FragmentManager manager = getFragmentManager();
 
 		//If I use the topic ID as the tag,  that clears up a lot of difficulties with stuff
@@ -303,7 +362,7 @@ public class MainActivity extends BaseActivity
 				.addToBackStack( null )
 				.commit();
         //TODO better fragment managing, need to hide all types of fragments, currently only switching via nav drawer hides properly
-        workingFragment = URL;
+        //workingFragment = URL;*/
 	}
 
 	@Override
