@@ -78,7 +78,17 @@ public class MainActivity extends BaseActivity
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_main );
 
-        UserID = getIntent().getIntExtra("userId", -1);
+		String userIdString = getIntent().getStringExtra( "userId" );
+
+		if ( userIdString.equals( null ) )
+		{
+			UserID = -1;
+		}
+		else
+		{
+			UserID = ( Integer.valueOf( userIdString ));
+		}
+
 
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById( R.id.navigation_drawer );
 
