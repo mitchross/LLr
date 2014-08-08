@@ -81,10 +81,9 @@ public class LoginScreen extends BaseActivity
 		//TODO figure out how to get external IP and use LL check login instead of just logging in again
 		if ( prefs.contains( getString( R.string.prefs_password ) ) && prefs.contains( getString( R.string.prefs_username ) ) && prefs.getBoolean( getString( R.string.prefs_login ), false ) )
 		{
-			Toast.makeText( this, "Logging in with saved credentials", Toast.LENGTH_SHORT ).show();
+			Toast.makeText( this, "using saved credentials", Toast.LENGTH_SHORT ).show();
 			userNameEditText.setText( prefs.getString( getString( R.string.prefs_username ), "" ) );
-			passwordEditText.setText( prefs.getString(getString( R.string.prefs_username ), "" ) );
-			//login( prefs.getString( getString( R.string.prefs_username ), "" ), prefs.getString( getString( R.string.prefs_password ), "" ) );
+			passwordEditText.setText( prefs.getString(getString( R.string.prefs_password ), "" ) );
 		}
 	}
 

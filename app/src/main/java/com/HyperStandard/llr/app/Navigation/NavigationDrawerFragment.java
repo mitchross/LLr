@@ -186,7 +186,7 @@ public class NavigationDrawerFragment extends Fragment
 
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the navigation drawer and the action bar app icon.
-		mDrawerToggle = new ActionBarDrawerToggle(
+		this.mDrawerToggle = new ActionBarDrawerToggle(
 				getActivity(),                    /* host Activity */
 				mDrawerLayout,                    /* DrawerLayout object */
 				R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
@@ -229,11 +229,6 @@ public class NavigationDrawerFragment extends Fragment
 				getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
 			}
 		};
-
-		Log.e( mTag, "is drawer enabled?" + Boolean.toString( mDrawerToggle.isDrawerIndicatorEnabled() ) );
-		Log.e( mTag, "is drawer enabled?" + Boolean.toString( mDrawerToggle.onOptionsItemSelected( null ) ) );
- 
-
 
 
 		// If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
@@ -325,7 +320,7 @@ public class NavigationDrawerFragment extends Fragment
 	@Override
 	public boolean onOptionsItemSelected( MenuItem item )
 	{
-		Log.e( mTag, Boolean.toString( mDrawerToggle.isDrawerIndicatorEnabled() ) );
+
 		if ( mDrawerToggle.onOptionsItemSelected( item ) )
 		{
 			return true;
