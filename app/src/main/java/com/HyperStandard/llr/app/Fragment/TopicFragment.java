@@ -40,7 +40,7 @@ public class TopicFragment extends Fragment
 	private static final String mTag = "LLr -> (TF)";
 
 
-	@InjectView( R.id.topic_listview )
+	@InjectView(R.id.topic_listview)
 	ListView listView;
 
 	private Callbacks callbacks;
@@ -69,7 +69,7 @@ public class TopicFragment extends Fragment
 	public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
 	{
 		View v = inflater.inflate( R.layout.fragment_container, container, false );
-		ButterKnife.inject( this , v );
+		ButterKnife.inject( this, v );
 
 		//ExecutorService executor = Executors.newSingleThreadExecutor();
 		ExecutorService executor = Executors.newFixedThreadPool( 2 );

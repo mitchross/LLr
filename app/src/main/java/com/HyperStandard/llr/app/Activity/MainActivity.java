@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.HyperStandard.llr.app.BookmarkLink;
 import com.HyperStandard.llr.app.CustomTypefaceSpan;
+import com.HyperStandard.llr.app.Fragment.PollFragment;
 import com.HyperStandard.llr.app.Fragment.TopicFragment;
 import com.HyperStandard.llr.app.Fragment.TopicListFragment;
 import com.HyperStandard.llr.app.LoadPage;
@@ -39,6 +40,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.Optional;
 
@@ -46,21 +48,30 @@ public class MainActivity extends BaseActivity
 		implements NavigationDrawerFragment.NavigationDrawerCallbacks,
 		NavigationAdapter.NavigationDrawerCallback,
 		TopicListFragment.Callbacks,
-		TopicFragment.Callbacks
+		TopicFragment.Callbacks,
+		PollFragment.Callbacks
 {
-    private static final int TYPE_TOPICLIST = 1;
-    private static final int TYPE_TOPIC = 2;
-    private static final int TYPE_POLL = 3;
+
+	private static final int TYPE_TOPICLIST = 1;
+	private static final int TYPE_TOPIC = 2;
+	private static final int TYPE_POLL = 3;
 	public static Map<String, String> cookies;
 	private static String mTag = "LLr -> (Main)";
 	public int UserID;
-	@Optional
-	@InjectView(R.id.leftNavigationDrawer)
 	ListView mListView;
+	@Optional
+	@InjectView( R.id.leftNavigationDrawer )
+	ListView listView;
+	private ArrayList<String> pageHistory = new ArrayList<>();
 	/**
 	 * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
 	 */
 	private NavigationDrawerFragment mNavigationDrawerFragment;
+	/**
+	 * Fragment storing the poll
+	 */
+	private PollFragment mPollFragment;
+
 	/**
 	 * Used to store the last screen title. For use in {@link #restoreActionBar()}.
 	 */
@@ -78,25 +89,38 @@ public class MainActivity extends BaseActivity
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_main );
 
-        UserID = getIntent().getIntExtra("userId", -1);
+		UserID = getIntent().getIntExtra( "userId", -1 );
 
-		mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById( R.id.navigation_drawer );
+		ButterKnife.inject( this );
 
+		//mNavigationDrawerFragment = (NavigationDrawerFragment) NavigationDrawerFragment.instantiate(getApplicationContext(), "debug");
+		mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById( R.id.left_drawer );
+
+		if ( mNavigationDrawerFragment == null )
+		{
+			Log.e( mTag, "Nav fragment is null" );
+		}
 		mTitle = getTitle();
+		Log.e( mTag, "setup begin" );
 
 		mNavigationDrawerFragment.setUp(
-				R.id.navigation_drawer,
+				R.id.left_drawer,
 				(DrawerLayout) findViewById( R.id.drawer_layout ),
 				UserID,
 				this );
+		Log.e( mTag, "setup complete" );
 
-		if ( true )
+		if ( true )//TODO why is this still here goodness
 		{
 			ExecutorService executor = Executors.newSingleThreadExecutor();
-			Future<Document> loader = executor.submit( new LoadPage( getString(R.string.ll_main), cookies ) );
+			Future<Document> loader = executor.submit( new LoadPage( getString( R.string.ll_main ), cookies ) );
 			try
 			{
 				Document main = loader.get( 5, TimeUnit.SECONDS );
+				Element poll = main.select( "div.poll" ).first();
+				mPollFragment = new PollFragment();
+				mPollFragment.setCallbacks( this );
+				mPollFragment.setUp( main.select( "div.poll" ) );
 				Elements elements = main.select( "#bookmarks > span" );
 				ArrayList<BookmarkLink> bookmarks = new ArrayList<>( elements.size() );
 
@@ -134,8 +158,16 @@ public class MainActivity extends BaseActivity
 	@Override
 	public void onNavigationDrawerItemSelected( int position, String URL )
 	{
-        FragmentOverlord(TYPE_TOPICLIST, URL);
-        /*
+		Log.e( mTag, Integer.toString( position ) );
+		if ( position == 0 )
+		{
+			FragmentOverlord( TYPE_POLL, "" );
+		}
+		else
+		{
+			FragmentOverlord( TYPE_TOPICLIST, URL );
+		}
+		/*
 		String tag = "TAG_" + position;
 		if ( position == currentFragment )
 		{//No point in changing fragments if you're on the current one
@@ -212,63 +244,95 @@ public class MainActivity extends BaseActivity
 			actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_STANDARD );
 			actionBar.setDisplayShowTitleEnabled( true );
 			SpannableStringBuilder t = new SpannableStringBuilder( mTitle );
-			t.setSpan( new CustomTypefaceSpan( this, getString(R.string.font_title) ), 0, t.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE );
+			t.setSpan( new CustomTypefaceSpan( this, getString( R.string.font_title ) ), 0, t.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE );
 			actionBar.setTitle( t );
 		}
 	}
 
-    public void FragmentOverlord(int type, String URL)
-    {
-        FragmentManager manager = getFragmentManager();
-        Fragment currentFragment = manager.findFragmentByTag(currentFragmentTag);
-        FragmentTransaction transaction = manager.beginTransaction();
-        if (currentFragment != null) {
-            //TODO figure out why this won't hide sometimes
-            transaction.hide(currentFragment);
-            transaction.addToBackStack(null);
-        }
-        //TODO sliding animations
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        switch (type) {
-            case TYPE_TOPICLIST:
-                TopicListFragment topicListFragment = (TopicListFragment) manager.findFragmentByTag(URL);
-                if (topicListFragment == null) {
-                    topicListFragment = TopicListFragment.newInstance(0, URL);
-                    topicListFragment.setUp( getApplicationContext() );
-                    topicListFragment.setCallbacks(this);
-                    transaction.add(R.id.container, topicListFragment, URL);
-                }
-                    else transaction.show(topicListFragment);
-                {
+	@Override
+	public void onBackPressed()
+	{
 
-                }
-                break;
-            case TYPE_TOPIC:
-                TopicFragment topicFragment = (TopicFragment) manager.findFragmentByTag(URL);
-                if (topicFragment == null)
-                {
-                    topicFragment = TopicFragment.newInstance(URL);
-                    topicFragment.setCallbacks(this);
-                    topicFragment.setUp( getApplicationContext() );
-                    transaction.add(R.id.container, topicFragment, URL);
-                }
-                else
-                {
-                    transaction.show(topicFragment);
-                }
+	}
 
-                break;
-            case TYPE_POLL:
-                break;
-            default:
-                break;
+	public void FragmentOverlord( int type, String URL )
+	{
+		FragmentManager manager = getFragmentManager();
+		Fragment currentFragment = manager.findFragmentByTag( currentFragmentTag );
+		FragmentTransaction transaction = manager.beginTransaction();
 
-        }
-        Log.e(mTag, URL);
-        currentFragmentTag = URL;
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
+
+		for ( String s : pageHistory )
+		{
+			//TODO optimize this
+			if ( manager.findFragmentByTag( s ) != null && s != URL )
+			{ //Make sure fragment isn't null or the wanted one
+				if ( !manager.findFragmentByTag( s ).isHidden() )
+				{//Make sure the fragment isn't already hidden
+					transaction.hide( manager.findFragmentByTag( s ) );//Hide the fragment
+				}
+			}
+			if ( manager.findFragmentByTag( s ) != null && s == URL )
+			{
+				if ( manager.findFragmentByTag( s ).isHidden() )
+				{
+					transaction.show( manager.findFragmentByTag( s ) );
+					return;
+				}
+			}
+		}
+		if ( pageHistory.contains( URL ) )
+		{
+			pageHistory.add( URL );
+		}
+		//TODO sliding animations
+		transaction.setTransition( FragmentTransaction.TRANSIT_FRAGMENT_OPEN );
+		switch ( type )
+		{
+			case TYPE_TOPICLIST:
+				TopicListFragment topicListFragment = (TopicListFragment) manager.findFragmentByTag( URL );
+				if ( topicListFragment == null )
+				{
+					topicListFragment = TopicListFragment.newInstance( 0, URL );
+					topicListFragment.setUp( getApplicationContext() );
+					topicListFragment.setCallbacks( this );
+					transaction.add( R.id.container, topicListFragment, URL );
+				}
+				else
+				{
+					transaction.show( topicListFragment );
+				}
+			{
+
+			}
+			break;
+			case TYPE_TOPIC:
+				TopicFragment topicFragment = (TopicFragment) manager.findFragmentByTag( URL );
+				if ( topicFragment == null )
+				{
+					topicFragment = TopicFragment.newInstance( URL );
+					topicFragment.setCallbacks( this );
+					topicFragment.setUp( getApplicationContext() );
+					transaction.add( R.id.container, topicFragment, URL );
+				}
+				else
+				{
+					transaction.show( topicFragment );
+				}
+
+				break;
+			case TYPE_POLL:
+				transaction.replace( R.id.container, mPollFragment );
+				break;
+			default:
+				break;
+
+		}
+		Log.e( mTag, URL );
+		currentFragmentTag = URL;
+		transaction.addToBackStack( null );
+		transaction.commit();
+	}
 
 
 	@Override
@@ -339,7 +403,7 @@ public class MainActivity extends BaseActivity
 	public void loadTopic( String URL )
 	{
 
-        FragmentOverlord(TYPE_TOPIC, URL);
+		FragmentOverlord( TYPE_TOPIC, URL );
 	/*
 		FragmentManager manager = getFragmentManager();
 

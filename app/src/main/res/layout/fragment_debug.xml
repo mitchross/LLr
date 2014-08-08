@@ -1,54 +1,55 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="0dp"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:paddingTop="0dp"
-    tools:context=".MainActivity$PlaceholderFragment">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="0dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:paddingTop="0dp"
+                tools:context=".MainActivity$PlaceholderFragment">
 
-    <TextView
-        android:layout_alignParentBottom="true"
-        android:id="@+id/textoutput"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="debug info goes here" />
+	<TextView
+			android:layout_alignParentBottom="true"
+			android:id="@+id/textoutput"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="debug info goes here" />
 
-    <Button
-        android:id="@+id/testbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/textoutput"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:onClick="loadPage"
-        android:text="topics" />
+	<Button
+			android:id="@+id/testbutton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_above="@id/textoutput"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:onClick="loadPage"
+			android:text="topics" />
 
-    <ListView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/listview"
-        android:layout_above="@+id/testbutton"
-        android:layout_alignParentTop="true">
+	<ListView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/listview"
+			android:layout_above="@+id/testbutton"
+			android:layout_alignParentTop="true">
 
-        </ListView>
+	</ListView>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="drawer"
-        android:id="@+id/testbutton2"
-        android:layout_below="@+id/listview"
-        android:layout_toRightOf="@+id/testbutton"
-        android:onClick="addDrawer"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="posts"
-        android:id="@+id/testbutton3"
-        android:layout_below="@+id/listview"
-        android:layout_toRightOf="@+id/testbutton2"
-        android:onClick="loadTopic"/>
+	<Button
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="drawer"
+			android:id="@+id/testbutton2"
+			android:layout_below="@+id/listview"
+			android:layout_toRightOf="@+id/testbutton"
+			android:onClick="addDrawer" />
+
+	<Button
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="posts"
+			android:id="@+id/testbutton3"
+			android:layout_below="@+id/listview"
+			android:layout_toRightOf="@+id/testbutton2"
+			android:onClick="loadTopic" />
 
 </RelativeLayout>

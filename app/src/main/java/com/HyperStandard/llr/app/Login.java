@@ -16,6 +16,8 @@ import java.util.concurrent.Callable;
  * @version 0.1
  * @since 6/12/2014
  */
+
+//TODO possibly include this as an inner class in LoginScreen.java
 public class Login implements Callable<Connection.Response>
 {
 	private final static String mTag = "LLr -> Login";

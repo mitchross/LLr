@@ -9,9 +9,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.PopupMenu;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.HyperStandard.llr.app.Data.Cookies;
@@ -20,6 +23,9 @@ import com.HyperStandard.llr.app.R;
 
 import org.jsoup.Connection;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -31,6 +37,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
+import static com.HyperStandard.llr.app.R.id.loginspinner;
+
 /**
  * Entry point to application, with login
  *
@@ -40,11 +48,13 @@ import butterknife.OnClick;
  */
 public class LoginScreen extends BaseActivity
 {
-	private final static String mTag = "LLr Login";
+	private final static String mTag = "LLr -> LoginScreen";
+
 	@InjectView(R.id.username)
 	protected EditText userNameEditText;
 	@InjectView(R.id.password)
 	protected EditText passwordEditText;
+
 	private SharedPreferences prefs;
 
 	@OnClick(R.id.loginbutton)
@@ -57,6 +67,7 @@ public class LoginScreen extends BaseActivity
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
 	{
+		Log.e( mTag, getDatabasePath( "testMe" ).toString() );
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.login );
 
@@ -71,9 +82,10 @@ public class LoginScreen extends BaseActivity
 		if ( prefs.contains( getString( R.string.prefs_password ) ) && prefs.contains( getString( R.string.prefs_username ) ) && prefs.getBoolean( getString( R.string.prefs_login ), false ) )
 		{
 			Toast.makeText( this, "Logging in with saved credentials", Toast.LENGTH_SHORT ).show();
-			autoLogin( prefs.getString( getString(R.string.prefs_username), "" ), prefs.getString( getString(R.string.prefs_password), "" ) );
+			userNameEditText.setText( prefs.getString( getString( R.string.prefs_username ), "" ) );
+			passwordEditText.setText( prefs.getString(getString( R.string.prefs_username ), "" ) );
+			//login( prefs.getString( getString( R.string.prefs_username ), "" ), prefs.getString( getString( R.string.prefs_password ), "" ) );
 		}
-
 	}
 
 	@Override
@@ -81,7 +93,47 @@ public class LoginScreen extends BaseActivity
 	{
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate( R.menu.login, menu );
+		Spinner mSpinner = (Spinner) menu.findItem( loginspinner ).getActionView();//You need the getActionView thing I don't know why
+		if ( prefs.contains( getString( R.string.prefs_username_set ) ) )
+		{
+			class AccountInfo
+			{
+				public String un;
+				public String pw;
 
+				public AccountInfo( String un, String pw )
+				{
+					this.un = un;
+					this.pw = pw;
+				}
+			}
+			//Instantiate arrays to hold un/pws
+			ArrayList<AccountInfo> useraccounts = new ArrayList<>();
+
+			//I don't know how to add to this set? ? ?
+			Set<String> usernameSet = prefs.getStringSet( getString( R.string.prefs_username_set ), null );
+			for ( String s : usernameSet )
+			{
+				if ( getSharedPreferences( s, MODE_PRIVATE ).contains( getString( R.string.prefs_password ) ) )
+				{//Checks to see if there's an associated password with the username
+					//TODO figure out whether too many sharedpreferences are bad
+					String password = getSharedPreferences( s, MODE_PRIVATE ).getString( getString( R.string.prefs_password ), null );
+					useraccounts.add( new AccountInfo( s, password ) );
+				}
+			}
+			mSpinner.setVisibility( View.VISIBLE );
+		}
+		else
+		{
+			Log.i( mTag, "No additional accounts reported, not showing accounts menu" );
+		}
+
+
+		String[] options = { "item 1", "items 2" };
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>( getApplicationContext(), android.R.layout.simple_spinner_item, options );
+		adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
+
+		mSpinner.setAdapter( adapter );
 		return super.onCreateOptionsMenu( menu );
 	}
 
@@ -97,7 +149,7 @@ public class LoginScreen extends BaseActivity
 			case R.id.cleardata:
 				//  Do something
 				return true;
-			case R.id.loginspinner:
+			case loginspinner:
 				// Do Something
 				return true;
 
@@ -126,17 +178,26 @@ public class LoginScreen extends BaseActivity
 				final Intent intent = new Intent( this, MainActivity.class );
 
 
-                //Using global cookie cache
-                Cookies.setCookies(response.cookies());
+				//Using global cookie cache
+				Cookies.setCookies( response.cookies() );
 
-                intent.putExtra("userId", response.cookie("userid"));
-                CheckBox checkBox = (CheckBox) findViewById( R.id.login_checkbox );
+				intent.putExtra( "userId", response.cookie( "userid" ) );
+				CheckBox checkBox = (CheckBox) findViewById( R.id.login_checkbox );
 				if ( checkBox.isChecked() )
 				{
+					Set usernameSet;
+					if ( prefs.contains( getString( R.string.prefs_username_set ) )) {
+						usernameSet = new HashSet( 1 );
+						usernameSet.add( password );
+						/*SharedPreferences newPasswordPreference = getSharedPreferences( username, MODE_PRIVATE );
+						newPasswordPreference
+						prefs.edit()
+								.putStringSet( getString( R.string.prefs_username_set ) )*/
+					}
 					prefs.edit()
-							.putString(getString(R.string.prefs_password), password)
-							.putString(getString(R.string.prefs_username), username)
-							.putBoolean(getString(R.string.prefs_login), true)
+							.putString( getString( R.string.prefs_password ), password )
+							.putString( getString( R.string.prefs_username ), username )
+							.putBoolean( getString( R.string.prefs_login ), true )
 							.apply();
 				}
 				startActivity( intent );
@@ -155,7 +216,7 @@ public class LoginScreen extends BaseActivity
 
 	}
 
-	public void autoLogin( String username, String password )
+	public void login( String username, String password )
 	{
 
 		ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -167,10 +228,10 @@ public class LoginScreen extends BaseActivity
 			//Check to see if we've got logged in correctly, and if so, set up the account.
 			if ( response.body().equals( "<script>document.location.href=\"/\";</script>" ) )
 			{
-				Log.v( mTag, "Successful login, using autoLogin()" );
+				Log.v( mTag, "Successful login, using login()" );
 
-                //Using global cookie cache
-                Cookies.setCookies(response.cookies());
+				//Using global cookie cache
+				Cookies.setCookies( response.cookies() );
 
 				final Intent intent = new Intent( this, MainActivity.class );
 

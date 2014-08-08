@@ -2,60 +2,60 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/padding_top"
-    android:paddingLeft="@dimen/padding_side"
-    android:paddingRight="@dimen/padding_side"
-    android:layout_margin="8dp"
-    android:id="@+id/topic_listview_container">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/padding_top"
+                android:paddingLeft="@dimen/padding_side"
+                android:paddingRight="@dimen/padding_side"
+                android:layout_margin="8dp"
+                android:id="@+id/topic_listview_container">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Title"
-        android:id="@+id/topicTitle"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-		android:textColor="@android:color/black"/>
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			tools:text="Title"
+			android:id="@+id/topicTitle"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:textColor="@android:color/black" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Topic Creator"
-        android:id="@+id/topicCreator"
-        android:layout_below="@+id/topicTitle"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textColor="@android:color/black"/>
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			tools:text="Topic Creator"
+			android:id="@+id/topicCreator"
+			android:layout_below="@+id/topicTitle"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:textColor="@android:color/black" />
 
-    <TextView
-        android:layout_below="@id/topicCreator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Topic Tags"
-        android:id="@+id/topicTags"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textColor="@android:color/black"/>
+	<TextView
+			android:layout_below="@id/topicCreator"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			tools:text="Topic Tags"
+			android:id="@+id/topicTags"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:textColor="@android:color/black" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Topic Posts"
-        android:id="@+id/topicPosts"
-        android:textColor="@android:color/black"
-        android:layout_below="@+id/topicCreator"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			tools:text="Topic Posts"
+			android:id="@+id/topicPosts"
+			android:textColor="@android:color/black"
+			android:layout_below="@+id/topicCreator"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true" />
 
-    <TextView
-        android:layout_below="@id/topicCreator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/holo_red_light"
-        tools:text="red tags"
-        android:id="@+id/redTags"
-        android:layout_toRightOf="@+id/topicTags" />
+	<TextView
+			android:layout_below="@id/topicCreator"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@android:color/holo_red_light"
+			tools:text="red tags"
+			android:id="@+id/redTags"
+			android:layout_toRightOf="@+id/topicTags" />
 </RelativeLayout>

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="prefs_login">userlogin</string>
-    <string name="prefs_username">username</string>
-    <string name="prefs_password">password</string>
+	<string name="prefs_login">userlogin</string>
+	<string name="prefs_username">username</string>
+	<string name="prefs_password">password</string>
+	<string name="prefs_username_set">username_array</string>
 
-    <string name="ll_main">http://endoftheinter.net/main.php</string>
-    <string name="loggedout">Das Ende des Internets</string>
+	<string name="ll_main">http://endoftheinter.net/main.php</string>
+	<string name="loggedout">Das Ende des Internets</string>
 
-    <string name="font_listview">fonts/Roboto-Light.ttf</string>
-    <string name="font_title">fonts/RobotoCondensed-Light.ttf</string>
-    <string name="font_comic">fonts/ComicRelief.ttf</string>
+	<string name="font_listview">fonts/Roboto-Light.ttf</string>
+	<string name="font_title">fonts/RobotoCondensed-Light.ttf</string>
+	<string name="font_comic">fonts/ComicRelief.ttf</string>
 </resources>

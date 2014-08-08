@@ -28,11 +28,10 @@ public class PostAdapter extends ArrayAdapter<TopicPost>
 	private Typeface typeface;
 
 
-
 	public PostAdapter( Context context, int textViewResourceId, ArrayList<TopicPost> objects )
 	{
 		super( context, textViewResourceId, objects );
-		typeface = Typefaces.getTypface( context, getContext().getString( R.string.font_listview )  );
+		typeface = Typefaces.getTypface( context, getContext().getString( R.string.font_listview ) );
 		this.objects = objects;
 	}
 
@@ -53,7 +52,6 @@ public class PostAdapter extends ArrayAdapter<TopicPost>
 		{
 			viewHolder = (ViewHolder) view.getTag();
 		}
-
 
 
 		if ( i != null )
@@ -89,7 +87,7 @@ public class PostAdapter extends ArrayAdapter<TopicPost>
 		@InjectView( R.id.post_signature )
 		TextView signature;
 
-		public ViewHolder ( View v)
+		public ViewHolder( View v )
 		{
 			ButterKnife.inject( this, v );
 		}

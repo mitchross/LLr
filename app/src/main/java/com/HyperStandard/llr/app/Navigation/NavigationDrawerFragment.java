@@ -14,6 +14,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -193,6 +194,7 @@ public class NavigationDrawerFragment extends Fragment
 				R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
 		)
 		{
+
 			@Override
 			public void onDrawerClosed( View drawerView )
 			{
@@ -227,6 +229,12 @@ public class NavigationDrawerFragment extends Fragment
 				getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
 			}
 		};
+
+		Log.e( mTag, "is drawer enabled?" + Boolean.toString( mDrawerToggle.isDrawerIndicatorEnabled() ) );
+		Log.e( mTag, "is drawer enabled?" + Boolean.toString( mDrawerToggle.onOptionsItemSelected( null ) ) );
+ 
+
+
 
 		// If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
 		// per the navigation drawer design guidelines.
@@ -317,6 +325,7 @@ public class NavigationDrawerFragment extends Fragment
 	@Override
 	public boolean onOptionsItemSelected( MenuItem item )
 	{
+		Log.e( mTag, Boolean.toString( mDrawerToggle.isDrawerIndicatorEnabled() ) );
 		if ( mDrawerToggle.onOptionsItemSelected( item ) )
 		{
 			return true;

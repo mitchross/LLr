@@ -1,16 +1,23 @@
 package com.HyperStandard.llr.app.Navigation;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.HyperStandard.llr.app.BookmarkLink;
+import com.HyperStandard.llr.app.LoadImage;
 import com.HyperStandard.llr.app.R;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * @author HyperStandard
@@ -18,6 +25,7 @@ import java.util.ArrayList;
  */
 public class NavigationAdapter extends ArrayAdapter<BookmarkLink>
 {
+	private static final int NUMBER_STATIC_LINKS = 0;
 	private ArrayList<BookmarkLink> objects;
 	private NavigationDrawerCallback callback;
 
@@ -30,47 +38,61 @@ public class NavigationAdapter extends ArrayAdapter<BookmarkLink>
 	public View getView( int position, View convertView, ViewGroup parent )
 	{
 
-		// assign the view we are converting to a local variable
 		View v = convertView;
 
-		// first check to see if the view is null. if so, we have to inflate it.
-		// to inflate it basically means to render, or show, the view.
-		if ( v == null )
+
+
+		//The navigation drawer will have the modular links at the bottom, but the first NUMBER_STATIC_LINKS items will be custom
+		BookmarkLink i = objects.get( position + NUMBER_STATIC_LINKS );
+
+		switch ( position )
 		{
-			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-			v = inflater.inflate( R.layout.listview_navigation_row, null );
-		}
+			case 0://This holds the user picture (if it exists)//TODO fix this later
+				LayoutInflater inflater1 = (LayoutInflater) getContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+				v = inflater1.inflate( R.layout.listview_navigation_userpic, null );
+				ExecutorService executor = Executors.newSingleThreadExecutor();
+				ImageView imageView = (ImageView) v.findViewById( R.id.navigation_userpic );
+				Future<Bitmap> bitmapFuture = executor.submit( new LoadImage( "http://i4.dealtwith.it/i/n/7146d225232a005ee298011a8be2bac5/almond.png" ) );
+				try
+				{
+					Bitmap userpic = bitmapFuture.get();
+					imageView.setImageBitmap( userpic );
+				}
+				catch ( InterruptedException e )
+				{
+					e.printStackTrace();
+				}
+				catch ( ExecutionException e )
+				{
+					e.printStackTrace();
+				}
+				break;
+			case 1:
+			default:
+				if ( v == null )
+				{
+					LayoutInflater inflater = (LayoutInflater) getContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+					v = inflater.inflate( R.layout.listview_navigation_row, null );
+				}
+				if ( i != null )
+				{
+					/**
+					 * Action label (String)
+					 */
+					TextView title = (TextView) v.findViewById( R.id.mainText );
 
-		/*
-		 * Recall that the variable position is sent in as an argument to this method.
-		 * The variable simply refers to the position of the current object in the list. (The ArrayAdapter
-		 * iterates through the list we sent it)
-		 *
-		 * Therefore, i refers to the current Item object.
-		 */
-		BookmarkLink i = objects.get( position );
+					if ( title != null )
+					{
+						title.setText( i.getBookmarkName() );
+					}
 
-		if ( i != null )
-		{
-
-			// This is how you obtain a reference to the TextViews.
-			// These TextViews are created in the XML files we defined.
-
-			/**
-			 * Action label (String)
-			 */
-			TextView title = (TextView) v.findViewById( R.id.mainText );
-
-			if ( title != null )
-			{
-				title.setText( i.getBookmarkName() );
-			}
-
-			//Log.e("Callback", i.getBookmarkTags());
-			if ( i.getBookmarkTags().contains( "showmessages.php" ) )
-			{
-				callback.changeLocation( i.getBookmarkTags() );
-			}
+					//Log.e("Callback", i.getBookmarkTags());
+					if ( i.getBookmarkTags().contains( "showmessages.php" ) )
+					{
+						callback.changeLocation( i.getBookmarkTags() );
+					}
+				}
+				break;
 		}
 
 
