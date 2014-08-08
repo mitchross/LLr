@@ -32,20 +32,26 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.Optional;
 
-public class MainActivity extends BaseActivity
-		implements NavigationDrawerFragment.NavigationDrawerCallbacks,
+public class MainActivity extends BaseActivity implements
+		NavigationDrawerFragment.NavigationDrawerCallbacks,
 		NavigationAdapter.NavigationDrawerCallback,
 		TopicListFragment.Callbacks,
 		TopicFragment.Callbacks,
@@ -55,6 +61,7 @@ public class MainActivity extends BaseActivity
 	private static final int TYPE_TOPICLIST = 1;
 	private static final int TYPE_TOPIC = 2;
 	private static final int TYPE_POLL = 3;
+	private static final int TYPE_BACK_BUTTON = 4;
 	public static Map<String, String> cookies;
 	private static String mTag = "LLr -> (Main)";
 	public int UserID;
@@ -62,6 +69,7 @@ public class MainActivity extends BaseActivity
 	@Optional
 	@InjectView( R.id.leftNavigationDrawer )
 	ListView listView;
+	private Queue<Pair<String, Integer>> pagesHistory = new LinkedList<>();
 	private ArrayList<String> pageHistory = new ArrayList<>();
 	/**
 	 * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -93,22 +101,16 @@ public class MainActivity extends BaseActivity
 
 		ButterKnife.inject( this );
 
-		//mNavigationDrawerFragment = (NavigationDrawerFragment) NavigationDrawerFragment.instantiate(getApplicationContext(), "debug");
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById( R.id.left_drawer );
 
-		if ( mNavigationDrawerFragment == null )
-		{
-			Log.e( mTag, "Nav fragment is null" );
-		}
+
 		mTitle = getTitle();
-		Log.e( mTag, "setup begin" );
 
 		mNavigationDrawerFragment.setUp(
 				R.id.left_drawer,
 				(DrawerLayout) findViewById( R.id.drawer_layout ),
 				UserID,
 				this );
-		Log.e( mTag, "setup complete" );
 
 		if ( true )//TODO why is this still here goodness
 		{
@@ -117,10 +119,10 @@ public class MainActivity extends BaseActivity
 			try
 			{
 				Document main = loader.get( 5, TimeUnit.SECONDS );
-				Element poll = main.select( "div.poll" ).first();
+				/*Element poll = main.select( "div.poll" ).first();
 				mPollFragment = new PollFragment();
 				mPollFragment.setCallbacks( this );
-				mPollFragment.setUp( main.select( "div.poll" ) );
+				mPollFragment.setUp( main.select( "div.poll" ) );*///TODO implement poll after frag handling/nav problems fixed
 				Elements elements = main.select( "#bookmarks > span" );
 				ArrayList<BookmarkLink> bookmarks = new ArrayList<>( elements.size() );
 
@@ -252,17 +254,72 @@ public class MainActivity extends BaseActivity
 	@Override
 	public void onBackPressed()
 	{
-
+		/* This captures the back button, and tells the fragment manager that it should remove the latest fragment
+		 * poll() is necessary because we want to remove the info for the latest (read: current) fragment so that the second to last
+		 * fragment (read: previous) fragment can be shown. At the moment the current fragment gets removed.
+		 */
+		Pair<String, Integer> t;
+		t = pagesHistory.poll();
+		FragmentOverlord( TYPE_BACK_BUTTON, t.getLeft() );
 	}
 
 	public void FragmentOverlord( int type, String URL )
 	{
+		Fragment fragmentToHide;
+		String fragmentTagToShow;
+		int newFragmentType;
+
+
 		FragmentManager manager = getFragmentManager();
-		Fragment currentFragment = manager.findFragmentByTag( currentFragmentTag );
 		FragmentTransaction transaction = manager.beginTransaction();
 
+		if ( !pagesHistory.isEmpty() )
+		{
+			fragmentToHide = manager.findFragmentByTag( pagesHistory.poll().getLeft() );
+		}
+		else
+		{
+			fragmentToHide = null;
+		}
 
-		for ( String s : pageHistory )
+		//TODO implement sliding animations
+		transaction.setTransition( FragmentTransaction.TRANSIT_FRAGMENT_OPEN );
+
+
+		/* This lets the one method both add new fragments and also override the back button
+		 * later on I'll implement tabs and such, which is why I'm using fragments, instead of activities
+		 * I could use views I suppose but I like this way, it's modular.
+		 * There needs to be a null check on the fragmentToHide later on in the switch statement
+		 * using poll() before calling the method means that the last item on the Queue gets removed ahead of time and the tag is passed
+		 * to the method for removal
+		 */
+		if ( type == TYPE_BACK_BUTTON )
+		{
+			fragmentToHide = manager.findFragmentByTag( URL );
+			transaction.remove( fragmentToHide );
+			if ( pagesHistory.isEmpty() )
+			{
+				fragmentTagToShow = "http://boards.endoftheinter.net/topics/Posted";
+				newFragmentType = TYPE_TOPICLIST;
+			}
+			else
+			{
+				fragmentTagToShow = pagesHistory.peek().getLeft();
+				newFragmentType = pagesHistory.peek().getRight();
+			}
+		}
+		/* If the type isn't TYPE_BACK_BUTTON, i.e. any type that involves adding new fragments
+		 * then you keep the inputs as they are. The URL serves both as the tag, for finding by tag, and also
+		 * the actual URL that gets passed to the fragment on instantiation (to actually load the appropriate page)
+		 * TODO handle cases in which, in different tabs, the same URL gets loaded
+		 * That can probably be handled by appending a tab number or ID to the URL before passing it as a tag
+		 */
+		else
+		{
+			fragmentTagToShow = URL;
+			newFragmentType = type;
+		}
+		/*for ( String s : pageHistory )
 		{
 			//TODO optimize this
 			if ( manager.findFragmentByTag( s ) != null && s != URL )
@@ -284,36 +341,51 @@ public class MainActivity extends BaseActivity
 		if ( pageHistory.contains( URL ) )
 		{
 			pageHistory.add( URL );
+		}*/
+
+		/* In theory, there should only be one visible fragment at a time, since back button presses are being captured, so
+		 * there's not much reason to iterate through the Queue of tags to hide them all. The null check is because the back
+		 * button handling makes the current fragment null. I could add a proper back/forward history type but that's not really normative
+		 * I think in a no web browser environment.
+		 * TODO figure out if there are edge cases where that's not true
+		 */
+		if ( fragmentToHide != null )
+		{
+			transaction.hide( fragmentToHide );
 		}
-		//TODO sliding animations
-		transaction.setTransition( FragmentTransaction.TRANSIT_FRAGMENT_OPEN );
-		switch ( type )
+
+		switch ( newFragmentType )
 		{
 			case TYPE_TOPICLIST:
-				TopicListFragment topicListFragment = (TopicListFragment) manager.findFragmentByTag( URL );
+				TopicListFragment topicListFragment = (TopicListFragment) manager.findFragmentByTag( fragmentTagToShow );
+				pagesHistory.add( Pair.of( fragmentTagToShow, newFragmentType ) );
 				if ( topicListFragment == null )
 				{
-					topicListFragment = TopicListFragment.newInstance( 0, URL );
+					topicListFragment = TopicListFragment.newInstance( 0, fragmentTagToShow );
 					topicListFragment.setUp( getApplicationContext() );
 					topicListFragment.setCallbacks( this );
-					transaction.add( R.id.container, topicListFragment, URL );
+					transaction.add( R.id.container, topicListFragment, fragmentTagToShow );
 				}
 				else
 				{
 					transaction.show( topicListFragment );
 				}
+				Log.e( mTag, pagesHistory.peek().getLeft() );
 			{
 
 			}
 			break;
 			case TYPE_TOPIC:
+				pagesHistory.add( Pair.of( fragmentTagToShow, newFragmentType ) );
+				Log.e( mTag, pagesHistory.peek().getLeft() );
+
 				TopicFragment topicFragment = (TopicFragment) manager.findFragmentByTag( URL );
 				if ( topicFragment == null )
 				{
-					topicFragment = TopicFragment.newInstance( URL );
+					topicFragment = TopicFragment.newInstance( fragmentTagToShow );
 					topicFragment.setCallbacks( this );
 					topicFragment.setUp( getApplicationContext() );
-					transaction.add( R.id.container, topicFragment, URL );
+					transaction.add( R.id.container, topicFragment, fragmentTagToShow );
 				}
 				else
 				{
@@ -328,9 +400,7 @@ public class MainActivity extends BaseActivity
 				break;
 
 		}
-		Log.e( mTag, URL );
-		currentFragmentTag = URL;
-		transaction.addToBackStack( null );
+		Log.e( mTag, "loading: " + URL );
 		transaction.commit();
 	}
 
