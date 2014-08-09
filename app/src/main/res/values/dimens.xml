@@ -7,9 +7,18 @@
 		 https://developer.android.com/design/patterns/navigation-drawer.html -->
 	<dimen name="navigation_drawer_width">240dp</dimen>
 
-
+	<!-- Per the design guidelines, what is Google, my mom? Ain't nobody can control me -->
 	<dimen name="padding_side">6dp</dimen>
 	<dimen name="padding_top">4dp</dimen>
+	<dimen name="padding_none">0dp</dimen>
 
+	<!-- Dimensions for the left Nvaigation Drawer -->
 	<dimen name="userpic_height">48dp</dimen>
+
+	<!--font sizes (duh) why is this even a comment come on pull yourself together man -->
+	<!-- Wow apparently these have to be "sp" not "dp" what's the difference even geeeez -->
+	<!-- turns out they scale the values based on the user's font size preferences, who knew? -->
+	<!--TODO delete all these dumb comments -->
+	<dimen name="font_small">10sp</dimen>
+	<dimen name="font_normal">16sp</dimen>
 </resources>

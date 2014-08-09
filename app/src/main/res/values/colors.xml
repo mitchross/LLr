@@ -4,4 +4,5 @@
 	<color name="faded_white">#88FFFFFF</color>
 	<color name="dark_grey">#FF2D2D2D</color>
 	<color name="red">#FFFF0000</color>
+	<color name="black">#FF000000</color>
 </resources>

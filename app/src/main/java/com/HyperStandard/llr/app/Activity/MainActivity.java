@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.text.SpannableStringBuilder;
@@ -67,7 +68,7 @@ public class MainActivity extends BaseActivity implements
 	public int UserID;
 	ListView mListView;
 	@Optional
-	@InjectView( R.id.leftNavigationDrawer )
+	@InjectView(R.id.leftNavigationDrawer)
 	ListView listView;
 	private Queue<Pair<String, Integer>> pagesHistory = new LinkedList<>();
 	private ArrayList<String> pageHistory = new ArrayList<>();
@@ -119,6 +120,7 @@ public class MainActivity extends BaseActivity implements
 			try
 			{
 				Document main = loader.get( 5, TimeUnit.SECONDS );
+				String ImageURLTEMP;//TODO deleteme later
 				/*Element poll = main.select( "div.poll" ).first();
 				mPollFragment = new PollFragment();
 				mPollFragment.setCallbacks( this );
@@ -427,6 +429,11 @@ public class MainActivity extends BaseActivity implements
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
+		if ( item.getItemId() == R.id.action_settings )
+		{
+			final Intent intent = new Intent( this, SettingsActivity.class );
+			startActivity( intent );
+		}
 		return id == R.id.action_settings || super.onOptionsItemSelected( item );
 	}
 

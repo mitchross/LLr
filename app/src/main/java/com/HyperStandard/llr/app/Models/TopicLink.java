@@ -10,6 +10,7 @@ import org.jsoup.select.Elements;
  */
 public class TopicLink
 {
+	//TODO I'm not sure if these should be public?
 	public int topicId;
 	public String[] tags;
 	public int userId;
@@ -18,9 +19,12 @@ public class TopicLink
 	public String topicTitle;
 	public int lastRead;
 
+	private boolean isAnonymous = false;
+
 
 	public TopicLink( Element e )
 	{
+		//Container for tags, if they exist
 		Elements el = e.select( "div.fr > a" );
 
 		//Get the tags
@@ -33,7 +37,16 @@ public class TopicLink
 			tags = new String[ el.size() ];
 			for ( int i = 0; i < tags.length; i++ )
 			{
-				tags[ i ] = el.get( i ).text();
+				String t = el.get( i ).text();
+
+				//This enable better name and userId handling, since anonymous topics are the only ones with
+				//no <a> element with a username/Id. This can skip that whole issue.
+				if ( t.equals( "Anonymous" ) )
+				{
+					isAnonymous = true;
+				}
+
+				tags[ i ] = t;
 			}
 		}
 
@@ -62,20 +75,22 @@ public class TopicLink
 //TODO THIS IS CRASHING FOR ME
 		try
 		{
-			//Check if it's an anonymous topic
-			String un = e.select( "td > a" ).first().attr( "href" );
-			if ( un == null || un.equals( "" ) )
+			if ( !isAnonymous )
 			{
-				username = "Human";
-				userId = -1;
-			}
-			else
-			{//If there's a username
+				//Check if it's an anonymous topic
+				String un = e.select( "td > a" ).first().attr( "href" );
+
 				userId = Integer.parseInt( un.substring( un.lastIndexOf( "=" ) + 1 ) );
 
 				//Same as the user except get the inner text (username)
 				username = e.select( "td > a" ).first().text();
 			}
+			else
+			{
+				username = "Human #1";
+				userId = -1;
+			}
+
 		}
 		catch ( NullPointerException e1 )
 		{

@@ -20,7 +20,7 @@ public class BaseActivity extends Activity
 	{
 		super.onCreate( savedInstanceState );
 		//Set base font
-		CalligraphyConfig.initDefault( "fonts/RobotoSlab-Regular.ttf", R.attr.fontPath );
+		//CalligraphyConfig.initDefault( getString( R.string.font_title ), R.attr.fontPath );
 	}
 
 	@Override

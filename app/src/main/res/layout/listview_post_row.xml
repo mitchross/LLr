@@ -4,11 +4,13 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingRight="@dimen/padding_side"
-                android:paddingLeft="@dimen/padding_side"
+                android:paddingRight="@dimen/padding_none"
+                android:paddingLeft="@dimen/padding_none"
                 android:paddingBottom="@dimen/padding_top">
 
 	<TextView
+			android:paddingLeft="@dimen/padding_side"
+			android:paddingRight="@dimen/padding_side"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:id="@+id/post_username"
@@ -16,6 +18,9 @@
 			android:textColor="@color/white" />
 
 	<TextView
+			android:layout_marginLeft="@dimen/padding_side"
+			android:layout_marginRight="@dimen/padding_side"
+			android:textColor="@color/black"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:singleLine="false"
@@ -23,9 +28,12 @@
 			android:layout_below="@id/post_username" />
 
 	<TextView
+			android:layout_marginLeft="@dimen/padding_side"
+			android:layout_marginRight="@dimen/padding_side"
+			android:textSize="@dimen/font_small"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/post_signature"
 			android:layout_below="@id/post_message"
-			android:textColor="@color/red" />
+			android:textColor="@color/dark_grey" />
 </RelativeLayout>

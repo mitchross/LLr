@@ -2,6 +2,7 @@ package com.HyperStandard.llr.app.Navigation;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,10 @@ import android.widget.TextView;
 
 import com.HyperStandard.llr.app.BookmarkLink;
 import com.HyperStandard.llr.app.LoadImage;
+import com.HyperStandard.llr.app.LoadPage;
 import com.HyperStandard.llr.app.R;
+
+import org.jsoup.nodes.Document;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -50,11 +54,19 @@ public class NavigationAdapter extends ArrayAdapter<BookmarkLink>
 			case 0://This holds the user picture (if it exists)//TODO fix this later
 				LayoutInflater inflater1 = (LayoutInflater) getContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 				v = inflater1.inflate( R.layout.listview_navigation_userpic, null );
-				ExecutorService executor = Executors.newSingleThreadExecutor();
+				ExecutorService executor = Executors.newFixedThreadPool( 2 );
 				ImageView imageView = (ImageView) v.findViewById( R.id.navigation_userpic );
+				Future<Document> documentFuture = executor.submit( new LoadPage( "http://endoftheinter.net/profile.php?user=25600", null ) );
 				Future<Bitmap> bitmapFuture = executor.submit( new LoadImage( "http://i4.dealtwith.it/i/n/7146d225232a005ee298011a8be2bac5/almond.png" ) );
 				try
-				{
+				{//TODO clean this up
+					Document userPageTest = documentFuture.get();
+					String pictureTest = userPageTest.select( "td:contains(picture) + td" ).first().html();
+					if ( pictureTest.equals("") )
+					{
+						Log.e( "Pciture error:", "no picture" );
+					}
+					Log.e( "picture html", pictureTest );
 					Bitmap userpic = bitmapFuture.get();
 					imageView.setImageBitmap( userpic );
 				}

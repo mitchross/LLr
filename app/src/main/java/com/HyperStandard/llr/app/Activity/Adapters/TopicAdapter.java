@@ -55,7 +55,7 @@ public class TopicAdapter extends ArrayAdapter<TopicLink>
 		}
 
 
-		//TODO really dont need all these null checks. Fix it later
+		//TODO really don't need all these null checks. Fix it later
 		if ( i != null )
 		{
 
@@ -67,8 +67,8 @@ public class TopicAdapter extends ArrayAdapter<TopicLink>
 
 			if ( myView.topicCreator != null )
 			{
-				myView.topicCreator.setTypeface( typeface );
-				myView.topicCreator.setText( i.username );
+				myView.topicCreator.setTypeface( typeface );//TODO remove the userID, it's for testing only
+				myView.topicCreator.setText( i.username + " | " + i.userId );
 			}
 
 			if ( myView.blackTags != null )
