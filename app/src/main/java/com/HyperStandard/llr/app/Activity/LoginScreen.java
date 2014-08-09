@@ -83,7 +83,7 @@ public class LoginScreen extends BaseActivity
 		{
 			Toast.makeText( this, "using saved credentials", Toast.LENGTH_SHORT ).show();
 			userNameEditText.setText( prefs.getString( getString( R.string.prefs_username ), "" ) );
-			passwordEditText.setText( prefs.getString(getString( R.string.prefs_password ), "" ) );
+			passwordEditText.setText( prefs.getString( getString( R.string.prefs_password ), "" ) );
 		}
 	}
 
@@ -165,27 +165,45 @@ public class LoginScreen extends BaseActivity
 		final String password = passwordEditText.getText().toString();
 
 		ExecutorService executor = Executors.newSingleThreadExecutor();
-		Future<Connection.Response> loggedin = executor.submit( new Login( username, password ) );
+
+		String URLtoConnectTo;
+
+		//TODO fix this up, possibly inline the callable, deal with the syntax differences etc
+		if ( prefs.getBoolean( "use_iphone_login", false ) )
+		{
+			URLtoConnectTo = "https://iphone.endoftheinter.net/";
+			//URLtoConnectTo = "https://endoftheinter.net/";
+		}
+		else
+		{
+			URLtoConnectTo = "https://iphone.endoftheinter.net/";
+		}
+
+		Future<Connection.Response> loggedin = executor.submit( new Login( URLtoConnectTo, username, password ) );
 		try
 		{
 			Connection.Response response = loggedin.get( 30, TimeUnit.SECONDS );
 
+			//TODO get this in a constants file for easy updating, character escapes are proving troublesome
 			//Check to see if we've got logged in correctly, and if so, set up the account.
 			if ( response.body().equals( "<script>document.location.href=\"/\";</script>" ) )
 			{
+				Log.e( response.body(), getString( R.string.successful_response ) );
+
 				Log.i( mTag, "Successful login, using manual login()" );
 				final Intent intent = new Intent( this, MainActivity.class );
 
-
-				//Using global cookie cache
+				//Adding cookies to global cookie cache
 				Cookies.setCookies( response.cookies() );
 
-				intent.putExtra( "userId", response.cookie( "userid" ) );
+				int userId = Integer.parseInt( response.cookie( getString( R.string.cookies_userid ) ) );
+				intent.putExtra( "userId", userId );
 				CheckBox checkBox = (CheckBox) findViewById( R.id.login_checkbox );
 				if ( checkBox.isChecked() )
 				{
 					Set usernameSet;
-					if ( prefs.contains( getString( R.string.prefs_username_set ) )) {
+					if ( prefs.contains( getString( R.string.prefs_username_set ) ) )
+					{
 						usernameSet = new HashSet( 1 );
 						usernameSet.add( password );
 						/*SharedPreferences newPasswordPreference = getSharedPreferences( username, MODE_PRIVATE );
@@ -203,6 +221,7 @@ public class LoginScreen extends BaseActivity
 			}
 			else
 			{
+				Log.e( response.body(), getString( R.string.successful_response ) );
 				Toast.makeText( this, "Failed to login", Toast.LENGTH_SHORT ).show();
 			}
 
@@ -219,10 +238,10 @@ public class LoginScreen extends BaseActivity
 	{
 
 		ExecutorService executor = Executors.newSingleThreadExecutor();
-		Future<Connection.Response> loggedin = executor.submit( new Login( username, password ) );
+		Future<Connection.Response> loggedin = executor.submit( new Login( "http://iphone.endoftheinter.net/", username, password ) );
 		try
 		{
-			Connection.Response response = loggedin.get( 15, TimeUnit.SECONDS );
+			Connection.Response response = loggedin.get( 15, TimeUnit.SECONDS );//TODO standardize timeouts
 
 			//Check to see if we've got logged in correctly, and if so, set up the account.
 			if ( response.body().equals( "<script>document.location.href=\"/\";</script>" ) )

@@ -1,0 +1,11 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory
+		android:title="@string/pref_header_general" />
+	<SwitchPreference
+			android:key="use_iphone_login"
+			android:capitalize="sentences"
+			android:defaultValue="true"
+			android:title="@string/pref_use_iphone_login"
+			/>
+
+</PreferenceScreen>

@@ -23,17 +23,17 @@ public class Login implements Callable<Connection.Response>
 	private final static String mTag = "LLr -> Login";
 	private String username;
 	private String password;
+	private String URL;
 
-	public Login( String username, String password )
+	public Login( String URL, String username, String password )
 	{
+		this.URL = URL;
 		this.username = username;
 		this.password = password;
 	}
 
 	public Connection.Response call() throws Exception
 	{
-		String url = "https://iphone.endoftheinter.net";
-
 
 		try
 		{
@@ -41,7 +41,7 @@ public class Login implements Callable<Connection.Response>
 			 * Try to connect to iphone login site and get response
 			 */
 			Connection.Response res = Jsoup
-					.connect( url )
+					.connect( "https://iphone.endoftheinter.net" )
 					.data( "username", username, "password", password )
 					.method( Connection.Method.POST )
 					.execute();
@@ -60,9 +60,9 @@ public class Login implements Callable<Connection.Response>
 			//TODO find a less dumb way to do this?
 			catch ( Exception e )
 			{
-				url = "https://endoftheinter.net/";
+				URL = "https://endoftheinter.net/";
 				Connection.Response errorPage = Jsoup
-						.connect( url )
+						.connect( URL )
 						.data( "username", username, "password", password )
 						.method( Connection.Method.POST )
 						.execute();

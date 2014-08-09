@@ -1,0 +1,14 @@
+<resources>
+	<string name="title_activity_settings">Settings</string>
+
+	<!-- Strings related to Settings -->
+
+	<string name="pref_header_general">General</string>
+
+	<string name="pref_header_privacy">Privacy</string>
+
+	<string name="pref_use_database">Use database</string>
+
+	<string name="pref_use_iphone_login">Use iPhone login</string>
+
+</resources>
