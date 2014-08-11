@@ -29,6 +29,7 @@ import com.HyperStandard.llr.app.Navigation.NavigationAdapter;
 import com.HyperStandard.llr.app.Navigation.NavigationDrawerFragment;
 import com.HyperStandard.llr.app.R;
 
+import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -68,7 +69,7 @@ public class MainActivity extends BaseActivity implements
 	public int UserID;
 	ListView mListView;
 	@Optional
-	@InjectView(R.id.leftNavigationDrawer)
+	@InjectView( R.id.leftNavigationDrawer )
 	ListView listView;
 	private Queue<Pair<String, Integer>> pagesHistory = new LinkedList<>();
 	private ArrayList<String> pageHistory = new ArrayList<>();
@@ -433,6 +434,14 @@ public class MainActivity extends BaseActivity implements
 		{
 			final Intent intent = new Intent( this, SettingsActivity.class );
 			startActivity( intent );
+		}
+
+		if ( item.getItemId() == R.id.action_logout )
+		{
+			//TODO add logout link to strings and use that for connection
+			final Intent intent = new Intent( this, LoginScreen.class );
+			startActivity( intent );
+			//TODO add extra boolean value from response indicating successful logout
 		}
 		return id == R.id.action_settings || super.onOptionsItemSelected( item );
 	}
