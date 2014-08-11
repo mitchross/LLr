@@ -14,7 +14,9 @@ import com.HyperStandard.llr.app.BookmarkLink;
 import com.HyperStandard.llr.app.LoadImage;
 import com.HyperStandard.llr.app.LoadPage;
 import com.HyperStandard.llr.app.R;
+import com.squareup.picasso.Picasso;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.jsoup.nodes.Document;
 
 import java.util.ArrayList;
@@ -32,10 +34,12 @@ public class NavigationAdapter extends ArrayAdapter<BookmarkLink>
 	private static final int NUMBER_STATIC_LINKS = 0;
 	private ArrayList<BookmarkLink> objects;
 	private NavigationDrawerCallback callback;
+	private int userId;
 
-	NavigationAdapter( Context context, int textViewResourceId, ArrayList<BookmarkLink> objects )
+	NavigationAdapter( Context context, int textViewResourceId, ArrayList<BookmarkLink> objects, int userId )
 	{
 		super( context, textViewResourceId, objects );
+		this.userId = userId;
 		this.objects = objects;
 	}
 
@@ -54,27 +58,24 @@ public class NavigationAdapter extends ArrayAdapter<BookmarkLink>
 			case 0://This holds the user picture (if it exists)//TODO fix this later
 				LayoutInflater inflater1 = (LayoutInflater) getContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 				v = inflater1.inflate( R.layout.listview_navigation_userpic, null );
-				ExecutorService executor = Executors.newFixedThreadPool( 2 );
+				ExecutorService executor = Executors.newSingleThreadExecutor();
 				ImageView imageView = (ImageView) v.findViewById( R.id.navigation_userpic );
-				Future<Document> documentFuture = executor.submit( new LoadPage( "http://endoftheinter.net/profile.php?user=25600", null ) );
-				Future<Bitmap> bitmapFuture = executor.submit( new LoadImage( "http://i4.dealtwith.it/i/n/7146d225232a005ee298011a8be2bac5/almond.png" ) );
+				Future<Document> documentFuture = executor.submit( new LoadPage( "http://endoftheinter.net/profile.php?user=" + userId, null ) );
 				try
 				{//TODO clean this up
 					Document userPageTest = documentFuture.get();
-					String pictureTest = userPageTest.select( "td:contains(picture) + td" ).first().html();
-					if ( pictureTest.equals("") )
+					String pictureTest;
+					Log.e( "userId", Integer.toString( userId ) );
+					if ( userPageTest.select( "td:contains(picture) + td a" ).first().hasAttr( "imgsrc" ) )
 					{
-						Log.e( "Pciture error:", "no picture" );
+						pictureTest = userPageTest.select( "td:contains(picture) + td a" ).first().attr( "imgsrc" );
+						Picasso.with(getContext())
+								.load( pictureTest )
+								.into( imageView );
+						Log.e( Integer.toString( userId ), pictureTest );
 					}
-					Log.e( "picture html", pictureTest );
-					Bitmap userpic = bitmapFuture.get();
-					imageView.setImageBitmap( userpic );
 				}
-				catch ( InterruptedException e )
-				{
-					e.printStackTrace();
-				}
-				catch ( ExecutionException e )
+				catch ( InterruptedException | ExecutionException | NullPointerException e )
 				{
 					e.printStackTrace();
 				}

@@ -7,6 +7,8 @@
 
 	<!-- strings to determine LL functions -->
 	<string name="successful_response">&quot;&lt;script&gt;document.location.href=\&quot;/\&quot;;&lt;script&gt;&quot;</string>
+
+	<string name="url_logout">http://endoftheinter.net/logout.php</string>
 	<string name="ll_main">http://endoftheinter.net/main.php</string>
 	<string name="loggedout">Das Ende des Internets</string>
 

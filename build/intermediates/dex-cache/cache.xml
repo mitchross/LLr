@@ -20,6 +20,12 @@
         revision="19.1.0"
         sha1="1069a9bca1cb0162881179a799d273d45e9aee14"/>
     <item
+        dex="C:\Users\nonex_000\SkyDrive\Development\AndroidStudioProjects\writer\LLR\app\build\intermediates\pre-dexed\debug\picasso-2.3.3-4965aac4be4cf2f967f5852e06064b53d4e78ade.jar"
+        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\com.squareup.picasso\picasso\2.3.3\1262995965440e28ba5c4d480c9c9ab4ccce84cc\picasso-2.3.3.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="1262995965440e28ba5c4d480c9c9ab4ccce84cc"/>
+    <item
         dex="C:\Users\nonex_000\SkyDrive\Development\AndroidStudioProjects\writer\LLR\app\build\intermediates\pre-dexed\debug\commons-lang3-3.3.2-e99d11a82b80d5c65f0ff0f19398ddbed3571cd8.jar"
         jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\org.apache.commons\commons-lang3\3.3.2\90a3822c38ec8c996e84c16a3477ef632cbc87a3\commons-lang3-3.3.2.jar"
         jumboMode="false"

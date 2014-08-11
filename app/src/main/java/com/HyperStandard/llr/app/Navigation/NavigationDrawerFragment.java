@@ -67,7 +67,7 @@ public class NavigationDrawerFragment extends Fragment
 	private int mCurrentSelectedPosition = 4;
 	private boolean mFromSavedInstanceState;
 	private boolean mUserLearnedDrawer;
-	private int UserID;
+	private int userId;
 	private String URL;
 	private Context context;
 
@@ -122,28 +122,14 @@ public class NavigationDrawerFragment extends Fragment
 
 		//TODO put this code somewhere else maybe?
 		ArrayList<BookmarkLink> bookmarks = new ArrayList<>();
-		bookmarks.add(
-				new BookmarkLink(
-						"My Account",
-						( "http://endoftheinter.net/profile.php?user=" + Integer.toString( UserID ) ),
-						"ACCOUNT" )
-		);
-		bookmarks.add(
-				new BookmarkLink(
-						"Poll of The Day",
-						"http://endoftheinter.net/main.php",
-						"POLL" )
-		);
-		bookmarks.add(
-				new BookmarkLink(
-						"Logout",
-						"http://endoftheinter.net/logout.php",
-						"LOGOUT" )
-		);
+
+		Log.e( mTag, Integer.toString( userId ) );
 		mDrawerListView.setAdapter( new NavigationAdapter(
 						getActionBar().getThemedContext(),
 						listview_navigation_row,
-						bookmarks )
+						bookmarks,
+						userId
+				)
 		);
 		mDrawerListView.setOnItemClickListener( new AdapterView.OnItemClickListener()
 		{
@@ -174,7 +160,8 @@ public class NavigationDrawerFragment extends Fragment
 		this.context = context;
 		mFragmentContainerView = getActivity().findViewById( fragmentId );
 		mDrawerLayout = drawerLayout;
-		this.UserID = UserID;
+		this.userId = UserID;
+		Log.e( mTag, Integer.toString( userId ) );
 
 		// set a custom shadow that overlays the main content when the drawer opens
 		mDrawerLayout.setDrawerShadow( R.drawable.drawer_shadow, GravityCompat.START );
@@ -249,6 +236,15 @@ public class NavigationDrawerFragment extends Fragment
 		} );
 
 		mDrawerLayout.setDrawerListener( mDrawerToggle );
+		ArrayList<BookmarkLink> bookmarks = new ArrayList<>();
+
+		NavigationAdapter adapter = new NavigationAdapter(  getActionBar().getThemedContext(),
+				listview_navigation_row,
+				bookmarks,
+				userId
+		);
+		mDrawerListView.setAdapter( adapter );
+		mDrawerListView.invalidate();
 	}
 
 	private void selectItem( int position, String URL )

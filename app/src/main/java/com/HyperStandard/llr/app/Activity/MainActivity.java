@@ -34,11 +34,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -66,7 +64,7 @@ public class MainActivity extends BaseActivity implements
 	private static final int TYPE_BACK_BUTTON = 4;
 	public static Map<String, String> cookies;
 	private static String mTag = "LLr -> (Main)";
-	public int UserID;
+	public int userId;
 	ListView mListView;
 	@Optional
 	@InjectView( R.id.leftNavigationDrawer )
@@ -99,7 +97,7 @@ public class MainActivity extends BaseActivity implements
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_main );
 
-		UserID = getIntent().getIntExtra( "userId", -1 );
+		userId = getIntent().getIntExtra( "userId", -1 );
 
 		ButterKnife.inject( this );
 
@@ -108,10 +106,11 @@ public class MainActivity extends BaseActivity implements
 
 		mTitle = getTitle();
 
+		Log.e( mTag, Integer.toString( userId ) );
 		mNavigationDrawerFragment.setUp(
 				R.id.left_drawer,
 				(DrawerLayout) findViewById( R.id.drawer_layout ),
-				UserID,
+				userId,
 				this );
 
 		if ( true )//TODO why is this still here goodness
@@ -438,6 +437,9 @@ public class MainActivity extends BaseActivity implements
 
 		if ( item.getItemId() == R.id.action_logout )
 		{
+			Connection.Response response;
+			Document logoutResponse;
+			//response = Jsoup.( getString( R.string.url_logout ) )
 			//TODO add logout link to strings and use that for connection
 			final Intent intent = new Intent( this, LoginScreen.class );
 			startActivity( intent );

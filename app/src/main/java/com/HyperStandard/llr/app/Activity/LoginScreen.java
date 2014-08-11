@@ -32,6 +32,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.prefs.Preferences;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -169,10 +170,12 @@ public class LoginScreen extends BaseActivity
 		String URLtoConnectTo;
 
 		//TODO fix this up, possibly inline the callable, deal with the syntax differences etc
-		if ( prefs.getBoolean( "use_iphone_login", false ) )
+		SharedPreferences acctPrefs = getPreferences( MODE_PRIVATE );
+		if ( acctPrefs.getBoolean( "use_iphone_login", false ) )
 		{
-			URLtoConnectTo = "https://iphone.endoftheinter.net/";
-			//URLtoConnectTo = "https://endoftheinter.net/";
+			Log.e( mTag, "using desktop version" );
+			//URLtoConnectTo = "https://iphone.endoftheinter.net/";
+			URLtoConnectTo = "https://endoftheinter.net/";
 		}
 		else
 		{
