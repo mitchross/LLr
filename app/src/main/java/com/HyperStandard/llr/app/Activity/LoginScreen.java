@@ -171,15 +171,15 @@ public class LoginScreen extends BaseActivity
 
 		//TODO fix this up, possibly inline the callable, deal with the syntax differences etc
 		SharedPreferences acctPrefs = getPreferences( MODE_PRIVATE );
-		if ( acctPrefs.getBoolean( "use_iphone_login", false ) )
+		if ( acctPrefs.getBoolean( "use_iphone_login", true ) )
 		{
-			Log.e( mTag, "using desktop version" );
-			//URLtoConnectTo = "https://iphone.endoftheinter.net/";
-			URLtoConnectTo = "https://endoftheinter.net/";
+			URLtoConnectTo = "https://iphone.endoftheinter.net/";
 		}
 		else
 		{
-			URLtoConnectTo = "https://iphone.endoftheinter.net/";
+			Log.e( mTag, "using desktop version" );
+			URLtoConnectTo = "https://endoftheinter.net/";
+			//URLtoConnectTo = "https://iphone.endoftheinter.net/";
 		}
 
 		Future<Connection.Response> loggedin = executor.submit( new Login( URLtoConnectTo, username, password ) );
