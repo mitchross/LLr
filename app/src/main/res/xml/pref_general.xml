@@ -1,6 +1,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 	<PreferenceCategory
 		android:title="@string/pref_header_general" />
+	<!--TODO add an explanation of this item-->
 	<SwitchPreference
 			android:key="use_iphone_login"
 			android:capitalize="sentences"

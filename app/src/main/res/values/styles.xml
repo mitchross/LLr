@@ -2,14 +2,22 @@
 
 	<!-- Base application theme. -->
 	<style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-		<!-- Customize your theme here. -->
+		<item name="android:actionOverflowButtonStyle">@style/overflow_chevron</item>
 	</style>
 
-	<style name="login_style">
+	<style name="AppTheme.login_style">
 		<item name="android:actionBarStyle">@style/login_actionbar</item>
 		<item name="android:windowActionBarOverlay">true</item>
 		<item name="android:windowActionBar">true</item>
 		<item name="android:windowTitleSize">0dp</item>
+	</style>
+
+	<style name="AppTheme.main">
+
+	</style>
+
+	<style name="overflow_chevron">
+		<item name="android:src">@drawable/ic_chevron_down</item>
 	</style>
 
 	<style name="login_actionbar" parent="android:Widget.Holo.ActionBar">
