@@ -4,6 +4,7 @@
 	<string name="prefs_username">username</string>
 	<string name="prefs_password">password</string>
 	<string name="prefs_username_set">username_array</string>
+	<string name="prefs_name">LLr.prefs</string>
 
 	<!-- strings to determine LL functions -->
 	<string name="successful_response">&quot;&lt;script&gt;document.location.href=\&quot;/\&quot;;&lt;script&gt;&quot;</string>
@@ -17,4 +18,5 @@
 	<string name="font_listview">fonts/Roboto-Light.ttf</string>
 	<string name="font_title">fonts/RobotoCondensed-Light.ttf</string>
 	<string name="font_comic">fonts/ComicRelief.ttf</string>
+
 </resources>
