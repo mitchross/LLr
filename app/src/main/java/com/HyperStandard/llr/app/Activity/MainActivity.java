@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.HyperStandard.llr.app.BookmarkLink;
 import com.HyperStandard.llr.app.CustomTypefaceSpan;
+import com.HyperStandard.llr.app.Fragment.MainPageFragment;
 import com.HyperStandard.llr.app.Fragment.PollFragment;
 import com.HyperStandard.llr.app.Fragment.TopicFragment;
 import com.HyperStandard.llr.app.Fragment.TopicListFragment;
@@ -44,7 +45,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -61,6 +62,7 @@ public class MainActivity extends BaseActivity implements
 	private static final int TYPE_TOPICLIST = 1;
 	private static final int TYPE_TOPIC = 2;
 	private static final int TYPE_POLL = 3;
+	private static final int TYPE_MAINPAGE = 5;
 	private static final int TYPE_BACK_BUTTON = 4;
 	public static Map<String, String> cookies;
 	private static String mTag = "LLr -> (Main)";
@@ -69,7 +71,7 @@ public class MainActivity extends BaseActivity implements
 	@Optional
 	@InjectView( R.id.leftNavigationDrawer )
 	ListView listView;
-	private Queue<Pair<String, Integer>> pagesHistory = new LinkedList<>();
+	private Queue<Triple<String, String,  Integer>> pagesHistory = new LinkedList<>();
 	private ArrayList<String> pageHistory = new ArrayList<>();
 	/**
 	 * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -83,7 +85,7 @@ public class MainActivity extends BaseActivity implements
 	/**
 	 * Used to store the last screen title. For use in {@link #restoreActionBar()}.
 	 */
-	private CharSequence mTitle;
+	private CharSequence mTitle = "";
 	/**
 	 * stores the tag of the active fragment
 	 */
@@ -157,6 +159,7 @@ public class MainActivity extends BaseActivity implements
 			}
 
 		}
+		FragmentOverlord( TYPE_MAINPAGE, getString( R.string.ll_main ) );
 	}
 
 	@Override
@@ -260,7 +263,7 @@ public class MainActivity extends BaseActivity implements
 		 * poll() is necessary because we want to remove the info for the latest (read: current) fragment so that the second to last
 		 * fragment (read: previous) fragment can be shown. At the moment the current fragment gets removed.
 		 */
-		Pair<String, Integer> t;
+		Triple<String, String, Integer> t;
 		t = pagesHistory.poll();
 		FragmentOverlord( TYPE_BACK_BUTTON, t.getLeft() );
 	}
@@ -270,7 +273,6 @@ public class MainActivity extends BaseActivity implements
 		Fragment fragmentToHide;
 		String fragmentTagToShow;
 		int newFragmentType;
-
 
 		FragmentManager manager = getFragmentManager();
 		FragmentTransaction transaction = manager.beginTransaction();
@@ -306,6 +308,8 @@ public class MainActivity extends BaseActivity implements
 			}
 			else
 			{
+				mTitle = pagesHistory.peek().getMiddle();
+				restoreActionBar();
 				fragmentTagToShow = pagesHistory.peek().getLeft();
 				newFragmentType = pagesHistory.peek().getRight();
 			}
@@ -360,7 +364,7 @@ public class MainActivity extends BaseActivity implements
 		{
 			case TYPE_TOPICLIST:
 				TopicListFragment topicListFragment = (TopicListFragment) manager.findFragmentByTag( fragmentTagToShow );
-				pagesHistory.add( Pair.of( fragmentTagToShow, newFragmentType ) );
+				pagesHistory.add( Triple.of( fragmentTagToShow, mTitle.toString(), newFragmentType ) );
 				if ( topicListFragment == null )
 				{
 					topicListFragment = TopicListFragment.newInstance( 0, fragmentTagToShow );
@@ -378,7 +382,7 @@ public class MainActivity extends BaseActivity implements
 			}
 			break;
 			case TYPE_TOPIC:
-				pagesHistory.add( Pair.of( fragmentTagToShow, newFragmentType ) );
+				pagesHistory.add( Triple.of( fragmentTagToShow, mTitle.toString(), newFragmentType ) );
 				Log.e( mTag, pagesHistory.peek().getLeft() );
 
 				TopicFragment topicFragment = (TopicFragment) manager.findFragmentByTag( URL );
@@ -397,6 +401,10 @@ public class MainActivity extends BaseActivity implements
 				break;
 			case TYPE_POLL:
 				transaction.replace( R.id.container, mPollFragment );
+				break;
+			case TYPE_MAINPAGE:
+				MainPageFragment fragment = MainPageFragment.newInstance( 0, getString( R.string.ll_main ) );
+				transaction.replace( R.id.container, fragment );
 				break;
 			default:
 				break;
@@ -429,6 +437,11 @@ public class MainActivity extends BaseActivity implements
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
+
+		if ( item.getItemId() == R.id.action_example )
+		{
+			FragmentOverlord( TYPE_MAINPAGE, getString( R.string.ll_main ) );
+		}
 		if ( item.getItemId() == R.id.action_settings )
 		{
 			final Intent intent = new Intent( this, SettingsActivity.class );

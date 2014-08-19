@@ -20,7 +20,7 @@ import java.util.concurrent.Callable;
 //TODO possibly include this as an inner class in LoginScreen.java
 public class Login implements Callable<Connection.Response>
 {
-	private final static String mTag = "LLr -> Login";
+	private final static String mTag = "LLr -> (Login)";
 	private String username;
 	private String password;
 	private String URL;

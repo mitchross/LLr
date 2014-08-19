@@ -51,14 +51,14 @@ public class LoginScreen extends BaseActivity
 {
 	private final static String mTag = "LLr -> LoginScreen";
 
-	@InjectView( R.id.username )
+	@InjectView(R.id.username)
 	protected EditText userNameEditText;
-	@InjectView( R.id.password )
+	@InjectView(R.id.password)
 	protected EditText passwordEditText;
 
 	private SharedPreferences prefs;
 
-	@OnClick( R.id.loginbutton )
+	@OnClick(R.id.loginbutton)
 	protected void loginButtonClick()
 	{
 		login();
@@ -71,6 +71,7 @@ public class LoginScreen extends BaseActivity
 		Log.e( mTag, getDatabasePath( "testMe" ).toString() );
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.login );
+		PreferenceManager.setDefaultValues( getApplicationContext(), "prefs", MODE_PRIVATE, R.xml.pref_general, false );
 
 		//Butterknife injection for views
 		ButterKnife.inject( this );
@@ -78,7 +79,7 @@ public class LoginScreen extends BaseActivity
 
 		//Get the shared prefs that the username is going to be put in
 		//TODO change this to possibly encrypted login info, and support for multiple accounts
-		prefs = PreferenceManager.getDefaultSharedPreferences( this );
+		prefs = getSharedPreferences( getString( R.string.pref_name ), MODE_PRIVATE );
 		//TODO figure out how to get external IP and use LL check login instead of just logging in again
 		if ( prefs.contains( getString( R.string.prefs_password ) ) && prefs.contains( getString( R.string.prefs_username ) ) && prefs.getBoolean( getString( R.string.prefs_login ), false ) )
 		{
@@ -170,8 +171,7 @@ public class LoginScreen extends BaseActivity
 		String URLtoConnectTo;
 
 		//TODO fix this up, possibly inline the callable, deal with the syntax differences etc
-		SharedPreferences acctPrefs = getSharedPreferences( getString( R.string.prefs_name ), MODE_PRIVATE );
-		if ( acctPrefs.getBoolean( "use_iphone_login", true ) )
+		if ( prefs.getBoolean( "use_iphone_login", true ) )
 		{
 			URLtoConnectTo = "https://iphone.endoftheinter.net/";
 		}

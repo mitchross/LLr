@@ -51,7 +51,7 @@ public class SettingsActivity extends PreferenceActivity
 		public void onCreate( Bundle savedInstanceState )
 		{
 			super.onCreate( savedInstanceState );
-			getPreferenceManager().setSharedPreferencesName( getString( R.string.prefs_name ) );
+			getPreferenceManager().setSharedPreferencesName( getString( R.string.pref_name ) );
 			addPreferencesFromResource( R.xml.pref_general );
 			addPreferencesFromResource( R.xml.pref_privacy );
 		}

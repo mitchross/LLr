@@ -12,9 +12,10 @@ import java.io.File;
  */
 public class DatabaseOpener extends SQLiteOpenHelper
 {
-	private final static String mTag = "LLr -> DatabaseOpener";
+	private final static String mTag = "LLr -> (DatabaseOpener)";
 
 	private Context mContext;
+	private String databaseName;
 	private SQLiteDatabase.CursorFactory mCursorfactory;
 
 	private SQLiteDatabase mDataBase;
@@ -24,12 +25,11 @@ public class DatabaseOpener extends SQLiteOpenHelper
 		super( context, name, factory, version );
 		this.mContext = context;
 		this.mCursorfactory = factory;
-		//File dbFile = context.getDatabasePath(  )
 	}
 
 	public void createDatabase(String name)
 	{
-		//SQLiteDatabase.openOrCreateDatabase(  )
+		SQLiteDatabase.openOrCreateDatabase( mContext.getDatabasePath( databaseName ), mCursorfactory );
 	}
 
 	@Override

@@ -11,9 +11,10 @@ import java.util.concurrent.Callable;
 /**
  * Created by nonex_000 on 8/7/2014.
  */
+//Todo remove this it's useless with picasso
 public class LoadImage implements Callable<Bitmap>
 {
-	private final static String mTag = "LLr -> LoadImage";
+	private final static String mTag = "LLr -> (LoadImage)";
 	private URL mURL;
 
 	public LoadImage( String URLString )
