@@ -52,6 +52,7 @@ public class SettingsActivity extends PreferenceActivity
 		{
 			super.onCreate( savedInstanceState );
 			getPreferenceManager().setSharedPreferencesName( getString( R.string.pref_name ) );
+			addPreferencesFromResource( R.xml.pref_links );
 			addPreferencesFromResource( R.xml.pref_general );
 			addPreferencesFromResource( R.xml.pref_privacy );
 		}

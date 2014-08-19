@@ -123,7 +123,6 @@ public class NavigationDrawerFragment extends Fragment
 		//TODO put this code somewhere else maybe?
 		ArrayList<BookmarkLink> bookmarks = new ArrayList<>();
 
-		Log.e( mTag, Integer.toString( userId ) );
 		mDrawerListView.setAdapter( new NavigationAdapter(
 						getActionBar().getThemedContext(),
 						listview_navigation_row,
@@ -161,7 +160,6 @@ public class NavigationDrawerFragment extends Fragment
 		mFragmentContainerView = getActivity().findViewById( fragmentId );
 		mDrawerLayout = drawerLayout;
 		this.userId = UserID;
-		Log.e( mTag, Integer.toString( userId ) );
 
 		// set a custom shadow that overlays the main content when the drawer opens
 		mDrawerLayout.setDrawerShadow( R.drawable.drawer_shadow, GravityCompat.START );

@@ -14,4 +14,6 @@
 
 	<string name="pref_use_iphone_login">Use iPhone login</string>
 
+	<string name="pref_goto_new_posts">Short press for new posts</string>
+
 </resources>

@@ -65,14 +65,12 @@ public class NavigationAdapter extends ArrayAdapter<BookmarkLink>
 				{//TODO clean this up
 					Document userPageTest = documentFuture.get();
 					String pictureTest;
-					Log.e( "userId", Integer.toString( userId ) );
 					if ( userPageTest.select( "td:contains(picture) + td a" ).first().hasAttr( "imgsrc" ) )
 					{
 						pictureTest = userPageTest.select( "td:contains(picture) + td a" ).first().attr( "imgsrc" );
 						Picasso.with(getContext())
 								.load( pictureTest )
 								.into( imageView );
-						Log.e( Integer.toString( userId ), pictureTest );
 					}
 				}
 				catch ( InterruptedException | ExecutionException | NullPointerException e )

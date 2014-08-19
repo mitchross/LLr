@@ -31,6 +31,7 @@ import com.HyperStandard.llr.app.Navigation.NavigationDrawerFragment;
 import com.HyperStandard.llr.app.R;
 
 import org.jsoup.Connection;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -69,9 +70,9 @@ public class MainActivity extends BaseActivity implements
 	public int userId;
 	ListView mListView;
 	@Optional
-	@InjectView( R.id.leftNavigationDrawer )
+	@InjectView(R.id.leftNavigationDrawer)
 	ListView listView;
-	private Queue<Triple<String, String,  Integer>> pagesHistory = new LinkedList<>();
+	private Queue<Triple<String, String, Integer>> pagesHistory = new LinkedList<>();
 	private ArrayList<String> pageHistory = new ArrayList<>();
 	/**
 	 * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -108,7 +109,6 @@ public class MainActivity extends BaseActivity implements
 
 		mTitle = getTitle();
 
-		Log.e( mTag, Integer.toString( userId ) );
 		mNavigationDrawerFragment.setUp(
 				R.id.left_drawer,
 				(DrawerLayout) findViewById( R.id.drawer_layout ),
@@ -141,7 +141,7 @@ public class MainActivity extends BaseActivity implements
 							"TOPIC_LIST"
 					) ) );
 
-					Log.e( e.select( "span > a" ).first().ownText(), e.select( "span > a" ).attr( "abs:href" ) );
+					Log.v( mTag, "loading bookmark: \"" + e.select( "span > a" ).first().ownText() + "\" @ " + e.select( "span > a" ).attr( "abs:href" ) );
 				}
 
 			}
@@ -165,7 +165,6 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public void onNavigationDrawerItemSelected( int position, String URL )
 	{
-		Log.e( mTag, Integer.toString( position ) );
 		if ( position == 0 )
 		{
 			FragmentOverlord( TYPE_POLL, "" );
@@ -411,6 +410,12 @@ public class MainActivity extends BaseActivity implements
 
 		}
 		Log.e( mTag, "loading: " + URL );
+		Log.e( mTag, "Type: " + Integer.toString( type ) );
+		if ( fragmentToHide != null )
+		{
+			Log.e( mTag, "Tag hiding: " + fragmentToHide.getTag() );
+		}
+
 		transaction.commit();
 	}
 
@@ -453,6 +458,7 @@ public class MainActivity extends BaseActivity implements
 			Connection.Response response;
 			Document logoutResponse;
 			//response = Jsoup.( getString( R.string.url_logout ) )
+			Jsoup.connect( getString( R.string.url_logout ) );
 			//TODO add logout link to strings and use that for connection
 			final Intent intent = new Intent( this, LoginScreen.class );
 			startActivity( intent );

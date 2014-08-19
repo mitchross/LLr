@@ -49,7 +49,7 @@ import static com.HyperStandard.llr.app.R.id.loginspinner;
  */
 public class LoginScreen extends BaseActivity
 {
-	private final static String mTag = "LLr -> LoginScreen";
+	private final static String mTag = "LLr -> (LoginScreen)";
 
 	@InjectView(R.id.username)
 	protected EditText userNameEditText;
