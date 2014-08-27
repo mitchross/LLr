@@ -69,7 +69,7 @@ public class PostMessage
 		@Override
 		public Connection.Response call() throws Exception
 		{
-			return Jsoup.connect( message )
+			return Jsoup.connect( "http://boards.endoftheinter.net/async-post.php" )
 					.data( "message", message, "h", h, "topic", Integer.toString(topicID) )
 					.cookies( Cookies.getCookies() )
 					.method( Connection.Method.POST )

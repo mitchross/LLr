@@ -26,7 +26,7 @@
 			android:layout_width="@dimen/navigation_drawer_width"
 			android:layout_height="match_parent"
 			android:layout_gravity="end"
-			android:name="com.HyperStandard.llr.app.Navigation.TabsDrawerFragment"
+			android:name="com.HyperStandard.llr.app.Navigation.PostDrawerFragment"
 			tools:layout="@layout/fragment_navigation_drawer" />
 
 	<fragment

@@ -45,6 +45,7 @@ public class TopicFragment extends Fragment
 
 	private Callbacks callbacks;
 	private Context context;
+	private int topicID;
 
 	public TopicFragment()
 	{
@@ -78,6 +79,11 @@ public class TopicFragment extends Fragment
 		{
 			Document page = request.get( 10, TimeUnit.SECONDS );
 			callbacks.sendTitle( page.title() );
+			topicID = Integer.parseInt( getArguments().getString( "URL" ) );
+			String hTag = page.select( "input[name=h]" ).attr( "value" );
+			Log.e( mTag, Integer.toString( topicID ) );
+			Log.e( mTag, hTag );
+			callbacks.registerTopic( "", hTag, topicID);
 			final Elements elements = page.select( "div.message-container" );
 
 			Future<ArrayList<TopicPost>> arrayListFuture = executor.submit( new Callable<ArrayList<TopicPost>>()
@@ -121,6 +127,8 @@ public class TopicFragment extends Fragment
 
 	public interface Callbacks
 	{
+		public void registerTopic( String message, String h, int topicID );
+
 		public void sendTitle( String title );
 	}
 

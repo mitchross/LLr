@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -29,6 +30,8 @@ import com.HyperStandard.llr.app.Fragment.TopicListFragment;
 import com.HyperStandard.llr.app.LoadPage;
 import com.HyperStandard.llr.app.Navigation.NavigationAdapter;
 import com.HyperStandard.llr.app.Navigation.NavigationDrawerFragment;
+import com.HyperStandard.llr.app.Navigation.PostDrawerFragment;
+import com.HyperStandard.llr.app.PostMessage;
 import com.HyperStandard.llr.app.R;
 
 import org.jsoup.Connection;
@@ -87,6 +90,10 @@ public class MainActivity extends BaseActivity implements
 	 */
 	private PollFragment mPollFragment;
 
+	private PostDrawerFragment mPostDrawerFragment;
+	private int topicID;
+	private String h;
+
 	/**
 	 * Used to store the last screen title. For use in {@link #restoreActionBar()}.
 	 */
@@ -109,7 +116,7 @@ public class MainActivity extends BaseActivity implements
 		ButterKnife.inject( this );
 
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById( R.id.left_drawer );
-
+		mPostDrawerFragment = (PostDrawerFragment) getFragmentManager().findFragmentById( R.id.navigation_tabs );
 
 		mTitle = getTitle();
 
@@ -506,6 +513,14 @@ public class MainActivity extends BaseActivity implements
 	}
 
 	@Override
+	public void registerTopic( String message, String h, int topicID )
+	{
+		this.h = h;
+		this.topicID = topicID;
+		mPostDrawerFragment.setUp( h, topicID, getApplicationContext() );
+	}
+
+	@Override
 	public void sendTitle( String title )
 	{
 		fixTitle( title );
@@ -602,14 +617,14 @@ public class MainActivity extends BaseActivity implements
 					return Jsoup.connect( "http://boards.endoftheinter.net/async-post.php" )
 							.cookies( Cookies.getCookies() )
 							.data( "h", html )
-							.data( "message", "posting from app" )
+							.data( "message", "im gay you guys" )
 							.data( "topic", "8898015" )
 							.method( Connection.Method.POST )
 							.execute();
 				}
 			} );
-			Connection.Response res = responseFuture.get( 5, TimeUnit.SECONDS );
-			Log.e( mTag, res.body() );
+			//Connection.Response res = responseFuture.get( 5, TimeUnit.SECONDS );
+			//Log.e( mTag, res.body() );
 
 		}
 		catch ( Exception e )
@@ -617,6 +632,14 @@ public class MainActivity extends BaseActivity implements
 			e.printStackTrace();
 		}
 
+	}
+
+	public void postMessage(View v)
+	{
+		EditText editText = (EditText) findViewById( R.id.post_message_edit_text );
+		PostMessage postMessage = new PostMessage();
+		postMessage.post( editText.getText().toString(), h, topicID, false );
+		//postMessage.post( "testing", h, topicID, false );
 	}
 
 	/**
