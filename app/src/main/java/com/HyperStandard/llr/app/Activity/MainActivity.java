@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.HyperStandard.llr.app.BookmarkLink;
 import com.HyperStandard.llr.app.CustomTypefaceSpan;
+import com.HyperStandard.llr.app.Data.Cookies;
 import com.HyperStandard.llr.app.Fragment.MainPageFragment;
 import com.HyperStandard.llr.app.Fragment.PollFragment;
 import com.HyperStandard.llr.app.Fragment.TopicFragment;
@@ -36,10 +37,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -114,6 +118,7 @@ public class MainActivity extends BaseActivity implements
 				(DrawerLayout) findViewById( R.id.drawer_layout ),
 				userId,
 				this );
+		testPost();
 
 		if ( true )//TODO why is this still here goodness
 		{
@@ -159,7 +164,7 @@ public class MainActivity extends BaseActivity implements
 			}
 
 		}
-		FragmentOverlord( TYPE_MAINPAGE, getString( R.string.ll_main ) );
+		//FragmentOverlord( TYPE_MAINPAGE, getString( R.string.ll_main ) );
 	}
 
 	@Override
@@ -539,6 +544,78 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public void changeLocation( String URL )
 	{
+
+	}
+
+	//TODO delete after test
+	public void testPost()
+	{
+		/*ExecutorService executor = Executors.newSingleThreadExecutor();
+		Thread t = new Thread( new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				try
+				{
+					Document page = Jsoup
+							.connect( "http://boards.endoftheinter.net/showmessages.php?topic=8898015" )
+							.cookies( Cookies.getCookies() )
+							.execute()
+							.parse();
+					try
+					{
+						Thread.sleep( 2000 );
+					}
+					catch ( InterruptedException e )
+					{
+						e.printStackTrace();
+					}
+					String html = page.html();
+					String h = page.select( "input[type=hidden]" ).html();
+					String inputs = page.select( "input" ).html();
+					Log.e( mTag + 1, inputs );
+					Log.e( mTag + 2, html );
+				}
+				catch ( IOException e )
+				{
+					e.printStackTrace();
+				}
+			}
+		} );
+		t.start();*/
+
+		ExecutorService executorTest = Executors.newFixedThreadPool( 2 );
+		Future<Document> loaderTest = executorTest.submit( new LoadPage( "http://boards.endoftheinter.net/showmessages.php?topic=8898015", cookies ) );
+		try
+		{
+			Document main = loaderTest.get( 30, TimeUnit.SECONDS );
+			final String html = main.select("input[name=h]").attr( "value" );
+			Log.e( mTag, html );
+			//String inputs = main.select( "form" ).toString();
+			//Log.e( mTag, inputs );
+			Future<Connection.Response> responseFuture = executorTest.submit( new Callable<Connection.Response>()
+			{
+				@Override
+				public Connection.Response call() throws Exception
+				{
+					return Jsoup.connect( "http://boards.endoftheinter.net/async-post.php" )
+							.cookies( Cookies.getCookies() )
+							.data( "h", html )
+							.data( "message", "posting from app" )
+							.data( "topic", "8898015" )
+							.method( Connection.Method.POST )
+							.execute();
+				}
+			} );
+			Connection.Response res = responseFuture.get( 5, TimeUnit.SECONDS );
+			Log.e( mTag, res.body() );
+
+		}
+		catch ( Exception e )
+		{
+			e.printStackTrace();
+		}
 
 	}
 

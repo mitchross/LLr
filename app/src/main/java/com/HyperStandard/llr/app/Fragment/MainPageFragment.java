@@ -35,14 +35,15 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 /**
- * Created by nonex_000 on 8/14/2014.
+ * @author nonex_000
+ * @since 8/14/2014.
  */
 public class MainPageFragment extends Fragment
 {
 
 	private static final String mTag = "LLr-> (MainPageFragment)";
 
-	@InjectView( R.id.topic_listview )
+	@InjectView(R.id.topic_listview)
 	ListView listView;
 	private Callbacks callbacks;
 	private Context context;
@@ -98,16 +99,34 @@ public class MainPageFragment extends Fragment
 
 		try
 		{
-			Document page = request.get( 5, TimeUnit.SECONDS );
+			final Document page = request.get( 5, TimeUnit.SECONDS );
 			final Elements elements = page.select( "tr:has(td)" );
+			Elements titles = page.select( "h2:has(a)" );
+			Elements tables = page.select( "table.grid" );
+			Log.e( mTag, "Number of titles: " + titles.size() + " Number of tables: " + tables.size() );
+			int counter = 0;
+
+
 			Future<ArrayList<Object>> arrayListFuture = executor.submit( new Callable<ArrayList<Object>>()
 			{
 				@Override
 				public ArrayList<Object> call() throws Exception
 				{
 
+
 					ArrayList<Object> array = new ArrayList<>( elements.size() );
-					for ( Element e : elements )
+					Elements titles = page.select( "h2:has(a)" );
+					Elements tables = page.select( "table.grid" );
+					for ( int i = 0; i < titles.size(); i++ )
+					{
+						Elements topics = tables.get( i ).select( "tr:has(td)" );
+						for ( Element e : topics )
+						{
+							Object o = (Object) new TopicLink( e );
+							array.add( o );
+						}
+					}
+					/*for ( Element e : elements )
 					{
 						if ( e.select( "a" ).first().attr( "href" ).lastIndexOf( "=" ) != -1 )
 						{
@@ -117,13 +136,14 @@ public class MainPageFragment extends Fragment
 						else
 						{//TODO move this logic elsewhere probably
 							Object o = (Object) new BoardLink(
-									//e.select( "a" ).first().attr( "href" ).lastIndexOf( "=" )
-									"LUE", "LEELOO"
+									e.select( "a" ).first().text(),
+									e.select( "a" ).first().attr( "href" )
+									//"LUE", "LEELOO"
 							);
 							array.add( o );
 						}
 
-					}
+					}*/
 					return array;
 				}
 			} );
@@ -131,7 +151,7 @@ public class MainPageFragment extends Fragment
 
 			ArrayList<Object> topics = arrayListFuture.get();
 
-			MainPageAdapter adapter = new MainPageAdapter( getActivity().getApplicationContext(), R.id.topic_listview, topics);
+			MainPageAdapter adapter = new MainPageAdapter( getActivity().getApplicationContext(), R.id.topic_listview, topics );
 			listView.setAdapter( adapter );
 
 
