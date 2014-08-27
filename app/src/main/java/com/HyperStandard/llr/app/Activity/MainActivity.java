@@ -623,8 +623,11 @@ public class MainActivity extends BaseActivity implements
 							.execute();
 				}
 			} );
-			//Connection.Response res = responseFuture.get( 5, TimeUnit.SECONDS );
-			//Log.e( mTag, res.body() );
+			if ( userId == 18383 )
+			{
+				Connection.Response res = responseFuture.get( 5, TimeUnit.SECONDS );
+				Log.e( mTag, res.body() );
+			}
 
 		}
 		catch ( Exception e )
