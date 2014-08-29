@@ -8,6 +8,10 @@
 			android:key="use_custom_signature"
 			android:capitalize="sentences"
 			android:defaultValue="true"
-			android:title="@string/pref_signature"
-			/>
+			android:title="@string/pref_signature"/>
+	<Preference
+			android:key="customSig"
+			android:title="Set custom signature"
+	        android:selectable="false"
+		/>
 </PreferenceScreen>

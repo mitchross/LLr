@@ -1,6 +1,7 @@
 package com.HyperStandard.llr.app.Activity;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.media.Ringtone;
@@ -55,7 +56,13 @@ public class SettingsActivity extends PreferenceActivity
 		{
 			if ( preference instanceof CheckBoxPreference )
 			{
-
+			}
+			if ( preference instanceof Preference )
+			{
+				if ( preference.getKey().equals( "customSig" ) )
+				{
+					//AlertDialog.Builder builder = new AlertDialog.Builder( mContext )
+				}
 			}
 			return false;
 		}

@@ -43,6 +43,8 @@ public class TopicListFragment extends Fragment
 	ListView listView;
 	private Callbacks callbacks;
 	private Context context;
+	private String title;
+
 
 
 	public TopicListFragment()
@@ -78,6 +80,16 @@ public class TopicListFragment extends Fragment
 	}
 
 	@Override
+	public void onHiddenChanged( boolean hidden )
+	{
+		super.onHiddenChanged( hidden );
+		if ( !hidden )
+		{
+			callbacks.sendTitle( title );
+		}
+	}
+
+	@Override
 	public void onResume()
 	{
 		super.onResume();
@@ -96,6 +108,8 @@ public class TopicListFragment extends Fragment
 		try
 		{
 			Document page = request.get( 5, TimeUnit.SECONDS );
+			title = page.title();
+			callbacks.sendTitle( title );
 			final Elements elements = page.select( "tr:has(td)" );
 			Future<ArrayList<TopicLink>> arrayListFuture = executor.submit( new Callable<ArrayList<TopicLink>>()
 			{
