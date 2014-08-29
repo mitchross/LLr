@@ -87,7 +87,11 @@ public class TopicListFragment extends Fragment
 	protected void getTopics()
 	{
 		ExecutorService executor = Executors.newFixedThreadPool( 2 );
-		Future<Document> request = executor.submit( new LoadPage( "http://boards.endoftheinter.net/topics/LUE", MainActivity.cookies ) );
+
+		String URL = getArguments().getString( "URL" );
+		Future<Document> request = executor.submit( new LoadPage( URL, MainActivity.cookies ) );
+
+		//Future<Document> request = executor.submit( new LoadPage( "http://boards.endoftheinter.net/topics/LUE", MainActivity.cookies ) );
 
 		try
 		{
@@ -108,13 +112,9 @@ public class TopicListFragment extends Fragment
 				}
 			} );
 
-
 			ArrayList<TopicLink> topics = arrayListFuture.get();
-
 			TopicAdapter adapter = new TopicAdapter( getActivity().getApplicationContext(), R.id.topic_listview, topics, callbacks );
 			listView.setAdapter( adapter );
-
-
 		}
 		catch ( InterruptedException e )
 		{

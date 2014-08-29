@@ -604,27 +604,28 @@ public class MainActivity extends BaseActivity implements
 		Future<Document> loaderTest = executorTest.submit( new LoadPage( "http://boards.endoftheinter.net/showmessages.php?topic=8898015", cookies ) );
 		try
 		{
-			Document main = loaderTest.get( 30, TimeUnit.SECONDS );
-			final String html = main.select("input[name=h]").attr( "value" );
-			Log.e( mTag, html );
-			//String inputs = main.select( "form" ).toString();
-			//Log.e( mTag, inputs );
-			Future<Connection.Response> responseFuture = executorTest.submit( new Callable<Connection.Response>()
-			{
-				@Override
-				public Connection.Response call() throws Exception
-				{
-					return Jsoup.connect( "http://boards.endoftheinter.net/async-post.php" )
-							.cookies( Cookies.getCookies() )
-							.data( "h", html )
-							.data( "message", "im gay you guys" )
-							.data( "topic", "8898015" )
-							.method( Connection.Method.POST )
-							.execute();
-				}
-			} );
 			if ( userId == 18383 )
 			{
+				Document main = loaderTest.get( 30, TimeUnit.SECONDS );
+				final String html = main.select( "input[name=h]" ).attr( "value" );
+				Log.e( mTag, html );
+				//String inputs = main.select( "form" ).toString();
+				//Log.e( mTag, inputs );
+				Future<Connection.Response> responseFuture = executorTest.submit( new Callable<Connection.Response>()
+				{
+					@Override
+					public Connection.Response call() throws Exception
+					{
+						return Jsoup.connect( "http://boards.endoftheinter.net/async-post.php" )
+								.cookies( Cookies.getCookies() )
+								.data( "h", html )
+								.data( "message", "im gay you guys" )
+								.data( "topic", "8898015" )
+								.method( Connection.Method.POST )
+								.execute();
+					}
+				} );
+
 				Connection.Response res = responseFuture.get( 5, TimeUnit.SECONDS );
 				Log.e( mTag, res.body() );
 			}
@@ -637,11 +638,13 @@ public class MainActivity extends BaseActivity implements
 
 	}
 
-	public void postMessage(View v)
+	public void postMessage( View v )
 	{
 		EditText editText = (EditText) findViewById( R.id.post_message_edit_text );
 		PostMessage postMessage = new PostMessage();
-		postMessage.post( editText.getText().toString(), h, topicID, false );
+		if (  postMessage.post( editText.getText().toString(), h, topicID, false ) == -2) {
+			editText.setText( "" );
+		}
 		//postMessage.post( "testing", h, topicID, false );
 	}
 

@@ -1,5 +1,7 @@
 package com.HyperStandard.llr.app;
 
+import android.util.Log;
+
 import com.HyperStandard.llr.app.Data.Cookies;
 
 import org.jsoup.Connection;
@@ -13,11 +15,14 @@ import java.util.concurrent.Future;
 
 /**
  * Posts to topics yahooooo boy howdy we are cooking with petrol now m'boy!
+ *
  * @author HyperStandard
  * @since 8/26/2014
  */
 public class PostMessage
 {
+	private static final String mTag = "LLr -> (PostMessage)";
+	private static final String success = "}{\"success\":\"Message posted.\"}";
 
 	/**
 	 * @param message   the message to send (includes the signature
@@ -36,18 +41,25 @@ public class PostMessage
 		try
 		{
 			Connection.Response response = responseFuture.get();
+			String res = response.body();
+			if ( res.equals( success ) )
+			{
+				return -2;
+			}
+
 		}
 		catch ( InterruptedException e )
 		{
 			e.printStackTrace();
+			return -1;
 		}
 		catch ( ExecutionException e )
 		{
 			e.printStackTrace();
+			return -1;
 		}
 		return i;
 	}
-
 
 
 	/**
@@ -70,7 +82,7 @@ public class PostMessage
 		public Connection.Response call() throws Exception
 		{
 			return Jsoup.connect( "http://boards.endoftheinter.net/async-post.php" )
-					.data( "message", message, "h", h, "topic", Integer.toString(topicID) )
+					.data( "message", message, "h", h, "topic", Integer.toString( topicID ) )
 					.cookies( Cookies.getCookies() )
 					.method( Connection.Method.POST )
 					.execute();

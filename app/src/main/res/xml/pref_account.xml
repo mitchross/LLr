@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory
+			android:title="@string/pref_header_general" />
+	<!--TODO add an explanation of this item-->
+	<CheckBoxPreference
+			android:key="use_custom_signature"
+			android:capitalize="sentences"
+			android:defaultValue="true"
+			android:title="@string/pref_signature"
+			/>
+</PreferenceScreen>
