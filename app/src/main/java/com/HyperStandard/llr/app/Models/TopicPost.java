@@ -20,6 +20,18 @@ public class TopicPost
 	public int userId;
 	//consider field for topic ID? Not sure if that's necessary
 
+	public TopicPost( String username, String time, String message, String signature, int messageId, int edits, int userId )
+	{
+		this.username = username;
+		this.time = time;
+		this.message = message;
+		this.signature = signature;
+		this.messageId = messageId;
+		this.edits = edits;
+		this.userId = userId;
+	}
+
+
 	public TopicPost( Element el )
 	{
 		try

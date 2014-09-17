@@ -3,6 +3,7 @@ package com.HyperStandard.llr.app;
 import android.util.Log;
 
 import com.HyperStandard.llr.app.Data.Cookies;
+import com.HyperStandard.llr.app.Exceptions.LoggedOutException;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -21,11 +22,7 @@ public class LoadPage implements Callable<Document>
 {
 	private String URL;
 
-	//TODO fix the mess that is cookies, maybe send them at login time, skip that whole array garbage
-	//
-	//I'm not sure about map constructrs since you can't instantiate a Map but Jsoup uses it? ? ?
-	private Map<String, String> cookies;
-
+	@Deprecated
 	/**
 	 * Send the data needed to load a webpage
 	 *
@@ -37,13 +34,28 @@ public class LoadPage implements Callable<Document>
 		this.URL = URL;
 	}
 
-	public Document call()
+	/**
+	 * Send the data needed to load a webpage
+	 *
+	 * @param URL The url (currently the whole thing + tags) may change later
+	 */
+	public LoadPage( String URL )
+	{
+		this.URL = URL;
+	}
+
+	public Document call() throws LoggedOutException
 	{
 		try
 		{
 			Document doc = Jsoup.connect( URL )
 					.cookies( Cookies.getCookies() )
 					.get();
+			if ( doc.title().equals( "Das Ende des Internets" ) )
+			{
+				Log.e( "error", "logged out" );
+				throw new LoggedOutException();
+			}
 			return doc;
 		}
 		catch ( IOException e )
@@ -52,4 +64,5 @@ public class LoadPage implements Callable<Document>
 		}
 		return null;
 	}
+
 }

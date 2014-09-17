@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.HyperStandard.llr.app.Activity.Adapters.PostAdapter;
 import com.HyperStandard.llr.app.Data.Cookies;
+import com.HyperStandard.llr.app.Exceptions.LoggedOutException;
 import com.HyperStandard.llr.app.LoadPage;
 import com.HyperStandard.llr.app.Models.TopicPost;
 import com.HyperStandard.llr.app.R;
@@ -22,6 +23,7 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -83,7 +85,7 @@ public class TopicFragment extends Fragment
 			String hTag = page.select( "input[name=h]" ).attr( "value" );
 			Log.e( mTag, Integer.toString( topicID ) );
 			Log.e( mTag, hTag );
-			callbacks.registerTopic( "", hTag, topicID);
+			callbacks.registerTopic( "", hTag, topicID );
 			final Elements elements = page.select( "div.message-container" );
 
 			Future<ArrayList<TopicPost>> arrayListFuture = executor.submit( new Callable<ArrayList<TopicPost>>()
@@ -113,7 +115,7 @@ public class TopicFragment extends Fragment
 		{
 			Toast.makeText( context, "Operation timed out", Toast.LENGTH_LONG ).show();
 		}
-		catch ( Exception e )
+		catch ( ExecutionException e )
 		{
 			e.printStackTrace();
 		}

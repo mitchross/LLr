@@ -562,6 +562,11 @@ public class MainActivity extends BaseActivity implements
 
 	}
 
+	public void doThing()
+	{
+		Integer height = .
+	}
+
 	//TODO delete after test
 	public void testPost()
 	{
@@ -642,7 +647,8 @@ public class MainActivity extends BaseActivity implements
 	{
 		EditText editText = (EditText) findViewById( R.id.post_message_edit_text );
 		PostMessage postMessage = new PostMessage();
-		if (  postMessage.post( editText.getText().toString(), h, topicID, false ) == -2) {
+		if ( postMessage.post( editText.getText().toString(), h, topicID, false ) == -2 )
+		{
 			editText.setText( "" );
 		}
 		//postMessage.post( "testing", h, topicID, false );
