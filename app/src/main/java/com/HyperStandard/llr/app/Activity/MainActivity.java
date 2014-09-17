@@ -66,21 +66,26 @@ public class MainActivity extends BaseActivity implements
 		TopicFragment.Callbacks,
 		PollFragment.Callbacks
 {
-
-	private static final int TYPE_TOPICLIST = 1;
-	private static final int TYPE_TOPIC = 2;
-	private static final int TYPE_POLL = 3;
-	private static final int TYPE_MAINPAGE = 5;
-	private static final int TYPE_BACK_BUTTON = 4;
-	public static Map<String, String> cookies;
+	/**
+	 * Used for logging
+	 */
 	private static String mTag = "LLr -> (Main)";
-	public int userId;
+
+	private static int userId;
+
+	/**
+	 * cached for performance?
+	 */
+	private static FragmentManager manager;
+
+	/**
+	 * Hold the last fragment tag
+	 */
+	private static String lastFragTag;
 	ListView mListView;
 	@Optional
-	@InjectView(R.id.leftNavigationDrawer)
+	@InjectView( R.id.leftNavigationDrawer )
 	ListView listView;
-	private Queue<Triple<String, String, Integer>> pagesHistory = new LinkedList<>();
-	private ArrayList<String> pageHistory = new ArrayList<>();
 	/**
 	 * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
 	 */
@@ -89,144 +94,112 @@ public class MainActivity extends BaseActivity implements
 	 * Fragment storing the poll
 	 */
 	private PollFragment mPollFragment;
-
 	private PostDrawerFragment mPostDrawerFragment;
 	private int topicID;
 	private String h;
 
 	/**
+	 * Used to store the TAG for the last used fragment
+	 */
+
+	/**
 	 * Used to store the last screen title. For use in {@link #restoreActionBar()}.
 	 */
 	private CharSequence mTitle = "";
-	/**
-	 * stores the tag of the active fragment
-	 */
-	private int currentFragment;
-	private String currentFragmentTag = "";
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
 	{
-		currentFragment = -1;
+		//Biolerplate stuff set the view, call super()
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_main );
 
+		//Get the uer ID number
 		userId = getIntent().getIntExtra( "userId", -1 );
 
+		//cache the fragment manager
+		manager = getFragmentManager();
+
+		//Who knows
 		ButterKnife.inject( this );
 
+		//Get references to the drawer fragments that do things
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById( R.id.left_drawer );
 		mPostDrawerFragment = (PostDrawerFragment) getFragmentManager().findFragmentById( R.id.navigation_tabs );
 
+		//Set the title to the applicaiton name TODO maybe change this to something else
 		mTitle = getTitle();
 
+		/** Because fragments get called with 0 argument constructors, you can't pass values to them
+		 *  except by adding a utility method to pass data to
+		 */
 		mNavigationDrawerFragment.setUp(
 				R.id.left_drawer,
 				(DrawerLayout) findViewById( R.id.drawer_layout ),
 				userId,
 				this );
-		testPost();
 
-		if ( true )//TODO why is this still here goodness
+		/**
+		 * Load the main page to get data from it i.e. bookmarks and other stuff later
+		 */
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		Future<Document> loader = executor.submit( new LoadPage( getString( R.string.ll_main ) ) );
+		try
 		{
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-			Future<Document> loader = executor.submit( new LoadPage( getString( R.string.ll_main ), cookies ) );
-			try
-			{
-				Document main = loader.get( 5, TimeUnit.SECONDS );
-				String ImageURLTEMP;//TODO deleteme later
+			Document main = loader.get( 5, TimeUnit.SECONDS );
 				/*Element poll = main.select( "div.poll" ).first();
 				mPollFragment = new PollFragment();
 				mPollFragment.setCallbacks( this );
 				mPollFragment.setUp( main.select( "div.poll" ) );*///TODO implement poll after frag handling/nav problems fixed
-				Elements elements = main.select( "#bookmarks > span" );
-				ArrayList<BookmarkLink> bookmarks = new ArrayList<>( elements.size() );
+			Elements elements = main.select( "#bookmarks > span" );
 
-				/**
-				 * Get the bookmarks, to populate the Navigation drawer with links
-				 */
-				for ( Element e : elements )
-				{//TODO fix this thing what's the deal with it
-					bookmarks.add( populateDrawer( new BookmarkLink(
-							e.select( "span > a" ).first().ownText(),
-							e.select( "span > a" ).attr( "abs:href" ),
-							"TOPIC_LIST"
-					) ) );
+			/**
+			 * Get the bookmarks, to populate the Navigation drawer with links
+			 */
+			for ( Element e : elements )
+			{
+				populateDrawer( new BookmarkLink(
+						e.select( "span > a" ).first().ownText(),
+						e.select( "span > a" ).attr( "abs:href" ),
+						"TOPIC_LIST"
+				) );
 
-					Log.v( mTag, "loading bookmark: \"" + e.select( "span > a" ).first().ownText() + "\" @ " + e.select( "span > a" ).attr( "abs:href" ) );
-				}
-
-			}
-			catch ( InterruptedException e )
-			{
-				Log.e( mTag, "Interrupted operation" );
-			}
-			catch ( TimeoutException e )
-			{
-				Toast.makeText( this, "Operation timed out", Toast.LENGTH_SHORT ).show();
-			}
-			catch ( Exception e )
-			{
-				e.printStackTrace();
+				Log.v( mTag, "loading bookmark: \"" + e.select( "span > a" ).first().ownText() + "\" @ " + e.select( "span > a" ).attr( "abs:href" ) );
 			}
 
 		}
-		//FragmentOverlord( TYPE_MAINPAGE, getString( R.string.ll_main ) );
+		catch ( InterruptedException e )
+		{
+			Log.e( mTag, "Interrupted operation" );
+		}
+		catch ( TimeoutException e )
+		{
+			Toast.makeText( this, "Operation timed out", Toast.LENGTH_SHORT ).show();
+		}
+		catch ( Exception e )
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void onNavigationDrawerItemSelected( int position, String URL )
 	{
-		if ( position == 0 )
+		if ( manager == null )
 		{
-			FragmentOverlord( TYPE_POLL, "" );
+			manager = getFragmentManager();
 		}
-		else
-		{
-			FragmentOverlord( TYPE_TOPICLIST, URL );
-		}
-		/*
-		String tag = "TAG_" + position;
-		if ( position == currentFragment )
-		{//No point in changing fragments if you're on the current one
-			return;
-		}
-		FragmentManager manager = getFragmentManager();
-		if ( currentFragment == -1 )
-		{//During first initilization
-			TopicListFragment fragment = TopicListFragment.newInstance( position, URL );
-			//TODO merge these calls maybe? ? ? ? they both have 'this' but 'this' means diff things
-			fragment.setUp( getApplicationContext() );
-			fragment.setCallbacks( this );
-			manager.beginTransaction()
-					.add( R.id.container, fragment, tag )//This needs to use the container found in activity_main.xml
-					.addToBackStack( null )
-					.commit();
-			currentFragment = position;
-			return;
-		}
-		TopicListFragment newFragment = (TopicListFragment) manager.findFragmentByTag( tag );
-		Fragment oldFragment = manager.findFragmentByTag( "TAG_" + currentFragment );
-		if ( newFragment == null )
-		{//If the new Fragment is null then it needs to be inflated and added
-			newFragment = TopicListFragment.newInstance( position, URL );
-			newFragment.setCallbacks( this );
-			newFragment.setUp( getApplicationContext() );
-			manager.beginTransaction()
-					.add( R.id.container, newFragment, tag )
-					.hide( oldFragment )
-					.addToBackStack( null )
-					.commit();
 
-			currentFragment = position;
-			return;
-		}//fallback to the new Fragment being already inflated and not the current one, therefore it's been hidden and can be shown
+		/**
+		 * make a new topic fragment TODO null check later
+		 */
+		TopicFragment fragment = TopicFragment.newInstance( URL );
+
+		Fragment lastFragment = manager.findFragmentByTag( lastFragTag );
+
 		manager.beginTransaction()
-				.show( newFragment )
-				.hide( oldFragment )
-				.addToBackStack( null )
-				.commit();
-		currentFragment = position;*/
+				if (lastFragment != null)
+				.hide(  )
 
 	}
 
@@ -267,170 +240,6 @@ public class MainActivity extends BaseActivity implements
 		}
 	}
 
-	@Override
-	public void onBackPressed()
-	{
-		/* This captures the back button, and tells the fragment manager that it should remove the latest fragment
-		 * poll() is necessary because we want to remove the info for the latest (read: current) fragment so that the second to last
-		 * fragment (read: previous) fragment can be shown. At the moment the current fragment gets removed.
-		 */
-		Triple<String, String, Integer> t;
-		t = pagesHistory.poll();
-		FragmentOverlord( TYPE_BACK_BUTTON, t.getLeft() );
-	}
-
-	public void FragmentOverlord( int type, String URL )
-	{
-		Fragment fragmentToHide;
-		String fragmentTagToShow;
-		int newFragmentType;
-
-		FragmentManager manager = getFragmentManager();
-		FragmentTransaction transaction = manager.beginTransaction();
-
-		if ( !pagesHistory.isEmpty() )
-		{
-			fragmentToHide = manager.findFragmentByTag( pagesHistory.poll().getLeft() );
-		}
-		else
-		{
-			fragmentToHide = null;
-		}
-
-		//TODO implement sliding animations
-		transaction.setTransition( FragmentTransaction.TRANSIT_FRAGMENT_OPEN );
-
-
-		/* This lets the one method both add new fragments and also override the back button
-		 * later on I'll implement tabs and such, which is why I'm using fragments, instead of activities
-		 * I could use views I suppose but I like this way, it's modular.
-		 * There needs to be a null check on the fragmentToHide later on in the switch statement
-		 * using poll() before calling the method means that the last item on the Queue gets removed ahead of time and the tag is passed
-		 * to the method for removal
-		 */
-		if ( type == TYPE_BACK_BUTTON )
-		{
-			fragmentToHide = manager.findFragmentByTag( URL );
-			transaction.remove( fragmentToHide );
-			if ( pagesHistory.isEmpty() )
-			{
-				fragmentTagToShow = "http://boards.endoftheinter.net/topics/Posted";
-				newFragmentType = TYPE_TOPICLIST;
-			}
-			else
-			{
-				mTitle = pagesHistory.peek().getMiddle();
-				restoreActionBar();
-				fragmentTagToShow = pagesHistory.peek().getLeft();
-				newFragmentType = pagesHistory.peek().getRight();
-			}
-		}
-		/* If the type isn't TYPE_BACK_BUTTON, i.e. any type that involves adding new fragments
-		 * then you keep the inputs as they are. The URL serves both as the tag, for finding by tag, and also
-		 * the actual URL that gets passed to the fragment on instantiation (to actually load the appropriate page)
-		 * TODO handle cases in which, in different tabs, the same URL gets loaded
-		 * That can probably be handled by appending a tab number or ID to the URL before passing it as a tag
-		 */
-		else
-		{
-			fragmentTagToShow = URL;
-			newFragmentType = type;
-		}
-		/*for ( String s : pageHistory )
-		{
-			//TODO optimize this
-			if ( manager.findFragmentByTag( s ) != null && s != URL )
-			{ //Make sure fragment isn't null or the wanted one
-				if ( !manager.findFragmentByTag( s ).isHidden() )
-				{//Make sure the fragment isn't already hidden
-					transaction.hide( manager.findFragmentByTag( s ) );//Hide the fragment
-				}
-			}
-			if ( manager.findFragmentByTag( s ) != null && s == URL )
-			{
-				if ( manager.findFragmentByTag( s ).isHidden() )
-				{
-					transaction.show( manager.findFragmentByTag( s ) );
-					return;
-				}
-			}
-		}
-		if ( pageHistory.contains( URL ) )
-		{
-			pageHistory.add( URL );
-		}*/
-
-		/* In theory, there should only be one visible fragment at a time, since back button presses are being captured, so
-		 * there's not much reason to iterate through the Queue of tags to hide them all. The null check is because the back
-		 * button handling makes the current fragment null. I could add a proper back/forward history type but that's not really normative
-		 * I think in a no web browser environment.
-		 * TODO figure out if there are edge cases where that's not true
-		 */
-		if ( fragmentToHide != null )
-		{
-			transaction.hide( fragmentToHide );
-		}
-
-		switch ( newFragmentType )
-		{
-			case TYPE_TOPICLIST:
-				TopicListFragment topicListFragment = (TopicListFragment) manager.findFragmentByTag( fragmentTagToShow );
-				pagesHistory.add( Triple.of( fragmentTagToShow, mTitle.toString(), newFragmentType ) );
-				if ( topicListFragment == null )
-				{
-					topicListFragment = TopicListFragment.newInstance( 0, fragmentTagToShow );
-					topicListFragment.setUp( getApplicationContext() );
-					topicListFragment.setCallbacks( this );
-					transaction.add( R.id.container, topicListFragment, fragmentTagToShow );
-				}
-				else
-				{
-					transaction.show( topicListFragment );
-				}
-				Log.e( mTag, pagesHistory.peek().getLeft() );
-			{
-
-			}
-			break;
-			case TYPE_TOPIC:
-				pagesHistory.add( Triple.of( fragmentTagToShow, mTitle.toString(), newFragmentType ) );
-				Log.e( mTag, pagesHistory.peek().getLeft() );
-
-				TopicFragment topicFragment = (TopicFragment) manager.findFragmentByTag( URL );
-				if ( topicFragment == null )
-				{
-					topicFragment = TopicFragment.newInstance( fragmentTagToShow );
-					topicFragment.setCallbacks( this );
-					topicFragment.setUp( getApplicationContext() );
-					transaction.add( R.id.container, topicFragment, fragmentTagToShow );
-				}
-				else
-				{
-					transaction.show( topicFragment );
-				}
-
-				break;
-			case TYPE_POLL:
-				transaction.replace( R.id.container, mPollFragment );
-				break;
-			case TYPE_MAINPAGE:
-				MainPageFragment fragment = MainPageFragment.newInstance( 0, getString( R.string.ll_main ) );
-				transaction.replace( R.id.container, fragment );
-				break;
-			default:
-				break;
-
-		}
-		Log.e( mTag, "loading: " + URL );
-		Log.e( mTag, "Type: " + Integer.toString( type ) );
-		if ( fragmentToHide != null )
-		{
-			Log.e( mTag, "Tag hiding: " + fragmentToHide.getTag() );
-		}
-
-		transaction.commit();
-	}
-
 
 	@Override
 	public boolean onCreateOptionsMenu( Menu menu )
@@ -457,7 +266,7 @@ public class MainActivity extends BaseActivity implements
 
 		if ( item.getItemId() == R.id.action_example )
 		{
-			FragmentOverlord( TYPE_MAINPAGE, getString( R.string.ll_main ) );
+			//TODO thing
 		}
 		if ( item.getItemId() == R.id.action_settings )
 		{
@@ -530,8 +339,6 @@ public class MainActivity extends BaseActivity implements
 	public void loadTopic( String URL )
 	{
 
-		FragmentOverlord( TYPE_TOPIC, URL );
-	/*
 		FragmentManager manager = getFragmentManager();
 
 		//If I use the topic ID as the tag,  that clears up a lot of difficulties with stuff
@@ -552,8 +359,8 @@ public class MainActivity extends BaseActivity implements
 				.hide( oldFragment )
 				.addToBackStack( null )
 				.commit();
-        //TODO better fragment managing, need to hide all types of fragments, currently only switching via nav drawer hides properly
-        //workingFragment = URL;*/
+		//TODO better fragment managing, need to hide all types of fragments, currently only switching via nav drawer hides properly
+		//workingFragment = URL;*/
 	}
 
 	@Override
@@ -562,10 +369,6 @@ public class MainActivity extends BaseActivity implements
 
 	}
 
-	public void doThing()
-	{
-		Integer height = .
-	}
 
 	//TODO delete after test
 	public void testPost()
@@ -606,7 +409,7 @@ public class MainActivity extends BaseActivity implements
 		t.start();*/
 
 		ExecutorService executorTest = Executors.newFixedThreadPool( 2 );
-		Future<Document> loaderTest = executorTest.submit( new LoadPage( "http://boards.endoftheinter.net/showmessages.php?topic=8898015", cookies ) );
+		Future<Document> loaderTest = executorTest.submit( new LoadPage( "http://boards.endoftheinter.net/showmessages.php?topic=8898015" ) );
 		try
 		{
 			if ( userId == 18383 )

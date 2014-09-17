@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class TopicArray
 {
-	public static ArrayList<TopicPost> newArrayFromMoreMessages(Document pageSection)
+	public static ArrayList<TopicPost> newArrayFromShowMessages(Elements pageSection)
 	{
 		final String mTag = "(LLr) -> MoreMessages -> newArray";
 		ArrayList<TopicPost> array = new ArrayList<>();
@@ -89,7 +89,7 @@ public class TopicArray
 		return array;
 	}
 
-	public static ArrayList<TopicPost> newArrayFromShowMessages()
+	public static ArrayList<TopicPost> newArrayFromMoreMessages()
 	{
 		return null;
 	}

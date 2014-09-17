@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.HyperStandard.llr.app.Activity.Adapters.PostAdapter;
+import com.HyperStandard.llr.app.Converters.TopicArray;
 import com.HyperStandard.llr.app.Data.Cookies;
 import com.HyperStandard.llr.app.Exceptions.LoggedOutException;
 import com.HyperStandard.llr.app.LoadPage;
@@ -93,12 +94,13 @@ public class TopicFragment extends Fragment
 				@Override
 				public ArrayList<TopicPost> call() throws Exception
 				{
-					ArrayList<TopicPost> array = new ArrayList<>( elements.size() );
+					/*ArrayList<TopicPost> array = new ArrayList<>( elements.size() );
 					for ( Element e : elements )
 					{
 						array.add( new TopicPost( e ) );
 					}
-					return array;
+					return array;*/
+					return TopicArray.newArrayFromShowMessages(elements);
 				}
 			} );
 
