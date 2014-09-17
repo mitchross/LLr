@@ -197,9 +197,9 @@ public class MainActivity extends BaseActivity implements
 
 		Fragment lastFragment = manager.findFragmentByTag( lastFragTag );
 
-		manager.beginTransaction()
+		/*manager.beginTransaction()
 				if (lastFragment != null)
-				.hide(  )
+				.hide(  )*/
 
 	}
 
@@ -345,7 +345,7 @@ public class MainActivity extends BaseActivity implements
 		TopicFragment fragment = (TopicFragment) manager.findFragmentByTag( URL );
 
 		//Get the current fragment (the one being replaced/hidden)
-		Fragment oldFragment = manager.findFragmentByTag( "TAG_" + currentFragment );
+		Fragment oldFragment = manager.findFragmentByTag( "TAG_" + lastFragTag );
 
 		if ( fragment == null )
 		{
