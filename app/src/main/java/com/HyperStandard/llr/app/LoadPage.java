@@ -30,9 +30,8 @@ public class LoadPage implements Callable<Document>
 	 * Send the data needed to load a webpage
 	 *
 	 * @param URL     The url (currently the whole thing + tags) may change later
-	 * @param cookies Map containing cookies needed to successfully query a page
 	 */
-	public LoadPage( String URL, Map<String, String> cookies )
+	public LoadPage( String URL )
 	{
 		this.URL = URL;
 	}

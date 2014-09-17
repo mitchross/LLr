@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.HyperStandard.llr.app.BookmarkLink;
-import com.HyperStandard.llr.app.LoadImage;
 import com.HyperStandard.llr.app.LoadPage;
 import com.HyperStandard.llr.app.R;
 
@@ -62,7 +61,7 @@ public class NavigationAdapter extends ArrayAdapter<BookmarkLink>
 				{//TODO clean this up
 					Document userPageTest = documentFuture.get();
 					String pictureTest = userPageTest.select( "td:contains(picture) + td" ).first().html();
-					if ( pictureTest.equals("") )
+					if ( pictureTest.equals( "" ) )
 					{
 						Log.e( "Pciture error:", "no picture" );
 					}
