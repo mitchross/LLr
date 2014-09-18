@@ -23,6 +23,8 @@ import android.widget.Toast;
 import com.HyperStandard.llr.app.BookmarkLink;
 import com.HyperStandard.llr.app.CustomTypefaceSpan;
 import com.HyperStandard.llr.app.Data.Cookies;
+import com.HyperStandard.llr.app.Exceptions.LoggedOutException;
+import com.HyperStandard.llr.app.Exceptions.WaitException;
 import com.HyperStandard.llr.app.Fragment.MainPageFragment;
 import com.HyperStandard.llr.app.Fragment.PollFragment;
 import com.HyperStandard.llr.app.Fragment.TopicFragment;
@@ -185,22 +187,12 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public void onNavigationDrawerItemSelected( int position, String URL )
 	{
-		if ( manager == null )
-		{
-			manager = getFragmentManager();
-		}
-
+		Log.e( "testing testing is this getting called", URL );
 		/**
-		 * make a new topic fragment TODO null check later
+		 * make a new topic fragment
 		 */
 		TopicFragment fragment = TopicFragment.newInstance( URL );
-
-		Fragment lastFragment = manager.findFragmentByTag( lastFragTag );
-
-		/*manager.beginTransaction()
-				if (lastFragment != null)
-				.hide(  )*/
-
+		hideAndReplaceFragment( fragment );
 	}
 
 	//TODO what the hell is this I don't even know
@@ -374,11 +366,21 @@ public class MainActivity extends BaseActivity implements
 	{
 		EditText editText = (EditText) findViewById( R.id.post_message_edit_text );
 		PostMessage postMessage = new PostMessage();
-		if ( postMessage.post( editText.getText().toString(), h, topicID, false ) == -2 )
+		try
 		{
-			editText.setText( "" );
+			if ( postMessage.post( editText.getText().toString(), h, topicID, false ) == -2 )
+			{
+				editText.setText( "" );
+			}
 		}
-		//postMessage.post( "testing", h, topicID, false );
+		catch ( LoggedOutException e )
+		{
+			e.printStackTrace();
+		}
+		catch ( WaitException e )
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -433,6 +435,27 @@ public class MainActivity extends BaseActivity implements
 			( (MainActivity) activity ).onSectionAttached(
 					getArguments().getInt( ARG_SECTION_NUMBER ) );
 		}
+	}
+
+	public void hideAndReplaceFragment(Fragment newFragment)
+	{
+		if ( manager == null )
+		{
+			manager = getFragmentManager();
+		}
+
+		Fragment oldFragment = manager.findFragmentByTag( lastFragTag );
+		FragmentTransaction transaction = manager.beginTransaction();
+
+		/**
+		 * Only hide if null
+ 		 */
+		if (oldFragment != null)
+		{
+			transaction.hide( oldFragment );
+		}
+		transaction.show( newFragment );
+		transaction.commit();
 	}
 
 }

@@ -56,11 +56,12 @@ public class NavigationAdapter extends ArrayAdapter<BookmarkLink>
 				v = inflater1.inflate( R.layout.listview_navigation_userpic, null );
 				ExecutorService executor = Executors.newSingleThreadExecutor();
 				ImageView imageView = (ImageView) v.findViewById( R.id.navigation_userpic );
-				Future<Document> documentFuture = executor.submit( new LoadPage( "http://endoftheinter.net/profile.php?user=" + userId, null ) );
+				Future<Document> documentFuture = executor.submit( new LoadPage( "http://endoftheinter.net/profile.php?user=" + userId) );
 				try
 				{//TODO clean this up
 					Document userPageTest = documentFuture.get();
 					String pictureTest;
+					//Dumb crap I have to do to get user picture
 					if ( userPageTest.select( "td:contains(picture) + td a" ).first().hasAttr( "imgsrc" ) )
 					{
 						pictureTest = userPageTest.select( "td:contains(picture) + td a" ).first().attr( "imgsrc" );

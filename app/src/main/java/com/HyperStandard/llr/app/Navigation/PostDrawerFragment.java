@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import com.HyperStandard.llr.app.Exceptions.LoggedOutException;
+import com.HyperStandard.llr.app.Exceptions.WaitException;
 import com.HyperStandard.llr.app.PostMessage;
 import com.HyperStandard.llr.app.R;
 
@@ -77,6 +79,17 @@ public class PostDrawerFragment extends Fragment
 	{
 		EditText editText = (EditText) v.findViewById( R.id.post_message_edit_text );
 		PostMessage postMessage = new PostMessage();
-		postMessage.post( editText.getText().toString(), h, topicID, false );
+		try
+		{
+			postMessage.post( editText.getText().toString(), h, topicID, false );
+		}
+		catch ( LoggedOutException e )
+		{
+			e.printStackTrace();
+		}
+		catch ( WaitException e )
+		{
+			e.printStackTrace();
+		}
 	}
 }

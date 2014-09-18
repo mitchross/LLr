@@ -77,7 +77,7 @@ public class TopicFragment extends Fragment
 
 		//ExecutorService executor = Executors.newSingleThreadExecutor();
 		ExecutorService executor = Executors.newFixedThreadPool( 2 );
-		Future<Document> request = executor.submit( new LoadPage( "http://boards.endoftheinter.net/showmessages.php?topic=" + getArguments().getString( "URL" ), Cookies.getCookies() ) );
+		Future<Document> request = executor.submit( new LoadPage( "http://boards.endoftheinter.net/showmessages.php?topic=" + getArguments().getString( "URL" ) ) );
 		try
 		{
 			Document page = request.get( 10, TimeUnit.SECONDS );
@@ -100,7 +100,7 @@ public class TopicFragment extends Fragment
 						array.add( new TopicPost( e ) );
 					}
 					return array;*/
-					return TopicArray.newArrayFromShowMessages(elements);
+					return TopicArray.newArrayFromShowMessages( elements );
 				}
 			} );
 
