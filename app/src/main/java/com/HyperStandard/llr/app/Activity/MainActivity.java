@@ -366,85 +366,9 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public void changeLocation( String URL )
 	{
-
+		//TODO implement also what calls this
 	}
 
-
-	//TODO delete after test
-	public void testPost()
-	{
-		/*ExecutorService executor = Executors.newSingleThreadExecutor();
-		Thread t = new Thread( new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				try
-				{
-					Document page = Jsoup
-							.connect( "http://boards.endoftheinter.net/showmessages.php?topic=8898015" )
-							.cookies( Cookies.getCookies() )
-							.execute()
-							.parse();
-					try
-					{
-						Thread.sleep( 2000 );
-					}
-					catch ( InterruptedException e )
-					{
-						e.printStackTrace();
-					}
-					String html = page.html();
-					String h = page.select( "input[type=hidden]" ).html();
-					String inputs = page.select( "input" ).html();
-					Log.e( mTag + 1, inputs );
-					Log.e( mTag + 2, html );
-				}
-				catch ( IOException e )
-				{
-					e.printStackTrace();
-				}
-			}
-		} );
-		t.start();*/
-
-		ExecutorService executorTest = Executors.newFixedThreadPool( 2 );
-		Future<Document> loaderTest = executorTest.submit( new LoadPage( "http://boards.endoftheinter.net/showmessages.php?topic=8898015" ) );
-		try
-		{
-			if ( userId == 18383 )
-			{
-				Document main = loaderTest.get( 30, TimeUnit.SECONDS );
-				final String html = main.select( "input[name=h]" ).attr( "value" );
-				Log.e( mTag, html );
-				//String inputs = main.select( "form" ).toString();
-				//Log.e( mTag, inputs );
-				Future<Connection.Response> responseFuture = executorTest.submit( new Callable<Connection.Response>()
-				{
-					@Override
-					public Connection.Response call() throws Exception
-					{
-						return Jsoup.connect( "http://boards.endoftheinter.net/async-post.php" )
-								.cookies( Cookies.getCookies() )
-								.data( "h", html )
-								.data( "message", "im gay you guys" )
-								.data( "topic", "8898015" )
-								.method( Connection.Method.POST )
-								.execute();
-					}
-				} );
-
-				Connection.Response res = responseFuture.get( 5, TimeUnit.SECONDS );
-				Log.e( mTag, res.body() );
-			}
-
-		}
-		catch ( Exception e )
-		{
-			e.printStackTrace();
-		}
-
-	}
 
 	public void postMessage( View v )
 	{

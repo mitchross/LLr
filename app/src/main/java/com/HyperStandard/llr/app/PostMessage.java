@@ -3,6 +3,8 @@ package com.HyperStandard.llr.app;
 import android.util.Log;
 
 import com.HyperStandard.llr.app.Data.Cookies;
+import com.HyperStandard.llr.app.Exceptions.LoggedOutException;
+import com.HyperStandard.llr.app.Exceptions.WaitException;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -31,10 +33,10 @@ public class PostMessage
 	 * @param autoRetry whether to auto post when ready
 	 * @return an integer corresponding to -2 for success, -1 for failure, 0+ for number of seconds before you can repost
 	 */
-	public int post( String message, String h, int topicID, boolean autoRetry )
+	public int post( String message, String h, int topicID, boolean autoRetry ) throws LoggedOutException, WaitException
 	{
 		int i = -1;
-		//TODO figure out how this performas when being called from multiple places maybe do a factory?
+		//TODO figure out how this performs when being called from multiple places maybe do a factory?
 		ExecutorService executors = Executors.newFixedThreadPool( 2 );
 		AsyncPost asyncPost = new AsyncPost( message, h, topicID );
 		Future<Connection.Response> responseFuture = executors.submit( asyncPost );

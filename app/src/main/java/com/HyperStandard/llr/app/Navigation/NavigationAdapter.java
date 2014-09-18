@@ -1,8 +1,6 @@
 package com.HyperStandard.llr.app.Navigation;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.HyperStandard.llr.app.BookmarkLink;
-import com.HyperStandard.llr.app.LoadImage;
 import com.HyperStandard.llr.app.LoadPage;
 import com.HyperStandard.llr.app.R;
 import com.squareup.picasso.Picasso;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.jsoup.nodes.Document;
 
 import java.util.ArrayList;

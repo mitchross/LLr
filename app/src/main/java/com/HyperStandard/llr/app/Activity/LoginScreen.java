@@ -22,6 +22,7 @@ import com.HyperStandard.llr.app.Data.Cookies;
 import com.HyperStandard.llr.app.Login;
 import com.HyperStandard.llr.app.R;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Connection;
 
 import java.util.ArrayList;
@@ -184,14 +185,13 @@ public class LoginScreen extends BaseActivity
 		//TODO fix this up, possibly inline the callable, deal with the syntax differences etc
 		if ( prefs.getBoolean( "use_iphone_login", true ) )
 		{
-            Log.e( mTag, "using iPhone login");
+            Log.v( mTag, "using iPhone login");
 			URLtoConnectTo = "https://iphone.endoftheinter.net/";
 		}
 		else
 		{
-			Log.e( mTag, "using desktop version" );
+			Log.v( mTag, "using desktop version" );
 			URLtoConnectTo = "https://endoftheinter.net/";
-			//URLtoConnectTo = "https://iphone.endoftheinter.net/";
 		}
 
 		Future<Connection.Response> loggedin = executor.submit( new Login( URLtoConnectTo, username, password ) );
@@ -201,9 +201,8 @@ public class LoginScreen extends BaseActivity
 
 			//TODO get this in a constants file for easy updating, character escapes are proving troublesome
 			//Check to see if we've got logged in correctly, and if so, set up the account.
-			if ( response.body().equals( "<script>document.location.href=\"/\";</script>" ) )
+			if ( response.body().equals( getString( R.string.successful_response ) ) )
 			{
-				Log.e( response.body(), getString( R.string.successful_response ) );
 
 				Log.i( mTag, "Successful login, using login() NOT login(username/password)" );
 				final Intent intent = new Intent( this, MainActivity.class );
@@ -232,7 +231,7 @@ public class LoginScreen extends BaseActivity
 							.putBoolean( getString( R.string.prefs_login ), true )
 							.apply();
 				}
-                startActivity( intent );
+				startActivity( intent );
 			}
 			else
 			{
@@ -246,41 +245,6 @@ public class LoginScreen extends BaseActivity
 		}
 	}
 
-    /*
-     * Can this be deleted? Why do we have 2 login methods, only one of which is used?
-     */
-    //TODO decide if we delete this?
-	public void login( String username, String password )
-	{
-
-		ExecutorService executor = Executors.newSingleThreadExecutor();
-		Future<Connection.Response> loggedin = executor.submit( new Login( "http://iphone.endoftheinter.net/", username, password ) );
-		try
-		{
-			Connection.Response response = loggedin.get( 15, TimeUnit.SECONDS );//TODO standardize timeouts
-
-			//Check to see if we've got logged in correctly, and if so, set up the account.
-			if ( response.body().equals( "<script>document.location.href=\"/\";</script>" ) )
-			{
-				Log.v( mTag, "Successful login, using login()" );
-
-				//Using global cookie cache
-				Cookies.setCookies( response.cookies() );
-
-				final Intent intent = new Intent( this, MainActivity.class );
-
-				//Actually start the main application proper
-				startActivity( intent );
-			}
-
-
-		}
-		catch ( TimeoutException | InterruptedException | ExecutionException e )
-		{
-			e.printStackTrace();
-		}
-	}
-
 	/**
 	 * This clears any saved login information
 	 * TODO selective delete based on different accounts? Also, actually implement eheh heh
@@ -290,6 +254,7 @@ public class LoginScreen extends BaseActivity
 		Toast.makeText( this, "buh", Toast.LENGTH_SHORT ).show();
 	}
 
+	//TODO probabably don't need this because teh action bar is impleemntted (sp)
 	/**
 	 * Emulate the overflow button
 	 * I could make it invisible w hardware menu buttons but eh only Samsung (more like samshit lol amirite) still uses those tbh

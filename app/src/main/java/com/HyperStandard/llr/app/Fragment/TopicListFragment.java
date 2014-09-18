@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.HyperStandard.llr.app.Activity.Adapters.TopicAdapter;
 import com.HyperStandard.llr.app.Activity.MainActivity;
+import com.HyperStandard.llr.app.Data.Cookies;
 import com.HyperStandard.llr.app.LoadPage;
 import com.HyperStandard.llr.app.Models.TopicLink;
 import com.HyperStandard.llr.app.R;
@@ -101,7 +102,7 @@ public class TopicListFragment extends Fragment
 		ExecutorService executor = Executors.newFixedThreadPool( 2 );
 
 		String URL = getArguments().getString( "URL" );
-		Future<Document> request = executor.submit( new LoadPage( URL, MainActivity.cookies ) );
+		Future<Document> request = executor.submit( new LoadPage( URL, Cookies.getCookies() ) );
 
 		//Future<Document> request = executor.submit( new LoadPage( "http://boards.endoftheinter.net/topics/LUE", MainActivity.cookies ) );
 

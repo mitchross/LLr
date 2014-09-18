@@ -95,7 +95,7 @@ public class MainPageFragment extends Fragment
 	protected void getTopics()
 	{
 		ExecutorService executor = Executors.newFixedThreadPool( 2 );
-		Future<Document> request = executor.submit( new LoadPage( URL, MainActivity.cookies ) );
+		Future<Document> request = executor.submit( new LoadPage( URL ) );
 
 		try
 		{
