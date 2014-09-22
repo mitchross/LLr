@@ -1,0 +1,27 @@
+﻿Merge branch 'master' of https://github.com/HyperStandard/LLr into Master_RepoFix
+
+Conflicts:
+	app/src/main/AndroidManifest.xml
+	app/src/main/java/com/HyperStandard/llr/app/Activity/LoginScreen.java
+	app/src/main/res/layout/login.xml
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch Master_RepoFix
+# Your branch is up-to-date with 'origin/master'.
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	modified:   app/src/main/AndroidManifest.xml
+#	modified:   app/src/main/java/com/HyperStandard/llr/app/Activity/LoginScreen.java
+#	modified:   app/src/main/res/layout/login.xml
+#	modified:   build/intermediates/model_data.bin
+#
+

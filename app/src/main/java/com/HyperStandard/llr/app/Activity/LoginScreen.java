@@ -185,7 +185,11 @@ public class LoginScreen extends BaseActivity
 		//TODO fix this up, possibly inline the callable, deal with the syntax differences etc
 		if ( prefs.getBoolean( "use_iphone_login", true ) )
 		{
+<<<<<<< HEAD
             Log.v( mTag, "using iPhone login");
+=======
+            Log.e( mTag, "using iPhone login");
+>>>>>>> 717e3e8cb7cbac400cfba106b204ec2e4f58b779
 			URLtoConnectTo = "https://iphone.endoftheinter.net/";
 		}
 		else
@@ -231,13 +235,51 @@ public class LoginScreen extends BaseActivity
 							.putBoolean( getString( R.string.prefs_login ), true )
 							.apply();
 				}
-				startActivity( intent );
+                startActivity( intent );
 			}
 			else
 			{
                 Log.e( response.body(), getString( R.string.successful_response ) );
 				Toast.makeText( this, "Failed to login", Toast.LENGTH_SHORT ).show();
 			}
+<<<<<<< HEAD
+=======
+		}
+		catch ( TimeoutException | InterruptedException | ExecutionException e )
+		{
+            e.printStackTrace();
+		}
+	}
+
+    /*
+     * Can this be deleted? Why do we have 2 login methods, only one of which is used?
+     */
+    //TODO decide if we delete this?
+	public void login( String username, String password )
+	{
+
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		Future<Connection.Response> loggedin = executor.submit( new Login( "http://iphone.endoftheinter.net/", username, password ) );
+		try
+		{
+			Connection.Response response = loggedin.get( 15, TimeUnit.SECONDS );//TODO standardize timeouts
+
+			//Check to see if we've got logged in correctly, and if so, set up the account.
+			if ( response.body().equals( "<script>document.location.href=\"/\";</script>" ) )
+			{
+				Log.v( mTag, "Successful login, using login()" );
+
+				//Using global cookie cache
+				Cookies.setCookies( response.cookies() );
+
+				final Intent intent = new Intent( this, MainActivity.class );
+
+				//Actually start the main application proper
+				startActivity( intent );
+			}
+
+
+>>>>>>> 717e3e8cb7cbac400cfba106b204ec2e4f58b779
 		}
 		catch ( TimeoutException | InterruptedException | ExecutionException e )
 		{
