@@ -52,18 +52,18 @@ public class LoginScreen extends BaseActivity
 {
 	private final static String mTag = "LLr -> (LoginScreen)";
 
-	@InjectView(R.id.username)
+	@InjectView( R.id.username )
 	protected EditText userNameEditText;
-	@InjectView(R.id.password)
+	@InjectView( R.id.password )
 	protected EditText passwordEditText;
-    @InjectView(R.id.progressBar)
-    protected ProgressBar progressBar;
-    @InjectView(R.id.loginbutton)
-    protected Button loginButton;
+	@InjectView( R.id.progressBar )
+	protected ProgressBar progressBar;
+	@InjectView( R.id.loginbutton )
+	protected Button loginButton;
 
 	private SharedPreferences prefs;
 
-	@OnClick(R.id.loginbutton)
+	@OnClick( R.id.loginbutton )
 	protected void loginButtonClick()
 	{
 		login();
@@ -88,18 +88,21 @@ public class LoginScreen extends BaseActivity
 		//TODO figure out how to get external IP and use LL check login instead of just logging in again
 		if ( prefs.contains( getString( R.string.prefs_password ) ) && prefs.contains( getString( R.string.prefs_username ) ) && prefs.getBoolean( getString( R.string.prefs_login ), false ) )
 		{
-            progressBar.setVisibility(ProgressBar.VISIBLE);
-            loginButton.setVisibility(View.INVISIBLE);
-            Toast.makeText( this, "using saved credentials", Toast.LENGTH_LONG ).show();
+			progressBar.setVisibility( ProgressBar.VISIBLE );
+			loginButton.setVisibility( View.INVISIBLE );
+			Toast.makeText( this, "using saved credentials", Toast.LENGTH_LONG ).show();
 			userNameEditText.setText( prefs.getString( getString( R.string.prefs_username ), "" ) );
 			passwordEditText.setText( prefs.getString( getString( R.string.prefs_password ), "" ) );
-            new Thread(new Runnable()
-            {public void run() {
-                    login();
-                }}).start();
-            //progressBar.setVisibility(ProgressBar.INVISIBLE);
-            //loginButton.setVisibility(View.VISIBLE);
-        }
+			new Thread( new Runnable()
+			{
+				public void run()
+				{
+					login();
+				}
+			} ).start();
+			//progressBar.setVisibility(ProgressBar.INVISIBLE);
+			//loginButton.setVisibility(View.VISIBLE);
+		}
 	}
 
 	@Override
@@ -175,7 +178,7 @@ public class LoginScreen extends BaseActivity
 
 	public void login()
 	{
-        String username = userNameEditText.getText().toString();
+		String username = userNameEditText.getText().toString();
 		final String password = passwordEditText.getText().toString();
 
 		ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -185,11 +188,7 @@ public class LoginScreen extends BaseActivity
 		//TODO fix this up, possibly inline the callable, deal with the syntax differences etc
 		if ( prefs.getBoolean( "use_iphone_login", true ) )
 		{
-<<<<<<< HEAD
-            Log.v( mTag, "using iPhone login");
-=======
-            Log.e( mTag, "using iPhone login");
->>>>>>> 717e3e8cb7cbac400cfba106b204ec2e4f58b779
+			Log.e( mTag, "using iPhone login" );
 			URLtoConnectTo = "https://iphone.endoftheinter.net/";
 		}
 		else
@@ -235,55 +234,17 @@ public class LoginScreen extends BaseActivity
 							.putBoolean( getString( R.string.prefs_login ), true )
 							.apply();
 				}
-                startActivity( intent );
+				startActivity( intent );
 			}
 			else
 			{
-                Log.e( response.body(), getString( R.string.successful_response ) );
+				Log.e( response.body(), getString( R.string.successful_response ) );
 				Toast.makeText( this, "Failed to login", Toast.LENGTH_SHORT ).show();
 			}
-<<<<<<< HEAD
-=======
 		}
 		catch ( TimeoutException | InterruptedException | ExecutionException e )
 		{
-            e.printStackTrace();
-		}
-	}
-
-    /*
-     * Can this be deleted? Why do we have 2 login methods, only one of which is used?
-     */
-    //TODO decide if we delete this?
-	public void login( String username, String password )
-	{
-
-		ExecutorService executor = Executors.newSingleThreadExecutor();
-		Future<Connection.Response> loggedin = executor.submit( new Login( "http://iphone.endoftheinter.net/", username, password ) );
-		try
-		{
-			Connection.Response response = loggedin.get( 15, TimeUnit.SECONDS );//TODO standardize timeouts
-
-			//Check to see if we've got logged in correctly, and if so, set up the account.
-			if ( response.body().equals( "<script>document.location.href=\"/\";</script>" ) )
-			{
-				Log.v( mTag, "Successful login, using login()" );
-
-				//Using global cookie cache
-				Cookies.setCookies( response.cookies() );
-
-				final Intent intent = new Intent( this, MainActivity.class );
-
-				//Actually start the main application proper
-				startActivity( intent );
-			}
-
-
->>>>>>> 717e3e8cb7cbac400cfba106b204ec2e4f58b779
-		}
-		catch ( TimeoutException | InterruptedException | ExecutionException e )
-		{
-            e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 
@@ -291,12 +252,14 @@ public class LoginScreen extends BaseActivity
 	 * This clears any saved login information
 	 * TODO selective delete based on different accounts? Also, actually implement eheh heh
 	 */
+
 	public void clearData( MenuItem item )
 	{
 		Toast.makeText( this, "buh", Toast.LENGTH_SHORT ).show();
 	}
 
 	//TODO probabably don't need this because teh action bar is impleemntted (sp)
+
 	/**
 	 * Emulate the overflow button
 	 * I could make it invisible w hardware menu buttons but eh only Samsung (more like samshit lol amirite) still uses those tbh

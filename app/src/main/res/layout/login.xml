@@ -9,22 +9,26 @@
                 android:orientation="vertical"
                 android:visibility="visible"
                 tools:ignore="MissingPrefix">
+
 	<ImageSwitcher
 			android:id="@+id/ImageSwitcher01"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_centerInParent="true"
 			android:background="@drawable/bg1" />
+
 	<RelativeLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="48dp">
+
 		<LinearLayout
 				android:id="@+id/linearlayout"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:layout_below="@id/username"
 				android:orientation="horizontal">
+
 			<EditText
 					android:id="@+id/password"
 					fontPath="fonts/ComicRelief.ttf"
@@ -36,6 +40,7 @@
 					android:password="true"
 					android:textColor="@color/white"
 					android:textColorHint="@color/white_50" />
+
 			<CheckBox
 					android:id="@+id/login_checkbox"
 					android:layout_width="wrap_content"
@@ -43,6 +48,7 @@
 					android:text="Save login?"
 					android:textColor="@color/white" />
 		</LinearLayout>
+
 		<EditText
 				android:id="@+id/username"
 				fontPath="fonts/ComicRelief.ttf"
@@ -54,6 +60,7 @@
 				android:inputType="text"
 				android:textColor="@color/white"
 				android:textColorHint="@color/white_50" />
+
 		<Button
 				android:id="@+id/loginbutton"
 				fontPath="fonts/ComicRelief.ttf"
@@ -68,7 +75,7 @@
 				android:text="Anmelden"
 				android:layout_margin="8dp" />
 	</RelativeLayout>
-<<<<<<< HEAD
+
 	<ProgressBar
 			android:visibility="invisible"
 			android:layout_width="wrap_content"
@@ -78,16 +85,4 @@
 			android:layout_centerHorizontal="true"
 			android:indeterminate="true"
 			/>
-=======
-
-    <ProgressBar
-        android:visibility="invisible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:layout_below="@+id/ImageSwitcher01"
-        android:layout_centerHorizontal="true"
-        android:indeterminate="true"
-        />
->>>>>>> 717e3e8cb7cbac400cfba106b204ec2e4f58b779
 </RelativeLayout>
