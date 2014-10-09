@@ -2,46 +2,58 @@
 <pre-dex-items>
 
     <item
-        dex="C:\Users\nonex_000\SkyDrive\Development\AndroidStudioProjects\writer\LLR\app\build\intermediates\pre-dexed\debug\butterknife-5.1.1-d87bf2b040fdd08e943269ed1e0d1b28da2a95f0.jar"
-        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\com.jakewharton\butterknife\5.1.1\b3652dfd65ca0bcf18790ff1a1f7624af4cb2bb8\butterknife-5.1.1.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="b3652dfd65ca0bcf18790ff1a1f7624af4cb2bb8"/>
-    <item
-        dex="C:\Users\nonex_000\SkyDrive\Development\AndroidStudioProjects\writer\LLR\app\build\intermediates\pre-dexed\debug\commons-lang3-3.3.2-e99d11a82b80d5c65f0ff0f19398ddbed3571cd8.jar"
-        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\org.apache.commons\commons-lang3\3.3.2\90a3822c38ec8c996e84c16a3477ef632cbc87a3\commons-lang3-3.3.2.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="90a3822c38ec8c996e84c16a3477ef632cbc87a3"/>
-    <item
-        dex="C:\Users\nonex_000\SkyDrive\Development\AndroidStudioProjects\writer\LLR\app\build\intermediates\pre-dexed\debug\commons-io-1.3.2-cf6b11304bbdff2e99ec8a8c37f1dad251274e6b.jar"
-        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\commons-io\commons-io\1.3.2\b6dde38349ba9bb5e6ea6320531eae969985dae5\commons-io-1.3.2.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="b6dde38349ba9bb5e6ea6320531eae969985dae5"/>
-    <item
-        dex="C:\Users\nonex_000\SkyDrive\Development\AndroidStudioProjects\writer\LLR\app\build\intermediates\pre-dexed\debug\support-v4-19.1.0-a99ee3f9ef92dad273255d9b3e3b4a9bbdb54d92.jar"
-        jar="C:\Program Files (x86)\Android\android-studio1\sdk\extras\android\m2repository\com\android\support\support-v4\19.1.0\support-v4-19.1.0.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67"/>
-    <item
-        dex="C:\Users\nonex_000\SkyDrive\Development\AndroidStudioProjects\writer\LLR\app\build\intermediates\pre-dexed\debug\picasso-2.3.3-4965aac4be4cf2f967f5852e06064b53d4e78ade.jar"
-        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\com.squareup.picasso\picasso\2.3.3\1262995965440e28ba5c4d480c9c9ab4ccce84cc\picasso-2.3.3.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="1262995965440e28ba5c4d480c9c9ab4ccce84cc"/>
-    <item
-        dex="C:\Users\nonex_000\SkyDrive\Development\AndroidStudioProjects\writer\LLR\app\build\intermediates\pre-dexed\debug\calligraphy-1.1.0-75a7096d77bf1209cf320f19a3f3366990860d5a.jar"
-        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\uk.co.chrisjenx\calligraphy\1.1.0\1069a9bca1cb0162881179a799d273d45e9aee14\calligraphy-1.1.0.jar"
+        dex="C:\Users\nonexistentcharacter\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\calligraphy-1.1.0-f33aa9d43e5b8b14c23891e3b62fcab7d327ff1a.jar"
+        jar="C:\Users\nonexistentcharacter\.gradle\caches\modules-2\files-2.1\uk.co.chrisjenx\calligraphy\1.1.0\1069a9bca1cb0162881179a799d273d45e9aee14\calligraphy-1.1.0.jar"
         jumboMode="false"
         revision="19.1.0"
         sha1="1069a9bca1cb0162881179a799d273d45e9aee14"/>
     <item
-        dex="C:\Users\nonex_000\SkyDrive\Development\AndroidStudioProjects\writer\LLR\app\build\intermediates\pre-dexed\debug\jsoup-1.7.3-a731902ab8bfad5402a5c6e589934a7e7c82c634.jar"
-        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\org.jsoup\jsoup\1.7.3\92568d7167ce1bf9eb1fd815b022d5a2c113547a\jsoup-1.7.3.jar"
+        dex="C:\Users\nonexistentcharacter\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\butterknife-5.1.1-e49e9840ba9068f8272994f1ce698a381b418b4b.jar"
+        jar="C:\Users\nonexistentcharacter\.gradle\caches\modules-2\files-2.1\com.jakewharton\butterknife\5.1.1\b3652dfd65ca0bcf18790ff1a1f7624af4cb2bb8\butterknife-5.1.1.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="b3652dfd65ca0bcf18790ff1a1f7624af4cb2bb8"/>
+    <item
+        dex="C:\Users\nonexistentcharacter\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\support-v4-19.1.0-0e1b0766ac113f9de305eb42265ae843b1266850.jar"
+        jar="C:\Users\nonexistentcharacter\AppData\Roaming\Android\sdk\extras\android\m2repository\com\android\support\support-v4\19.1.0\support-v4-19.1.0.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67"/>
+    <item
+        dex="C:\Users\nonexistentcharacter\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\commons-lang3-3.3.2-7b9de08e7be40843a18d44fca47702ebe1af5325.jar"
+        jar="C:\Users\nonexistentcharacter\.gradle\caches\modules-2\files-2.1\org.apache.commons\commons-lang3\3.3.2\90a3822c38ec8c996e84c16a3477ef632cbc87a3\commons-lang3-3.3.2.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="90a3822c38ec8c996e84c16a3477ef632cbc87a3"/>
+    <item
+        dex="C:\Users\nonexistentcharacter\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\picasso-2.3.3-68298a429fa3d196cd277508762d13f83f8124db.jar"
+        jar="C:\Users\nonexistentcharacter\.gradle\caches\modules-2\files-2.1\com.squareup.picasso\picasso\2.3.3\1262995965440e28ba5c4d480c9c9ab4ccce84cc\picasso-2.3.3.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="1262995965440e28ba5c4d480c9c9ab4ccce84cc"/>
+    <item
+        dex="C:\Users\nonexistentcharacter\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\jsoup-1.7.3-c431ece9aaa6424c02931a412b6aec7dd65be88d.jar"
+        jar="C:\Users\nonexistentcharacter\.gradle\caches\modules-2\files-2.1\org.jsoup\jsoup\1.7.3\92568d7167ce1bf9eb1fd815b022d5a2c113547a\jsoup-1.7.3.jar"
         jumboMode="false"
         revision="19.1.0"
         sha1="92568d7167ce1bf9eb1fd815b022d5a2c113547a"/>
+    <item
+        dex="C:\Users\nonexistentcharacter\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\okio-1.0.1-36f1046fa94261abe04639e29411f76f5a58277e.jar"
+        jar="C:\Users\nonexistentcharacter\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.0.1\39eff75ddcb987ff65888361a29f489c178429a3\okio-1.0.1.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="39eff75ddcb987ff65888361a29f489c178429a3"/>
+    <item
+        dex="C:\Users\nonexistentcharacter\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\commons-io-1.3.2-6b5eb36caf93879005e0f62ba1b1047ce31b8166.jar"
+        jar="C:\Users\nonexistentcharacter\.gradle\caches\modules-2\files-2.1\commons-io\commons-io\1.3.2\b6dde38349ba9bb5e6ea6320531eae969985dae5\commons-io-1.3.2.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="b6dde38349ba9bb5e6ea6320531eae969985dae5"/>
+    <item
+        dex="C:\Users\nonexistentcharacter\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\okhttp-2.0.0-6a5073275c1d1f9d4e2a0dd37702fe74d808df05.jar"
+        jar="C:\Users\nonexistentcharacter\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp\okhttp\2.0.0\4c8d1536dba3812cc1592090dc20c47a4ed3c35e\okhttp-2.0.0.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="4c8d1536dba3812cc1592090dc20c47a4ed3c35e"/>
 
 </pre-dex-items>

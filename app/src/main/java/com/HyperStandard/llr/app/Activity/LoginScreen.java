@@ -21,14 +21,22 @@ import android.widget.Toast;
 import com.HyperStandard.llr.app.Data.Cookies;
 import com.HyperStandard.llr.app.Login;
 import com.HyperStandard.llr.app.R;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -93,17 +101,58 @@ public class LoginScreen extends BaseActivity
 			Toast.makeText( this, "using saved credentials", Toast.LENGTH_LONG ).show();
 			userNameEditText.setText( prefs.getString( getString( R.string.prefs_username ), "" ) );
 			passwordEditText.setText( prefs.getString( getString( R.string.prefs_password ), "" ) );
-			new Thread( new Runnable()
+			/*new Thread( new Runnable()
 			{
 				public void run()
 				{
 					login();
 				}
-			} ).start();
+			} ).start();*///TODO remove these commetns
 			//progressBar.setVisibility(ProgressBar.INVISIBLE);
 			//loginButton.setVisibility(View.VISIBLE);
 		}
-	}
+        long timeNow = System.currentTimeMillis();
+        ExecutorService exec = Executors.newFixedThreadPool(2);
+        Future<Document> myDocFuture = exec.submit(new Callable<Document>() {
+            @Override
+            public Document call() throws Exception {
+                return Jsoup.connect("https://endoftheinter.net/").get();
+            }
+        });
+        try {
+            Document myDoc = myDocFuture.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        Log.e("Time taken for jsoup", Long.toString(System.currentTimeMillis() - timeNow));
+        timeNow = System.currentTimeMillis();
+        //final long fTime =  System.currentTimeMillis();
+        Future<Document> myOKFuture = exec.submit(new Callable<Document>() {
+            @Override
+            public Document call() throws Exception {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url("https://endoftheinter.net/")
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                //Log.e("Time taken for okhttp internal", Long.toString(System.currentTimeMillis() - fTime));
+                return Jsoup.parse(response.body().string());
+            }
+        });
+        try {
+            Document myDoc2 = myOKFuture.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        Log.e("Time taken for okhttp", Long.toString(System.currentTimeMillis() - timeNow));
+
+
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu( Menu menu )

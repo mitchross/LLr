@@ -35,6 +35,9 @@ import com.HyperStandard.llr.app.Navigation.NavigationDrawerFragment;
 import com.HyperStandard.llr.app.Navigation.PostDrawerFragment;
 import com.HyperStandard.llr.app.PostMessage;
 import com.HyperStandard.llr.app.R;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -182,6 +185,46 @@ public class MainActivity extends BaseActivity implements
 		{
 			e.printStackTrace();
 		}
+
+        long timeNow = System.currentTimeMillis();
+        ExecutorService exec = Executors.newFixedThreadPool(2);
+        Future<Document> myDocFuture = exec.submit(new Callable<Document>() {
+            @Override
+            public Document call() throws Exception {
+                return Jsoup.connect("https://boards.endoftheinter.net/showmessages.php?topic=8881962&page=2").cookies(Cookies.getCookies()).get();
+            }
+        });
+        try {
+            Document myDoc = myDocFuture.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        Log.e("Time taken for jsoup", Long.toString(System.currentTimeMillis() - timeNow));
+        timeNow = System.currentTimeMillis();
+        //final long fTime =  System.currentTimeMillis();
+        Future<Document> myOKFuture = exec.submit(new Callable<Document>() {
+            @Override
+            public Document call() throws Exception {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url("https://boards.endoftheinter.net/showmessages.php?topic=8881962&page=2")
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                //Log.e("Time taken for okhttp internal", Long.toString(System.currentTimeMillis() - fTime));
+                return Jsoup.parse(response.body().string());
+            }
+        });
+        try {
+            Document myDoc2 = myOKFuture.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        Log.e("Time taken for okhttp", Long.toString(System.currentTimeMillis() - timeNow));
 	}
 
 	@Override
