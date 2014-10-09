@@ -36,11 +36,22 @@ android {
 
 
 }
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "me.champeau.gradle:gradle-groovy-android-plugin:0.3.0"
+    }
+}
+
+apply plugin: "me.champeau.gradle.groovy-android"
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     // You must install or update the Support Repository through the SDK manager to use this dependency.
     compile 'com.android.support:support-v4:19.+'
+    compile 'org.codehaus.groovy:groovy:2.4.0-beta-3:grooid'
 
     //compile 'com.android.support:support-v4:20'
     compile 'com.squareup.picasso:picasso:2.3.3'
