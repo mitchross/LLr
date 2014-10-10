@@ -39,9 +39,6 @@ public class LoginActiviy extends Activity
 	private String[] usernames;
 	private String[] passwords;
 
-	private String username;
-	private String password;
-
 	private SharedPreferences prefs;
 
 	@InjectView(R.id.username)
@@ -52,7 +49,8 @@ public class LoginActiviy extends Activity
 	protected ProgressBar progressBar;
 	@InjectView(R.id.loginbutton)
 	protected Button loginButton;
-	@InjectView(R.id.loginspinner)	//TODO shape up var names
+	@InjectView(R.id.loginspinner)
+	//TODO shape up var names
 	protected Spinner loginspinner;
 
 	@Override
@@ -84,9 +82,6 @@ public class LoginActiviy extends Activity
 		usernames = prefs.getString( getString( R.string.prefs_username ), null )?.split( "✓" );
 		passwords = prefs.getString( getString( R.string.prefs_password ), null )?.split( "✓" );
 
-		username = usernames[preferred_account];
-		password = passwords[preferred_account];
-
 		//Check to see if we're auto logging in
 		if ( prefs.getBoolean( getString( R.string.prefs_autologin ), false )//figured I'd put this check first for the .000001 ms speed gain
 				&& prefs.contains( getString( R.string.prefs_passwords ) )
@@ -97,8 +92,8 @@ public class LoginActiviy extends Activity
 
 			Toast.makeText( this, "Logging in...", Toast.LENGTH_LONG ).show();
 
-			userNameEditText.setText "";
-			passwordEditText.setText "";
+			userNameEditText.setText usernames[preferred_account];
+			passwordEditText.setText passwords[preferred_account];
 
 			//log in yeah woo we did it hooray
 			new Thread().start( { login() } );
@@ -114,19 +109,14 @@ public class LoginActiviy extends Activity
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate R.menu.login, menu;
 		Spinner mSpinner = (Spinner) menu.findItem( R.id.loginspinner ).getActionView();
-		//if ( usernames.length > 1 )
-		if (true)
+		if ( usernames.length > 1 )
 		{
-
-			useraccounts.add();
-
 			mSpinner.setVisibility( View.VISIBLE );
 		} else
 		{
 			Log.i( mTag, "No additional accounts reported, not showing accounts menu" );
 		}
 
-		String[] usernames = ["testnig", "hallo"];
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>( getApplicationContext(), android.R.layout.simple_spinner_item, usernames );
 		adapter.setDropDownViewResource android.R.layout.simple_spinner_dropdown_item;
 
@@ -159,24 +149,23 @@ public class LoginActiviy extends Activity
 	public void login()
 	{
 		String username = userNameEditText.getText().toString();
-		final String password = passwordEditText.getText().toString();
+		String password = passwordEditText.getText().toString();
 
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 
-		String URLtoConnectTo;
+		String loginAddress;
 
-		//TODO fix this up, possibly inline the callable, deal with the syntax differences etc
 		if ( prefs.getBoolean( "use_iphone_login", true ) )
 		{
-			Log.e( mTag, "using iPhone login" );
-			URLtoConnectTo = "https://iphone.endoftheinter.net/";
+			Log.i( mTag, "Using iPhone login" );
+			loginAddress = "https://iphone.endoftheinter.net/";
 		} else
 		{
-			Log.v( mTag, "using desktop version" );
-			URLtoConnectTo = "https://endoftheinter.net/";
+			Log.i( mTag, "Using Desktop login" );
+			loginAddress = "https://endoftheinter.net/";
 		}
 		OkHttpClient client = new OkHttpClient();
-		Request request = new Request.Builder().url( URLtoConnectTo ).build();
+		Request request = new Request.Builder().url( loginAddress ).build();
 		Response response = client.newCall( request ).execute();
 		if ( response.body().toString().equals( getString( R.string.successful_response ) ) )
 		{
@@ -188,10 +177,10 @@ public class LoginActiviy extends Activity
 	@OnItemSelected(R.id.loginspinner)
 	void onItemSelected(int position)
 	{
-		userNameEditText.setText( usernames[position] );
-		passwordEditText.setText( passwords[position] );
-
-		new Thread.start( { login() } )
+		if ( userNameEditText?.setText( usernames[position] ) && passwordEditText?.setText( passwords[position] ) )
+		{
+			new Thread().start( { login() } )
+		}
 	}
 
 	/**

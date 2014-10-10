@@ -309,18 +309,24 @@ public class MainActivity extends BaseActivity implements
 			startActivity( intent );
 		}
 
-		if ( item.getItemId() == R.id.action_logout )
-		{
-			Connection.Response response;
-			Document logoutResponse;
-			//response = Jsoup.( getString( R.string.url_logout ) )
-			Jsoup.connect( getString( R.string.url_logout ) );
-			//TODO add logout link to strings and use that for connection
-			final Intent intent = new Intent( this, LoginScreen.class );
-			startActivity( intent );
-			//TODO add extra boolean value from response indicating successful logout
-		}
-		return id == R.id.action_settings || super.onOptionsItemSelected( item );
+		if ( item.getItemId() == R.id.action_logout ) {
+            //get prefes so we can make sure not to auto login
+            getSharedPreferences(getString(R.string.prefs_name), MODE_PRIVATE)
+                    .edit()
+                    .putBoolean(getString(R.string.prefs_autologin), false)
+                    .commit();
+
+            //TODO switch over to OKHttp
+            //OkHttpClient client = new OkHttpClient();
+            Connection.Response response;
+            Document logoutResponse;
+            Jsoup.connect(getString(R.string.url_logout));
+            //TODO add logout link to strings and use that for connection
+            final Intent intent = new Intent(this, LoginScreen.class);
+            startActivity(intent);
+            //TODO add extra boolean value from response indicating successful logout
+        }
+        return id == R.id.action_settings || super.onOptionsItemSelected( item );
 	}
 
 
