@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="prefs_login">userlogin</string>
-	<string name="prefs_username">username</string>
-	<string name="prefs_password">password</string>
-	<string name="prefs_username_set">username_array</string>
+	<string name="prefs_autologin">autologin</string>
+	<string name="prefs_usernames">usernames</string>
+	<string name="prefs_passwords">passwords</string>
+	<string name="prefs_preferred">preferred</string>
+
 	<string name="prefs_name">LLr.prefs</string>
 
 	<!-- strings to determine LL functions -->
