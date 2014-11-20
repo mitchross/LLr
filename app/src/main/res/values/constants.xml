@@ -5,7 +5,7 @@
 	<string name="prefs_passwords">passwords</string>
 	<string name="prefs_preferred">preferred</string>
 
-	<string name="prefs_name">LLr.prefs</string>
+	<string name="preferences_name">LLr.prefs</string>
 
 	<!-- strings to determine LL functions -->
 	<string name="successful_response">&quot;&lt;script&gt;document.location.href=\&quot;/\&quot;;&lt;/script&gt;&quot;</string>

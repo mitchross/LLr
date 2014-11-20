@@ -73,7 +73,8 @@
 				android:layout_below="@+id/linearlayout"
 				android:background="@drawable/login_button"
 				android:text="Anmelden"
-				android:layout_margin="8dp" />
+				android:layout_margin="8dp"
+				android:onClick="clicklogin"/>
 	</RelativeLayout>
 
 	<ProgressBar

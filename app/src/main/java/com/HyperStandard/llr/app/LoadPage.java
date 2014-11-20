@@ -1,9 +1,11 @@
 package com.HyperStandard.llr.app;
 
+import android.app.DownloadManager;
 import android.util.Log;
 
 import com.HyperStandard.llr.app.Data.Cookies;
 import com.HyperStandard.llr.app.Exceptions.LoggedOutException;
+import com.squareup.okhttp.Request;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -36,9 +38,17 @@ public class LoadPage implements Callable<Document>
 	{
 		try
 		{
-			Document doc = Jsoup.connect( URL )
+			/*Document doc = Jsoup.connect( URL )
 					.cookies( Cookies.getCookies() )
-					.get();
+					.get();*/
+			Request request = new Request.Builder()
+					.url( URL )
+					.build();
+
+
+			//Call the webpage w OKHttp, then turn the Body into a String and parse it into a JSoup document
+			Document doc = Jsoup.parse( Cache.get.Client().newCall( request ).execute().body().string());
+
 			if ( doc.title().equals( "Das Ende des Internets" ) )
 			{
 				Log.e( "error", "logged out" );

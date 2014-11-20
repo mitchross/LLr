@@ -18,21 +18,31 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.HyperStandard.llr.app.Cache;
+import com.HyperStandard.llr.app.CustomCookieManager;
 import com.HyperStandard.llr.app.Data.Cookies;
 import com.HyperStandard.llr.app.Login;
 import com.HyperStandard.llr.app.R;
+import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.cookie.Cookie;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.net.CookieManager;
+import java.net.HttpCookie;
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -47,13 +57,14 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
+import static com.HyperStandard.llr.app.R.id.container;
 import static com.HyperStandard.llr.app.R.id.loginspinner;
 
 /**
  * Entry point to application, with login
  *
  * @author HyperStandard
- * @version 0.1
+ * @version 0.2
  * @since 6/14/2014.
  */
 public class LoginScreen extends BaseActivity
@@ -66,269 +77,212 @@ public class LoginScreen extends BaseActivity
 	protected EditText passwordEditText;
 	@InjectView( R.id.progressBar )
 	protected ProgressBar progressBar;
-	@InjectView( R.id.loginbutton )
-	protected Button loginButton;
+	@InjectView( R.id.login_checkbox )
+	protected CheckBox checkBox;
+
+	private String username;
+	private String password;
 
 	private SharedPreferences prefs;
-
-	@OnClick( R.id.loginbutton )
-	protected void loginButtonClick()
-	{
-		login();
-	}
-
+	private OkHttpClient client;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
 	{
-		Log.e( mTag, getDatabasePath( "testMe" ).toString() );
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.login );
-		PreferenceManager.setDefaultValues( getApplicationContext(), "prefs", MODE_PRIVATE, R.xml.pref_general, false );
 
-		//Butterknife injection for views
 		ButterKnife.inject( this );
-		getActionBar();
 
-		//Get the shared prefs that the username is going to be put in
-		//TODO change this to possibly encrypted login info, and support for multiple accounts
-		prefs = getSharedPreferences( getString( R.string.pref_name ), MODE_PRIVATE );
-		//TODO figure out how to get external IP and use LL check login instead of just logging in again
-		if ( prefs.contains( getString( R.string.prefs_password ) ) && prefs.contains( getString( R.string.prefs_username ) ) && prefs.getBoolean( getString( R.string.prefs_login ), false ) )
+		//Get the general preferences for the application (same as the ones used by the pref activity)
+		prefs = getSharedPreferences( getString( R.string.preferences_name ), MODE_PRIVATE );
+
+		//Get values from preferences
+
+		//Usernames and passwords are stored in a single string then split by the ✓ token
+		//Because why not (I don't think it's valid for an LL name so it's prob no big deal)
+		String[] usernames = prefs.getString( "usernames", "" ).split( "✓" );
+		String[] passwords = prefs.getString( "passwords", "" ).split( "✓" );
+
+		//Index for which account is preferred
+		int preferred_account = prefs.getInt( "preferred_account", 0 );
+
+		//Whether to log in automatically
+		boolean autoLogin = prefs.getBoolean( "auto_login", false );
+
+		//some sanity checks probably not necessary but still why not
+		if ( ( usernames.length != 0 && passwords.length != 0 ) && ( passwords.length == usernames.length ) )
 		{
-			progressBar.setVisibility( ProgressBar.VISIBLE );
-			loginButton.setVisibility( View.INVISIBLE );
-			Toast.makeText( this, "using saved credentials", Toast.LENGTH_LONG ).show();
-			userNameEditText.setText( prefs.getString( getString( R.string.prefs_username ), "" ) );
-			passwordEditText.setText( prefs.getString( getString( R.string.prefs_password ), "" ) );
-			/*new Thread( new Runnable()
+			if ( preferred_account < usernames.length )
 			{
-				public void run()
-				{
-					login();
-				}
-			} ).start();*///TODO remove these commetns
-			//progressBar.setVisibility(ProgressBar.INVISIBLE);
-			//loginButton.setVisibility(View.VISIBLE);
+				username = usernames[ preferred_account ];
+				password = passwords[ preferred_account ];
+			}
 		}
-        long timeNow = System.currentTimeMillis();
-        ExecutorService exec = Executors.newFixedThreadPool(2);
-        Future<Document> myDocFuture = exec.submit(new Callable<Document>() {
-            @Override
-            public Document call() throws Exception {
-                return Jsoup.connect("https://endoftheinter.net/").get();
-            }
-        });
-        try {
-            Document myDoc = myDocFuture.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        Log.e("Time taken for jsoup", Long.toString(System.currentTimeMillis() - timeNow));
-        timeNow = System.currentTimeMillis();
-        //final long fTime =  System.currentTimeMillis();
-        Future<Document> myOKFuture = exec.submit(new Callable<Document>() {
-            @Override
-            public Document call() throws Exception {
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder()
-                        .url("https://endoftheinter.net/")
-                        .build();
+		if ( autoLogin )
+		{
+			login( username, password );
+		}
 
-                Response response = client.newCall(request).execute();
-                //Log.e("Time taken for okhttp internal", Long.toString(System.currentTimeMillis() - fTime));
-                return Jsoup.parse(response.body().string());
-            }
-        });
-        try {
-            Document myDoc2 = myOKFuture.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        Log.e("Time taken for okhttp", Long.toString(System.currentTimeMillis() - timeNow));
-
-
-    }
+		//Set the client and default cookies
+		//TODO make a better cookie store
+		client = Cache.get.Client();
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu( Menu menu )
 	{
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate( R.menu.login, menu );
-		Spinner mSpinner = (Spinner) menu.findItem( loginspinner ).getActionView();//You need the getActionView thing I don't know why
-		if ( prefs.contains( getString( R.string.prefs_username_set ) ) )
-		{
-			class AccountInfo
-			{
-				public String un;
-				public String pw;
-
-				public AccountInfo( String un, String pw )
-				{
-					this.un = un;
-					this.pw = pw;
-				}
-			}
-			//Instantiate arrays to hold un/pws
-			ArrayList<AccountInfo> useraccounts = new ArrayList<>();
-
-			//I don't know how to add to this set? ? ?
-			Set<String> usernameSet = prefs.getStringSet( getString( R.string.prefs_username_set ), null );
-			for ( String s : usernameSet )
-			{
-				if ( getSharedPreferences( s, MODE_PRIVATE ).contains( getString( R.string.prefs_password ) ) )
-				{//Checks to see if there's an associated password with the username
-					//TODO figure out whether too many sharedpreferences are bad
-					String password = getSharedPreferences( s, MODE_PRIVATE ).getString( getString( R.string.prefs_password ), null );
-					useraccounts.add( new AccountInfo( s, password ) );
-				}
-			}
-			mSpinner.setVisibility( View.VISIBLE );
-		}
-		else
-		{
-			Log.i( mTag, "No additional accounts reported, not showing accounts menu" );
-		}
-
-
-		String[] options = { "item 1", "items 2" };
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>( getApplicationContext(), android.R.layout.simple_spinner_item, options );
-		adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item );
-
-		mSpinner.setAdapter( adapter );
-		return super.onCreateOptionsMenu( menu );
+		// Inflate the menu; this adds items to the action bar if it is present.
+		//getMenuInflater().inflate( R.menu.menu_login, menu );
+		return true;
 	}
 
-	/**
-	 * On selecting action bar icons
-	 */
 	@Override
 	public boolean onOptionsItemSelected( MenuItem item )
 	{
-		// Take appropriate action for each action item click
-		switch ( item.getItemId() )
-		{
-			case R.id.cleardata:
-				//  Do something
-				return true;
-			case loginspinner:
-				// Do Something
-				return true;
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
 
-			default:
-				return super.onOptionsItemSelected( item );
+		//noinspection SimplifiableIfStatement
+		if ( id == R.id.action_settings )
+		{
+			return true;
 		}
+
+		return super.onOptionsItemSelected( item );
 	}
 
-
-	public void login()
+	private void login( String username, String password )
 	{
-		String username = userNameEditText.getText().toString();
-		final String password = passwordEditText.getText().toString();
+		String loginURL;
 
-		ExecutorService executor = Executors.newSingleThreadExecutor();
+		RequestBody formBody;
 
-		String URLtoConnectTo;
-
-		//TODO fix this up, possibly inline the callable, deal with the syntax differences etc
 		if ( prefs.getBoolean( "use_iphone_login", true ) )
 		{
-			Log.e( mTag, "using iPhone login" );
-			URLtoConnectTo = "https://iphone.endoftheinter.net/";
+			Log.i( mTag, "Using iPhone login" );
+			loginURL = "https://iphone.endoftheinter.net/";
+			formBody = new FormEncodingBuilder()
+					.add( "username", "almond" )
+					.add( "password", "XeGa2u_$" )
+					.build();
 		}
 		else
 		{
-			Log.v( mTag, "using desktop version" );
-			URLtoConnectTo = "https://endoftheinter.net/";
+			Log.i( mTag, "Using Desktop login" );
+			loginURL = "https://endoftheinter.net/";
+			formBody = new FormEncodingBuilder()
+					.add( "b", "almond" )
+					.add( "p", "XeGa2u_$" )
+					//todo figure out if this is necessary
+					.add( "r", "" )
+					.build();
 		}
 
-		Future<Connection.Response> loggedin = executor.submit( new Login( URLtoConnectTo, username, password ) );
+
+		final Request request = new Request.Builder()
+				.url( loginURL )
+				.post( formBody )
+				.build();
+
 		try
 		{
-			Connection.Response response = loggedin.get( 30, TimeUnit.SECONDS );
-
-			//TODO get this in a constants file for easy updating, character escapes are proving troublesome
-			//Check to see if we've got logged in correctly, and if so, set up the account.
-			if ( response.body().equals( getString( R.string.successful_response ) ) )
+			Future<Response> responseFuture = Executors.newSingleThreadExecutor().submit( new Callable<Response>()
 			{
-
-				Log.i( mTag, "Successful login, using login() NOT login(username/password)" );
-				final Intent intent = new Intent( this, MainActivity.class );
-
-				//Adding cookies to global cookie cache
-				Cookies.setCookies( response.cookies() );
-
-				int userId = Integer.parseInt( response.cookie( getString( R.string.cookies_userid ) ) );
-				intent.putExtra( "userId", userId );
-				CheckBox checkBox = (CheckBox) findViewById( R.id.login_checkbox );
-				if ( checkBox.isChecked() )
+				@Override
+				public Response call() throws Exception
 				{
-					Set usernameSet;
-					if ( prefs.contains( getString( R.string.prefs_username_set ) ) )
+					return client.newCall( request ).execute();
+				}
+			} );
+			Response response = responseFuture.get();
+			if ( response.body().string().equals( getString( R.string.successful_response ) ) )
+			{
+				if ( checkBox.isChecked() )
+				{//TODO use GSON instead
+					List<String> un = Arrays.asList( prefs.getString( "usernames", "" ).split( "✓" ) );
+					List<String> pw = Arrays.asList( prefs.getString( "passwords", "" ).split( "✓" ) );
+					for ( int i = 0; i < un.size(); i++ )
 					{
-						usernameSet = new HashSet( 1 );
-						usernameSet.add( password );
-						/*SharedPreferences newPasswordPreference = getSharedPreferences( username, MODE_PRIVATE );
-						newPasswordPreference
-						prefs.edit()
-								.putStringSet( getString( R.string.prefs_username_set ) )*/
+						//If the series of accounts already contains the username entered then change the password
+						if ( un.get( i ).equals( username ) )
+						{
+							pw.set( i, password );
+						}
 					}
+					if ( !un.contains( username ) )
+					{
+						un.add( username );
+						pw.add( password );
+					}
+					else
+					{
+						pw.set( un.indexOf( username ), password );
+					}
+
+					String uns = StringUtils.join( un.toArray(), "✓" );
+					String pws = StringUtils.join( pw.toArray(), "✓" );
+
 					prefs.edit()
-							.putString( getString( R.string.prefs_password ), password )
-							.putString( getString( R.string.prefs_username ), username )
-							.putBoolean( getString( R.string.prefs_login ), true )
+							.putString( "usernames", uns )
+							.putString( "passwords", pws )
 							.apply();
 				}
+
+				int userid = -1;
+				CookieManager cookieManager = (CookieManager) client.getCookieHandler();
+				List<HttpCookie> cookies = cookieManager.getCookieStore().getCookies();
+				for ( HttpCookie cookie : cookies )
+				{
+					if ( cookie.getName().equals( "userid" ) )
+					{
+						userid = Integer.parseInt( cookie.getValue() );
+						Log.v( mTag, "User ID is " + userid );
+					}
+				}
+				//int userId = Integer.parseInt( ((CookieManager) client.getCookieHandler()).getCookieStore(). ) ;
+				//Log.e( "int value", " " + userId );
+
+				//Launch the main activity
+				Intent intent = new Intent( this, MainActivity.class );
+				intent.putExtra( "userId", userid );
 				startActivity( intent );
 			}
 			else
 			{
-				Log.e( response.body(), getString( R.string.successful_response ) );
-				Toast.makeText( this, "Failed to login", Toast.LENGTH_SHORT ).show();
+				Toast.makeText( this, "Login failed", Toast.LENGTH_LONG ).show();
 			}
+
 		}
-		catch ( TimeoutException | InterruptedException | ExecutionException e )
+		catch ( Exception e )
 		{
 			e.printStackTrace();
 		}
 	}
 
-	/**
-	 * This clears any saved login information
-	 * TODO selective delete based on different accounts? Also, actually implement eheh heh
-	 */
-
-	public void clearData( MenuItem item )
+	public void clicklogin( View view )
 	{
-		Toast.makeText( this, "buh", Toast.LENGTH_SHORT ).show();
-	}
+		final String username = userNameEditText.getText().toString();
+		final String password = passwordEditText.getText().toString();
 
-	//TODO probabably don't need this because teh action bar is impleemntted (sp)
-
-	/**
-	 * Emulate the overflow button
-	 * I could make it invisible w hardware menu buttons but eh only Samsung (more like samshit lol amirite) still uses those tbh
-	 *
-	 * @param button
-	 */
-	public void openOptions( View button )
-	{
-
-		PopupMenu popup = new PopupMenu( this, button );
-		popup.getMenuInflater().inflate( R.menu.login, popup.getMenu() );
-
-		popup.setOnMenuItemClickListener( new PopupMenu.OnMenuItemClickListener()
+		//Check for empty strings in the text boxes
+		if ( !username.equals( "" ) && !password.equals( "" ) )
 		{
-			public boolean onMenuItemClick( MenuItem item )
-			{
-				item.collapseActionView();
-				return true;
-			}
-		} );
-		popup.show();
+
+			new Thread(new Runnable() {
+				@Override
+				public void run()
+				{
+					login( username, password );
+				}
+			}).start();
+		}
+		else
+		{
+			Toast.makeText( getApplicationContext(), "Empty boxes", Toast.LENGTH_LONG ).show();
+		}
 	}
+
 }

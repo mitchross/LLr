@@ -185,48 +185,7 @@ public class MainActivity extends BaseActivity implements
 		{
 			e.printStackTrace();
 		}
-
-        long timeNow = System.currentTimeMillis();
-        ExecutorService exec = Executors.newFixedThreadPool(2);
-        Future<Document> myDocFuture = exec.submit(new Callable<Document>() {
-            @Override
-            public Document call() throws Exception {
-                return Jsoup.connect("https://boards.endoftheinter.net/showmessages.php?topic=8881962&page=2").cookies(Cookies.getCookies()).get();
-            }
-        });
-        try {
-            Document myDoc = myDocFuture.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        Log.e("Time taken for jsoup", Long.toString(System.currentTimeMillis() - timeNow));
-        timeNow = System.currentTimeMillis();
-        //final long fTime =  System.currentTimeMillis();
-        Future<Document> myOKFuture = exec.submit(new Callable<Document>() {
-            @Override
-            public Document call() throws Exception {
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder()
-                        .url("https://boards.endoftheinter.net/showmessages.php?topic=8881962&page=2")
-                        .build();
-
-                Response response = client.newCall(request).execute();
-                //Log.e("Time taken for okhttp internal", Long.toString(System.currentTimeMillis() - fTime));
-                return Jsoup.parse(response.body().string());
-            }
-        });
-        try {
-            Document myDoc2 = myOKFuture.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        Log.e("Time taken for okhttp", Long.toString(System.currentTimeMillis() - timeNow));
 	}
-
 	@Override
 	public void onNavigationDrawerItemSelected( int position, String URL )
 	{
@@ -311,7 +270,7 @@ public class MainActivity extends BaseActivity implements
 
 		if ( item.getItemId() == R.id.action_logout ) {
             //get prefes so we can make sure not to auto login
-            getSharedPreferences(getString(R.string.prefs_name), MODE_PRIVATE)
+            getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE)
                     .edit()
                     .putBoolean(getString(R.string.prefs_autologin), false)
                     .commit();
@@ -506,5 +465,4 @@ public class MainActivity extends BaseActivity implements
 		transaction.show( newFragment );
 		transaction.commit();
 	}
-
 }
