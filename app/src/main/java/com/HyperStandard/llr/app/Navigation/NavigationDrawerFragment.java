@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.HyperStandard.llr.app.BookmarkLink;
 import com.HyperStandard.llr.app.CustomTypefaceSpan;
 import com.HyperStandard.llr.app.R;
+import com.HyperStandard.llr.app.Type;
 
 import java.util.ArrayList;
 
@@ -236,7 +237,7 @@ public class NavigationDrawerFragment extends Fragment
 		mDrawerLayout.setDrawerListener( mDrawerToggle );
 		ArrayList<BookmarkLink> bookmarks = new ArrayList<>();
 
-		NavigationAdapter adapter = new NavigationAdapter(  getActionBar().getThemedContext(),
+		NavigationAdapter adapter = new NavigationAdapter( getActionBar().getThemedContext(),
 				listview_navigation_row,
 				bookmarks,
 				userId
@@ -258,7 +259,16 @@ public class NavigationDrawerFragment extends Fragment
 		}
 		if ( mCallbacks != null )
 		{
-			mCallbacks.onNavigationDrawerItemSelected( position, URL );
+			Log.e( "url is ", URL );
+			//fixme this logic is whack fix it
+			if ( position == 0 )
+			{
+				mCallbacks.onNavigationDrawerItemSelected( position, URL, Type.IMAGE );
+			}
+			else
+			{
+				mCallbacks.onNavigationDrawerItemSelected( position, URL, Type.TOPICLIST );
+			}
 		}
 	}
 
@@ -380,7 +390,7 @@ public class NavigationDrawerFragment extends Fragment
 		/**
 		 * Called when an item in the navigation drawer is selected.
 		 */
-		void onNavigationDrawerItemSelected( int position, String URL );
+		void onNavigationDrawerItemSelected( int position, String URL, Type type );
 	}
 
 }

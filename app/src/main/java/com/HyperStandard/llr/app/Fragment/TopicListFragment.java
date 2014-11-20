@@ -128,8 +128,8 @@ public class TopicListFragment extends Fragment
 			} );
 
 			ArrayList<TopicLink> topics = arrayListFuture.get();
-			TopicAdapter adapter = new TopicAdapter( getActivity().getApplicationContext(), R.id.topic_listview, topics, callbacks );
-			listView.setAdapter( adapter );
+			//TopicAdapter adapter = new TopicAdapter( getActivity().getApplicationContext(), R.id.topic_listview, topics, callbacks );
+			//listView.setAdapter( adapter );
 		}
 		catch ( InterruptedException e )
 		{

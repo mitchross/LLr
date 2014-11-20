@@ -17,15 +17,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.HyperStandard.llr.app.BookmarkLink;
 import com.HyperStandard.llr.app.CustomTypefaceSpan;
-import com.HyperStandard.llr.app.Data.Cookies;
 import com.HyperStandard.llr.app.Exceptions.LoggedOutException;
 import com.HyperStandard.llr.app.Exceptions.WaitException;
-import com.HyperStandard.llr.app.Fragment.MainPageFragment;
 import com.HyperStandard.llr.app.Fragment.PollFragment;
 import com.HyperStandard.llr.app.Fragment.TopicFragment;
 import com.HyperStandard.llr.app.Fragment.TopicListFragment;
@@ -33,11 +32,10 @@ import com.HyperStandard.llr.app.LoadPage;
 import com.HyperStandard.llr.app.Navigation.NavigationAdapter;
 import com.HyperStandard.llr.app.Navigation.NavigationDrawerFragment;
 import com.HyperStandard.llr.app.Navigation.PostDrawerFragment;
+import com.HyperStandard.llr.app.Page.TopicList;
 import com.HyperStandard.llr.app.PostMessage;
 import com.HyperStandard.llr.app.R;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
+import com.HyperStandard.llr.app.Type;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -45,20 +43,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import org.apache.commons.lang3.tuple.Triple;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -69,7 +58,8 @@ public class MainActivity extends BaseActivity implements
 		NavigationAdapter.NavigationDrawerCallback,
 		TopicListFragment.Callbacks,
 		TopicFragment.Callbacks,
-		PollFragment.Callbacks
+		PollFragment.Callbacks, TopicList.Callbacks
+
 {
 	/**
 	 * Used for logging
@@ -89,7 +79,7 @@ public class MainActivity extends BaseActivity implements
 	private static String lastFragTag;
 	ListView mListView;
 	@Optional
-	@InjectView( R.id.leftNavigationDrawer )
+	@InjectView(R.id.leftNavigationDrawer)
 	ListView listView;
 	/**
 	 * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -165,11 +155,11 @@ public class MainActivity extends BaseActivity implements
 			{
 				populateDrawer( new BookmarkLink(
 						e.select( "span > a" ).first().ownText(),
-						e.select( "span > a" ).attr( "abs:href" ),
+						"http:" + e.select( "span > a" ).attr( "href" ),
 						"TOPIC_LIST"
 				) );
 
-				Log.v( mTag, "loading bookmark: \"" + e.select( "span > a" ).first().ownText() + "\" @ " + e.select( "span > a" ).attr( "abs:href" ) );
+				Log.v( mTag, "loading bookmark: \"" + e.select( "span > a" ).first().ownText() + "\" @ " + e.select( "span > a" ).attr( "href" ) );
 			}
 
 		}
@@ -185,16 +175,16 @@ public class MainActivity extends BaseActivity implements
 		{
 			e.printStackTrace();
 		}
+
 	}
+
 	@Override
-	public void onNavigationDrawerItemSelected( int position, String URL )
+	public void onNavigationDrawerItemSelected( int position, String URL, Type types )
 	{
-		Log.e( "testing testing is this getting called", URL );
-		/**
-		 * make a new topic fragment
-		 */
-		TopicFragment fragment = TopicFragment.newInstance( URL );
-		hideAndReplaceFragment( fragment );
+		if ( types == Type.TOPICLIST )
+		{
+			TopicList newPage = new TopicList( URL, this, getApplicationContext() );
+		}
 	}
 
 	//TODO what the hell is this I don't even know
@@ -268,24 +258,25 @@ public class MainActivity extends BaseActivity implements
 			startActivity( intent );
 		}
 
-		if ( item.getItemId() == R.id.action_logout ) {
-            //get prefes so we can make sure not to auto login
-            getSharedPreferences(getString(R.string.preferences_name), MODE_PRIVATE)
-                    .edit()
-                    .putBoolean(getString(R.string.prefs_autologin), false)
-                    .commit();
+		if ( item.getItemId() == R.id.action_logout )
+		{
+			//get prefes so we can make sure not to auto login
+			getSharedPreferences( getString( R.string.preferences_name ), MODE_PRIVATE )
+					.edit()
+					.putBoolean( getString( R.string.prefs_autologin ), false )
+					.commit();
 
-            //TODO switch over to OKHttp
-            //OkHttpClient client = new OkHttpClient();
-            Connection.Response response;
-            Document logoutResponse;
-            Jsoup.connect(getString(R.string.url_logout));
-            //TODO add logout link to strings and use that for connection
-            final Intent intent = new Intent(this, LoginScreen.class);
-            startActivity(intent);
-            //TODO add extra boolean value from response indicating successful logout
-        }
-        return id == R.id.action_settings || super.onOptionsItemSelected( item );
+			//TODO switch over to OKHttp
+			//OkHttpClient client = new OkHttpClient();
+			Connection.Response response;
+			Document logoutResponse;
+			Jsoup.connect( getString( R.string.url_logout ) );
+			//TODO add logout link to strings and use that for connection
+			final Intent intent = new Intent( this, LoginScreen.class );
+			startActivity( intent );
+			//TODO add extra boolean value from response indicating successful logout
+		}
+		return id == R.id.action_settings || super.onOptionsItemSelected( item );
 	}
 
 
@@ -369,7 +360,6 @@ public class MainActivity extends BaseActivity implements
 		//TODO implement also what calls this
 	}
 
-
 	public void postMessage( View v )
 	{
 		EditText editText = (EditText) findViewById( R.id.post_message_edit_text );
@@ -389,6 +379,15 @@ public class MainActivity extends BaseActivity implements
 		{
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void setView( View view )
+	{
+		Log.e( "View getting", "set" );
+		FrameLayout frameLayout = (FrameLayout) findViewById( R.id.container );
+		frameLayout.removeAllViews();
+		frameLayout.addView( view );
 	}
 
 	/**
@@ -445,7 +444,7 @@ public class MainActivity extends BaseActivity implements
 		}
 	}
 
-	public void hideAndReplaceFragment(Fragment newFragment)
+	public void hideAndReplaceFragment( Fragment newFragment )
 	{
 		if ( manager == null )
 		{
@@ -457,8 +456,8 @@ public class MainActivity extends BaseActivity implements
 
 		/**
 		 * Only hide if null
- 		 */
-		if (oldFragment != null)
+		 */
+		if ( oldFragment != null )
 		{
 			transaction.hide( oldFragment );
 		}

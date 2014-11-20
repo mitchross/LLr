@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.HyperStandard.llr.app.Fragment.TopicListFragment;
 import com.HyperStandard.llr.app.Models.TopicLink;
+import com.HyperStandard.llr.app.Page.TopicList;
 import com.HyperStandard.llr.app.R;
 
 import java.util.ArrayList;
@@ -23,12 +24,12 @@ import butterknife.InjectView;
  */
 public class TopicAdapter extends ArrayAdapter<TopicLink>
 {
-	protected TopicListFragment.Callbacks callbacks;
+	protected TopicList.Callbacks callbacks;
 	private ArrayList<TopicLink> objects;
 	private Typeface typeface;
 
 
-	public TopicAdapter( Context context, int textViewResourceId, ArrayList<TopicLink> objects, TopicListFragment.Callbacks callbacks )
+	public TopicAdapter( Context context, int textViewResourceId, ArrayList<TopicLink> objects, TopicList.Callbacks callbacks )
 	{
 		super( context, textViewResourceId, objects );
 		this.objects = objects;
@@ -118,7 +119,8 @@ public class TopicAdapter extends ArrayAdapter<TopicLink>
 				{
 					if ( callbacks != null )
 					{
-						callbacks.loadTopic( Integer.toString( i.topicId ) );
+						//fixme do stuff ehre pls
+						//callbacks.loadTopic( Integer.toString( i.topicId ) );
 					}
 
 				}

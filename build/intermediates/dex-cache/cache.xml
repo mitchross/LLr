@@ -51,18 +51,18 @@
         <dex dex="C:\Users\nonexistentcharacter\OneDrive\Development\AndroidStudioProjects\LLr\app\build\intermediates\pre-dexed\debug\jsoup-1.8.1-bfe32df01ec7c9f0b52acbbf76ef5dd5dba54806.jar" />
     </item>
     <item
-        jar="C:\Users\nonexistentcharacter\.gradle\caches\modules-2\files-2.1\org.apache.commons\commons-io\1.3.2\b6dde38349ba9bb5e6ea6320531eae969985dae5\commons-io-1.3.2.jar"
-        jumboMode="false"
-        revision="21.0.1"
-        sha1="b6dde38349ba9bb5e6ea6320531eae969985dae5">
-        <dex dex="C:\Users\nonexistentcharacter\OneDrive\Development\AndroidStudioProjects\LLr\app\build\intermediates\pre-dexed\debug\commons-io-1.3.2-bfdf8dde1aa47e8c4da611c298cb5580b61b0094.jar" />
-    </item>
-    <item
         jar="C:\Users\nonexistentcharacter\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp\okhttp\2.1.0\9b51f7d0c19f179b52beab7cb433f8ba5cf786a4\okhttp-2.1.0.jar"
         jumboMode="false"
         revision="21.0.1"
         sha1="9b51f7d0c19f179b52beab7cb433f8ba5cf786a4">
         <dex dex="C:\Users\nonexistentcharacter\OneDrive\Development\AndroidStudioProjects\LLr\app\build\intermediates\pre-dexed\debug\okhttp-2.1.0-a8db99172bbaab931b8bcee40f41c3c4883a44b6.jar" />
+    </item>
+    <item
+        jar="C:\Users\nonexistentcharacter\.gradle\caches\modules-2\files-2.1\org.apache.commons\commons-io\1.3.2\b6dde38349ba9bb5e6ea6320531eae969985dae5\commons-io-1.3.2.jar"
+        jumboMode="false"
+        revision="21.0.1"
+        sha1="b6dde38349ba9bb5e6ea6320531eae969985dae5">
+        <dex dex="C:\Users\nonexistentcharacter\OneDrive\Development\AndroidStudioProjects\LLr\app\build\intermediates\pre-dexed\debug\commons-io-1.3.2-bfdf8dde1aa47e8c4da611c298cb5580b61b0094.jar" />
     </item>
     <item
         jar="C:\Users\nonexistentcharacter\OneDrive\Development\AndroidStudioProjects\LLr\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.0\libs\internal_impl-21.0.0.jar"
@@ -79,11 +79,11 @@
         <dex dex="C:\Users\nonexistentcharacter\OneDrive\Development\AndroidStudioProjects\LLr\app\build\intermediates\pre-dexed\debug\commons-lang3-3.3.2-7b9de08e7be40843a18d44fca47702ebe1af5325.jar" />
     </item>
     <item
-        jar="C:\Users\nonexistentcharacter\.gradle\caches\modules-2\files-2.1\com.squareup.picasso\picasso\2.3.3\1262995965440e28ba5c4d480c9c9ab4ccce84cc\picasso-2.3.3.jar"
+        jar="C:\Users\nonexistentcharacter\.gradle\caches\modules-2\files-2.1\com.squareup.picasso\picasso\2.4.0\f36d2d4e3a36b3259aaf9d004d29b4cdc6c1bfb2\picasso-2.4.0.jar"
         jumboMode="false"
         revision="21.0.1"
-        sha1="1262995965440e28ba5c4d480c9c9ab4ccce84cc">
-        <dex dex="C:\Users\nonexistentcharacter\OneDrive\Development\AndroidStudioProjects\LLr\app\build\intermediates\pre-dexed\debug\picasso-2.3.3-68298a429fa3d196cd277508762d13f83f8124db.jar" />
+        sha1="f36d2d4e3a36b3259aaf9d004d29b4cdc6c1bfb2">
+        <dex dex="C:\Users\nonexistentcharacter\OneDrive\Development\AndroidStudioProjects\LLr\app\build\intermediates\pre-dexed\debug\picasso-2.4.0-3c570f119563d8d91952c47c135ef78a58f857ed.jar" />
     </item>
     <item
         jar="C:\Users\nonexistentcharacter\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp\okhttp-urlconnection\2.1.0\6025b7df8a6a4193138723ef120e7228b6a97024\okhttp-urlconnection-2.1.0.jar"
