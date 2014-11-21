@@ -18,7 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.HyperStandard.llr.app.BookmarkLink;
+import com.HyperStandard.llr.app.Models.BookmarkLink;
 import com.HyperStandard.llr.app.CustomTypefaceSpan;
 import com.HyperStandard.llr.app.Exceptions.LoggedOutException;
 import com.HyperStandard.llr.app.Exceptions.WaitException;
@@ -52,10 +52,7 @@ import butterknife.Optional;
 public class MainActivity extends BaseActivity implements
 		NavigationDrawerFragment.NavigationDrawerCallbacks,
 		NavigationAdapter.NavigationDrawerCallback,
-		TopicListFragment.Callbacks,
-		TopicFragment.Callbacks,
 		PollFragment.Callbacks,
-
 		TopicList.Callbacks,
 		Topic.Callbacks
 
@@ -177,10 +174,10 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public void onNavigationDrawerItemSelected( int position, String URL, Type types )
 	{
-		if ( types == Type.TOPICLIST )
-		{
+		//if ( types == Type.TOPICLIST )
+		//{
 			TopicList newPage = new TopicList( URL, this, getApplicationContext() );
-		}
+		//}
 	}
 
 	//TODO what the hell is this I don't even know
@@ -308,7 +305,7 @@ public class MainActivity extends BaseActivity implements
 		restoreActionBar();
 	}
 
-	@Override
+	//@Override
 	public void registerTopic( String message, String h, int topicID )
 	{
 		this.h = h;

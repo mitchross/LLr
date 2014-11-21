@@ -24,8 +24,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
- * @Author HyperStandard
- * @Since 11/20/2014.
+ * @author HyperStandard
+ * @since 11/20/2014.
  */
 public class TopicList
 {

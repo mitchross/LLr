@@ -25,7 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.HyperStandard.llr.app.BookmarkLink;
+import com.HyperStandard.llr.app.Models.BookmarkLink;
 import com.HyperStandard.llr.app.CustomTypefaceSpan;
 import com.HyperStandard.llr.app.R;
 import com.HyperStandard.llr.app.Type;

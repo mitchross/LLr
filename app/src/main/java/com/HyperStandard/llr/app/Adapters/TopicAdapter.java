@@ -56,77 +56,60 @@ public class TopicAdapter extends ArrayAdapter<TopicLink>
 
 
 		//TODO really don't need all these null checks. Fix it later
-		if ( i != null )
+		//myView.topicTitle.setTypeface(typeface);
+		myView.topicTitle.setText( i.topicTitle );
+		myView.topicCreator.setTypeface( typeface );//TODO remove the userID, it's for testing only
+		myView.topicCreator.setText( i.username + " | " + i.userId );
+		myView.redTags.setTypeface( typeface );
+		myView.blackTags.setTypeface( typeface );
+		myView.redTags.setText( "" );
+		myView.blackTags.setText( "" );
+		for ( int j = 0; j < i.tags.length; j++ )
 		{
-
-			if ( myView.topicTitle != null )
+			//TODO clean this stuff up
+			if ( i.tags[ j ].equals( "NWS" ) || i.tags[ j ].equals( "Spoiler" ) )
 			{
-				//myView.topicTitle.setTypeface(typeface);
-				myView.topicTitle.setText( i.topicTitle );
-			}
-
-			if ( myView.topicCreator != null )
-			{
-				myView.topicCreator.setTypeface( typeface );//TODO remove the userID, it's for testing only
-				myView.topicCreator.setText( i.username + " | " + i.userId );
-			}
-
-			if ( myView.blackTags != null )
-			{
-				myView.redTags.setTypeface( typeface );
-				myView.blackTags.setTypeface( typeface );
-				myView.redTags.setText( "" );
-				myView.blackTags.setText( "" );
-				for ( int j = 0; j < i.tags.length; j++ )
+				if ( myView.redTags != null )
 				{
-					//TODO clean this stuff up
-					if ( i.tags[ j ].equals( "NWS" ) || i.tags[ j ].equals( "Spoiler" ) )
-					{
-						if ( myView.redTags != null )
-						{
-							String currentText = myView.redTags.getText().toString();
-							//The space goes after the individual tags
-							myView.redTags.setText( currentText + i.tags[ j ] + " " );
-						}
-					}
-					else
-					{
-						String currentText = myView.blackTags.getText().toString();
-						//The space goes after the individual tags
-						myView.blackTags.setText( currentText + i.tags[ j ] + " " );
-					}
+					String currentText = myView.redTags.getText().toString();
+					//The space goes after the individual tags
+					myView.redTags.setText( currentText + i.tags[ j ] + " " );
 				}
 			}
-
-
-			if ( myView.posts != null )
+			else
 			{
-				myView.posts.setTypeface( typeface );
-				myView.posts.setText( Integer.toString( i.totalMessages ) );
-				if ( i.lastRead > 0 )
-				{
-					myView.posts.setText( " (" + i.lastRead + ") " );
-				}
+				String currentText = myView.blackTags.getText().toString();
+				//The space goes after the individual tags
+				myView.blackTags.setText( currentText + i.tags[ j ] + " " );
 			}
-
-			//Doesnt belong in view holder logic
-			RelativeLayout myLayout = (RelativeLayout) view.findViewById( R.id.topic_listview_container );
-			myLayout.setOnClickListener( new View.OnClickListener()
-			{
-				@Override
-				public void onClick( View view )
-				{
-					if ( callbacks != null )
-					{
-						//fixme do stuff ehre pls
-						callbacks.loadTopic( Integer.toString( i.topicId ) );
-					}
-
-				}
-			} );
-
-
 		}
+
+		myView.posts.setTypeface( typeface );
+		if ( i.readMessages > 0 )
+		{
+			myView.posts.setText( i.readMessages + " (" + i.unreadMessages + ") " );
+		}
+		else
+		{
+			myView.posts.setText( Integer.toString( i.totalMessages ) );
+		}
+
+
+		//Doesnt belong in view holder logic
+		RelativeLayout myLayout = (RelativeLayout) view.findViewById( R.id.topic_listview_container );
+		myLayout.setOnClickListener( new View.OnClickListener()
+		{
+			@Override
+			public void onClick( View view )
+			{
+				if ( callbacks != null )
+				{
+					callbacks.loadTopic( Integer.toString( i.topicId ) );
+				}
+
+			}
+		} );
+
 
 		return view;
 	}
@@ -137,15 +120,15 @@ public class TopicAdapter extends ArrayAdapter<TopicLink>
 		protected TopicLink i;
 
 
-		@InjectView(R.id.topicTitle)
+		@InjectView( R.id.topicTitle )
 		TextView topicTitle;
-		@InjectView(R.id.topicCreator)
+		@InjectView( R.id.topicCreator )
 		TextView topicCreator;
-		@InjectView(R.id.topicTags)
+		@InjectView( R.id.topicTags )
 		TextView blackTags;
-		@InjectView(R.id.redTags)
+		@InjectView( R.id.redTags )
 		TextView redTags;
-		@InjectView(R.id.topicPosts)
+		@InjectView( R.id.topicPosts )
 		TextView posts;
 
 		public ViewHolder( View view, TopicLink i )

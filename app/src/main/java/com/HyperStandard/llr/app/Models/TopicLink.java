@@ -10,14 +10,45 @@ import org.jsoup.select.Elements;
  */
 public class TopicLink
 {
-	//TODO I'm not sure if these should be public?
+	/**
+	 * Stores the ID number used for the topic, needed for URLs
+	 */
 	public int topicId;
+
+	/**
+	 * Array containing all the tags a topic has
+	 */
 	public String[] tags;
+
+	/**
+	 * User's ID number, mostly used for opening user info pages
+	 */
 	public int userId;
+
+	/**
+	 * User's name, self explanatory why is this a comment
+	 */
 	public String username;
-	public int totalMessages;
+
+	/**
+	 * Total messages the topic has (unread + read)
+	 */
+	public int totalMessages = 0;
+
+	/**
+	 * The actual title used in the topic
+	 */
 	public String topicTitle;
-	public int lastRead;
+
+	/**
+	 * The first number (i.e. number user has read)
+	 */
+	public int readMessages = 0;
+
+	/**
+	 * The second number(if applicable) which is the parenthetical amount of messages as of yet unread
+	 */
+	public int unreadMessages = 0;
 
 	private boolean isAnonymous = false;
 
@@ -100,22 +131,29 @@ public class TopicLink
 		}
 		totalMessages = Integer.parseInt( e.select( "td:nth-child(3)" ).first().ownText() );
 
-		//get teh amount of unread messages
+		if ( e.select( "td:has(span)" ) == null )
+		{
+			Log.e( "no span", "Td hasn't had span" );
+			//totalMessages =
+		}
+		else
+		{
+			//readMessages = Integer.parseInt( e.select( "td:has(spawn" ).first().ownText() );
+			Log.e( "span found", Integer.toString( readMessages ) );
+			//unreadMessages = Integer.parseInt( e.select( "td:has(span)" ).select( "span" ).text().replaceAll( "[^0-9]", "" ) );
+			Log.e( "spawn read",  e.select( "td:has(span)" ).select( "span" ).html() );
+		}
+		/*//get teh amount of unread messages
 		if ( e.select( "td:has(span)" ) == null || e.select( "td:has(span)" ).text().equals( "" ) )
 		{
-			lastRead = -1;
-			//lastRead = Integer.parseInt(e.select("td:has(span)").first().text().replaceAll("[^0-9]", ""));
+			readMessages = -1;
+			//readMessages = Integer.parseInt(e.select("td:has(span)").first().text().replaceAll("[^0-9]", ""));
 		}
 		else
 		{//negative one implies there's no extra messages
-			//lastRead = Integer.parseInt(e.select("td:has(span)").text().replaceAll("[^0-9]", ""));
-			lastRead = 20;
-			Log.v( "test", Integer.toString( lastRead ) );
-		}
-		//lastRead = 20;
-
-
+			readMessages = Integer.parseInt(e.select("td:has(span)").text().replaceAll("[^0-9]", ""));
+			//readMessages = 20;
+			Log.v( "test", Integer.toString( readMessages ) );
+		}*/
 	}
-
-
 }

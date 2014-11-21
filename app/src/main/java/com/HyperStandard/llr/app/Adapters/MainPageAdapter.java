@@ -92,9 +92,9 @@ public class MainPageAdapter extends ArrayAdapter<Object>
 			{
 				//myView.posts.setTypeface( typeface );
 				myView.posts.setText( Integer.toString( link.totalMessages ) );
-				if ( link.lastRead > 0 )
+				if ( link.readMessages > 0 )
 				{
-					myView.posts.setText( " (" + link.lastRead + ") " );
+					myView.posts.setText( " (" + link.readMessages + ") " );
 				}
 			}
 

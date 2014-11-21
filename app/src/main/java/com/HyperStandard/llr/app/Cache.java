@@ -10,7 +10,7 @@ import java.net.CookiePolicy;
  */
 public enum Cache
 {
-	get;
+	Web;
 
 	/**
 	 * Shared client between parts of the program

@@ -99,7 +99,7 @@ public class LoginScreen extends BaseActivity
 
 		//Set the client and default cookies
 		//TODO make a better cookie store
-		client = Cache.get.Client();
+		client = Cache.Web.Client();
 	}
 
 	@Override

@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.HyperStandard.llr.app.BookmarkLink;
+import com.HyperStandard.llr.app.Models.BookmarkLink;
 import com.HyperStandard.llr.app.LoadPage;
 import com.HyperStandard.llr.app.R;
 import com.squareup.picasso.Picasso;
