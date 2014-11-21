@@ -20,6 +20,10 @@
 				android:layout_height="wrap_content"
 				android:inputType="textMultiLine"
 				android:id="@+id/post_message_edit_text"/>
+		<EditText
+				android:layout_width="match_parent"
+				android:layout_height="80dp"
+				android:id="@+id/post_message_signature_box"/>
 		<Button
 				android:layout_width="fill_parent"
 				android:layout_height="48dp"
