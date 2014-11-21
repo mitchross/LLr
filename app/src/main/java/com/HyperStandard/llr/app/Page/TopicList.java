@@ -15,7 +15,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -23,9 +22,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * @Author HyperStandard
@@ -49,7 +45,7 @@ public class TopicList
 		{
 			Document page = request.get( 5, TimeUnit.SECONDS );
 			String title = page.title();
-			callbacks.sendTitle( title );
+			callbacks.setTitle( title );
 			final Elements elements = page.select( "tr:has(td)" );
 			Future<ArrayList<TopicLink>> arrayListFuture = executor.submit( new Callable<ArrayList<TopicLink>>()
 			{
@@ -72,7 +68,7 @@ public class TopicList
 
 			//todo should these be put into a single method? ? ?
 			callbacks.setView( listView );
-			callbacks.sendTitle( title );
+			callbacks.setTitle( title );
 		}
 		catch ( InterruptedException e )
 		{
@@ -90,10 +86,22 @@ public class TopicList
 
 	public interface Callbacks
 	{
+		/**
+		 * Sets the view for the page to be loaded
+		 * @param view
+		 */
 		public void setView( View view );
 
-		public void sendTitle( String title );
+		/**
+		 * Tells the app the page title which can then be displayed
+		 * @param title
+		 */
+		public void setTitle( String title );
 
+		/**
+		 * Tells the main activity to load a page, which is clicked in the adapter
+		 * @param url
+		 */
 		public void loadTopic(String url);
 	}
 }

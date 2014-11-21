@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.HyperStandard.llr.app.Fragment.TopicListFragment;
 import com.HyperStandard.llr.app.Models.TopicLink;
 import com.HyperStandard.llr.app.Page.TopicList;
 import com.HyperStandard.llr.app.R;

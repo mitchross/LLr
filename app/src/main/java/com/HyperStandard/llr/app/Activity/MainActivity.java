@@ -1,21 +1,16 @@
 package com.HyperStandard.llr.app.Activity;
 
 import android.app.ActionBar;
-import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
@@ -28,12 +23,11 @@ import com.HyperStandard.llr.app.CustomTypefaceSpan;
 import com.HyperStandard.llr.app.Exceptions.LoggedOutException;
 import com.HyperStandard.llr.app.Exceptions.WaitException;
 import com.HyperStandard.llr.app.Fragment.PollFragment;
-import com.HyperStandard.llr.app.Fragment.TopicFragment;
-import com.HyperStandard.llr.app.Fragment.TopicListFragment;
 import com.HyperStandard.llr.app.LoadPage;
 import com.HyperStandard.llr.app.Navigation.NavigationAdapter;
 import com.HyperStandard.llr.app.Navigation.NavigationDrawerFragment;
 import com.HyperStandard.llr.app.Navigation.PostDrawerFragment;
+import com.HyperStandard.llr.app.Page.Topic;
 import com.HyperStandard.llr.app.Page.TopicList;
 import com.HyperStandard.llr.app.PostMessage;
 import com.HyperStandard.llr.app.R;
@@ -60,7 +54,10 @@ public class MainActivity extends BaseActivity implements
 		NavigationAdapter.NavigationDrawerCallback,
 		TopicListFragment.Callbacks,
 		TopicFragment.Callbacks,
-		PollFragment.Callbacks, TopicList.Callbacks
+		PollFragment.Callbacks,
+
+		TopicList.Callbacks,
+		Topic.Callbacks
 
 {
 	/**
@@ -92,12 +89,9 @@ public class MainActivity extends BaseActivity implements
 	 */
 	private PollFragment mPollFragment;
 	private PostDrawerFragment mPostDrawerFragment;
-	private int topicID;
+	private int topicId;
 	private String h;
 
-	/**
-	 * Used to store the TAG for the last used fragment
-	 */
 
 	/**
 	 * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -318,21 +312,28 @@ public class MainActivity extends BaseActivity implements
 	public void registerTopic( String message, String h, int topicID )
 	{
 		this.h = h;
-		this.topicID = topicID;
+		this.topicId = topicID;
 		mPostDrawerFragment.setUp( h, topicID, getApplicationContext() );
+	}
+
+	//fixme merge these also decide which name is better
+	@Override
+	public void setTitle( String title )
+	{
+		fixTitle( title );
 	}
 
 	@Override
 	public void sendTitle( String title )
 	{
-		fixTitle( title );
+
 	}
 
 	@Override
 	public void loadTopic( String URL )
 	{
 		//fixme implement this
-		Log.e( "tesing", "laoded" );
+		Topic topic = new Topic( Integer.parseInt( URL ), this, getApplicationContext() );
 	}
 
 	@Override
@@ -347,7 +348,7 @@ public class MainActivity extends BaseActivity implements
 		PostMessage postMessage = new PostMessage();
 		try
 		{
-			if ( postMessage.post( editText.getText().toString(), h, topicID, false ) == -2 )
+			if ( postMessage.post( editText.getText().toString(), h, topicId, false ) == -2 )
 			{
 				editText.setText( "" );
 			}
@@ -375,80 +376,4 @@ public class MainActivity extends BaseActivity implements
 		frameLayout.addView( view );
 	}
 
-	//fixme delete me
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment
-	{
-		/**
-		 * The fragment argument representing the section number for this
-		 * fragment.
-		 */
-		private static final String ARG_SECTION_NUMBER = "section_number";
-
-		private static int position;
-
-		public PlaceholderFragment()
-		{
-		}
-
-		/**
-		 * Returns a new instance of this fragment for the given section
-		 * number.
-		 */
-		public static PlaceholderFragment newInstance( int sectionNumber )
-		{
-			position = sectionNumber;
-			PlaceholderFragment fragment = new PlaceholderFragment();
-			Bundle args = new Bundle();
-			args.putInt( ARG_SECTION_NUMBER, sectionNumber );
-			fragment.setArguments( args );
-			return fragment;
-		}
-
-		@Override
-		public View onCreateView( LayoutInflater inflater, ViewGroup container,
-								  Bundle savedInstanceState )
-		{
-			if ( position == 3 )
-			{
-				return inflater.inflate( R.layout.fragment_debug, container, false );
-			}
-			else
-			{
-				return inflater.inflate( R.layout.fragment_settings, container, false );
-			}
-		}
-
-		@Override
-		public void onAttach( Activity activity )
-		{
-			super.onAttach( activity );
-			( (MainActivity) activity ).onSectionAttached(
-					getArguments().getInt( ARG_SECTION_NUMBER ) );
-		}
-	}
-
-	//fixme delete me
-	public void hideAndReplaceFragment( Fragment newFragment )
-	{
-		if ( manager == null )
-		{
-			manager = getFragmentManager();
-		}
-
-		Fragment oldFragment = manager.findFragmentByTag( lastFragTag );
-		FragmentTransaction transaction = manager.beginTransaction();
-
-		/**
-		 * Only hide if null
-		 */
-		if ( oldFragment != null )
-		{
-			transaction.hide( oldFragment );
-		}
-		transaction.show( newFragment );
-		transaction.commit();
-	}
 }
