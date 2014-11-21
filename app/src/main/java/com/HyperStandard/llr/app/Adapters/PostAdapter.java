@@ -1,4 +1,4 @@
-package com.HyperStandard.llr.app.Activity.Adapters;
+package com.HyperStandard.llr.app.Adapters;
 
 /**
  * Created by mitch on 7/8/14.

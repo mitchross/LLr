@@ -1,4 +1,4 @@
-package com.HyperStandard.llr.app.Activity.Adapters;
+package com.HyperStandard.llr.app.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,10 +11,7 @@ import com.HyperStandard.llr.app.Models.BoardLink;
 import com.HyperStandard.llr.app.Models.TopicLink;
 import com.HyperStandard.llr.app.R;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
-import java.util.zip.Inflater;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

@@ -1,11 +1,10 @@
-package com.HyperStandard.llr.app.Activity.Adapters;
+package com.HyperStandard.llr.app.Adapters;
 
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.SpinnerAdapter;
 
 import java.util.List;
 

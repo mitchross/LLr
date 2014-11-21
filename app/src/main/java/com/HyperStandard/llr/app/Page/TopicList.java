@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.HyperStandard.llr.app.Activity.Adapters.TopicAdapter;
+import com.HyperStandard.llr.app.Adapters.TopicAdapter;
 import com.HyperStandard.llr.app.LoadPage;
 import com.HyperStandard.llr.app.Models.TopicLink;
 import com.HyperStandard.llr.app.R;

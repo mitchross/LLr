@@ -3,25 +3,16 @@ package com.HyperStandard.llr.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.HyperStandard.llr.app.Cache;
-import com.HyperStandard.llr.app.CustomCookieManager;
-import com.HyperStandard.llr.app.Data.Cookies;
-import com.HyperStandard.llr.app.Login;
 import com.HyperStandard.llr.app.R;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.OkHttpClient;
@@ -30,35 +21,17 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.cookie.Cookie;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
-import java.io.IOException;
 import java.net.CookieManager;
 import java.net.HttpCookie;
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
-
-import static com.HyperStandard.llr.app.R.id.container;
-import static com.HyperStandard.llr.app.R.id.loginspinner;
 
 /**
  * Entry point to application, with login

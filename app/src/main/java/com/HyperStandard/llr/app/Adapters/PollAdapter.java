@@ -1,4 +1,4 @@
-package com.HyperStandard.llr.app.Activity.Adapters;
+package com.HyperStandard.llr.app.Adapters;
 
 import android.content.Context;
 import android.view.View;

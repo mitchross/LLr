@@ -1,12 +1,11 @@
 package com.HyperStandard.llr.app.Page;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.HyperStandard.llr.app.Activity.Adapters.PostAdapter;
+import com.HyperStandard.llr.app.Adapters.PostAdapter;
 import com.HyperStandard.llr.app.Converters.TopicArray;
 import com.HyperStandard.llr.app.LoadPage;
 import com.HyperStandard.llr.app.Models.TopicPost;

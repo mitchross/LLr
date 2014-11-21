@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.HyperStandard.llr.app.R;
-
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**

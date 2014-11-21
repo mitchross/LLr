@@ -10,11 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.HyperStandard.llr.app.Activity.Adapters.MainPageAdapter;
-import com.HyperStandard.llr.app.Activity.Adapters.TopicAdapter;
-import com.HyperStandard.llr.app.Activity.MainActivity;
+import com.HyperStandard.llr.app.Adapters.MainPageAdapter;
 import com.HyperStandard.llr.app.LoadPage;
-import com.HyperStandard.llr.app.Models.BoardLink;
 import com.HyperStandard.llr.app.Models.TopicLink;
 import com.HyperStandard.llr.app.R;
 
@@ -23,7 +20,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
