@@ -1,7 +1,5 @@
 package com.HyperStandard.llr.app;
 
-import android.util.Log;
-
 import com.HyperStandard.llr.app.Data.Cookies;
 import com.HyperStandard.llr.app.Exceptions.LoggedOutException;
 import com.HyperStandard.llr.app.Exceptions.WaitException;

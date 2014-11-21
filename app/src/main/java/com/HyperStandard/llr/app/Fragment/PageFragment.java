@@ -3,8 +3,6 @@ package com.HyperStandard.llr.app.Fragment;
 import android.app.Fragment;
 import android.content.Context;
 
-import java.net.URL;
-
 
 /**
  * @author HyperStandard

@@ -2,9 +2,7 @@ package com.HyperStandard.llr.app;
 
 import com.squareup.okhttp.OkHttpClient;
 
-import java.net.CookieManager;
 import java.net.CookiePolicy;
-import java.net.CookieStore;
 
 /**
  * @author HyperStandard

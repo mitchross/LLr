@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.widget.CheckBox;
-import android.widget.Switch;
 
 /**
  * Created by nonex_000 on 8/11/2014.

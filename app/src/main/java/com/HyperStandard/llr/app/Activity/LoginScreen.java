@@ -138,8 +138,8 @@ public class LoginScreen extends BaseActivity
 			Log.i( mTag, "Using iPhone login" );
 			loginURL = "https://iphone.endoftheinter.net/";
 			formBody = new FormEncodingBuilder()
-					.add( "username", "almond" )
-					.add( "password", "XeGa2u_$" )
+					.add( "username", username )
+					.add( "password", password )
 					.build();
 		}
 		else
@@ -147,8 +147,8 @@ public class LoginScreen extends BaseActivity
 			Log.i( mTag, "Using Desktop login" );
 			loginURL = "https://endoftheinter.net/";
 			formBody = new FormEncodingBuilder()
-					.add( "b", "almond" )
-					.add( "p", "XeGa2u_$" )
+					.add( "b", username )
+					.add( "p", password )
 					//todo figure out if this is necessary
 					.add( "r", "" )
 					.build();
