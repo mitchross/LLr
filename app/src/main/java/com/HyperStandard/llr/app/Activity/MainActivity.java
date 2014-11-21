@@ -16,6 +16,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -329,29 +331,8 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public void loadTopic( String URL )
 	{
-
-		FragmentManager manager = getFragmentManager();
-
-		//If I use the topic ID as the tag,  that clears up a lot of difficulties with stuff
-		TopicFragment fragment = (TopicFragment) manager.findFragmentByTag( URL );
-
-		//Get the current fragment (the one being replaced/hidden)
-		Fragment oldFragment = manager.findFragmentByTag( "TAG_" + lastFragTag );
-
-		if ( fragment == null )
-		{
-			fragment = TopicFragment.newInstance( URL );
-		}
-
-		fragment.setUp( this );
-		fragment.setCallbacks( this );
-		manager.beginTransaction()
-				.add( R.id.container, fragment, URL )
-				.hide( oldFragment )
-				.addToBackStack( null )
-				.commit();
-		//TODO better fragment managing, need to hide all types of fragments, currently only switching via nav drawer hides properly
-		//workingFragment = URL;*/
+		//fixme implement this
+		Log.e( "tesing", "laoded" );
 	}
 
 	@Override
@@ -386,10 +367,15 @@ public class MainActivity extends BaseActivity implements
 	{
 		Log.e( "View getting", "set" );
 		FrameLayout frameLayout = (FrameLayout) findViewById( R.id.container );
+		Animation animation = AnimationUtils.loadAnimation( this, android.R.anim.fade_in);
+		frameLayout.setAnimation( animation );
+		//fixme help I can't animate T-T
 		frameLayout.removeAllViews();
+		frameLayout.setAnimation( animation );
 		frameLayout.addView( view );
 	}
 
+	//fixme delete me
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
@@ -444,6 +430,7 @@ public class MainActivity extends BaseActivity implements
 		}
 	}
 
+	//fixme delete me
 	public void hideAndReplaceFragment( Fragment newFragment )
 	{
 		if ( manager == null )

@@ -24,32 +24,32 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 /**
  * @Author HyperStandard
  * @Since 11/20/2014.
  */
 public class TopicList
 {
-
-
 	Callbacks callbacks;
 
 	public TopicList( String url, Callbacks callbacks, Context context )
 	{
 		this.callbacks = callbacks;
-		ExecutorService executor = Executors.newFixedThreadPool( 2 );
+
+		ExecutorService executor = Executors.newSingleThreadExecutor();
 
 		Future<Document> request = executor.submit( new LoadPage( url ) );
 
 		ListView listView = new ListView( context );
 
-		//Future<Document> request = executor.submit( new LoadPage( "http://boards.endoftheinter.net/topics/LUE", MainActivity.cookies ) );
-
 		try
 		{
 			Document page = request.get( 5, TimeUnit.SECONDS );
-			//title = page.title();
-			//callbacks.sendTitle( title );
+			String title = page.title();
+			callbacks.sendTitle( title );
 			final Elements elements = page.select( "tr:has(td)" );
 			Future<ArrayList<TopicLink>> arrayListFuture = executor.submit( new Callable<ArrayList<TopicLink>>()
 			{
@@ -67,9 +67,12 @@ public class TopicList
 			} );
 
 			ArrayList<TopicLink> topics = arrayListFuture.get();
-			TopicAdapter adapter = new TopicAdapter(context.getApplicationContext(), R.id.topic_listview, topics, callbacks );
+			TopicAdapter adapter = new TopicAdapter( context.getApplicationContext(), R.id.topic_listview, topics, callbacks );
 			listView.setAdapter( adapter );
+
+			//todo should these be put into a single method? ? ?
 			callbacks.setView( listView );
+			callbacks.sendTitle( title );
 		}
 		catch ( InterruptedException e )
 		{
@@ -88,5 +91,9 @@ public class TopicList
 	public interface Callbacks
 	{
 		public void setView( View view );
+
+		public void sendTitle( String title );
+
+		public void loadTopic(String url);
 	}
 }

@@ -120,7 +120,7 @@ public class TopicAdapter extends ArrayAdapter<TopicLink>
 					if ( callbacks != null )
 					{
 						//fixme do stuff ehre pls
-						//callbacks.loadTopic( Integer.toString( i.topicId ) );
+						callbacks.loadTopic( Integer.toString( i.topicId ) );
 					}
 
 				}
@@ -138,15 +138,15 @@ public class TopicAdapter extends ArrayAdapter<TopicLink>
 		protected TopicLink i;
 
 
-		@InjectView( R.id.topicTitle )
+		@InjectView(R.id.topicTitle)
 		TextView topicTitle;
-		@InjectView( R.id.topicCreator )
+		@InjectView(R.id.topicCreator)
 		TextView topicCreator;
-		@InjectView( R.id.topicTags )
+		@InjectView(R.id.topicTags)
 		TextView blackTags;
-		@InjectView( R.id.redTags )
+		@InjectView(R.id.redTags)
 		TextView redTags;
-		@InjectView( R.id.topicPosts )
+		@InjectView(R.id.topicPosts)
 		TextView posts;
 
 		public ViewHolder( View view, TopicLink i )
@@ -157,4 +157,5 @@ public class TopicAdapter extends ArrayAdapter<TopicLink>
 
 
 	}
+
 }
