@@ -85,9 +85,9 @@ public class TopicAdapter extends ArrayAdapter<TopicLink>
 		}
 
 		myView.posts.setTypeface( typeface );
-		if ( i.readMessages > 0 )
+		if ( i.unreadMessages > 0 )
 		{
-			myView.posts.setText( i.readMessages + " (" + i.unreadMessages + ") " );
+			myView.posts.setText( i.totalMessages + " (" + i.unreadMessages + ") " );
 		}
 		else
 		{

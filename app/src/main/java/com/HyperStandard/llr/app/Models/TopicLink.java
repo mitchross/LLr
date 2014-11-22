@@ -41,11 +41,6 @@ public class TopicLink
 	public String topicTitle;
 
 	/**
-	 * The first number (i.e. number user has read)
-	 */
-	public int readMessages = 0;
-
-	/**
 	 * The second number(if applicable) which is the parenthetical amount of messages as of yet unread
 	 */
 	public int unreadMessages = 0;
@@ -129,31 +124,20 @@ public class TopicLink
 			userId = -2;
 			e1.printStackTrace();
 		}
-		totalMessages = Integer.parseInt( e.select( "td:nth-child(3)" ).first().ownText() );
 
-		if ( e.select( "td:has(span)" ) == null )
+		if ( e.select( "td:has(span)" ).html().equals( "" ) )
 		{
-			Log.e( "no span", "Td hasn't had span" );
-			//totalMessages =
+			totalMessages = Integer.parseInt( e.select( "td:nth-child(3)" ).first().ownText() );
 		}
 		else
 		{
-			//readMessages = Integer.parseInt( e.select( "td:has(spawn" ).first().ownText() );
-			Log.e( "span found", Integer.toString( readMessages ) );
-			//unreadMessages = Integer.parseInt( e.select( "td:has(span)" ).select( "span" ).text().replaceAll( "[^0-9]", "" ) );
-			Log.e( "spawn read",  e.select( "td:has(span)" ).select( "span" ).html() );
+			//This gets the unread messages
+			unreadMessages = Integer.parseInt( e.select( "td:has(span)" ).select( "a" ).html().replaceAll( "[^0-9]", "" ) , 10  );
+
+			//This gets the total messages
+			totalMessages = Integer.parseInt( e.select( "td:has(span)" ).first().ownText() );
+
 		}
-		/*//get teh amount of unread messages
-		if ( e.select( "td:has(span)" ) == null || e.select( "td:has(span)" ).text().equals( "" ) )
-		{
-			readMessages = -1;
-			//readMessages = Integer.parseInt(e.select("td:has(span)").first().text().replaceAll("[^0-9]", ""));
-		}
-		else
-		{//negative one implies there's no extra messages
-			readMessages = Integer.parseInt(e.select("td:has(span)").text().replaceAll("[^0-9]", ""));
-			//readMessages = 20;
-			Log.v( "test", Integer.toString( readMessages ) );
-		}*/
+
 	}
 }

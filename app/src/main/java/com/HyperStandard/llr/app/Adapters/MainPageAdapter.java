@@ -17,7 +17,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 /**
- * Created by nonex_000 on 8/14/2014.
+ * @author HyperStandard
+ * @since 8/14/2014.
  */
 public class MainPageAdapter extends ArrayAdapter<Object>
 {
@@ -92,9 +93,9 @@ public class MainPageAdapter extends ArrayAdapter<Object>
 			{
 				//myView.posts.setTypeface( typeface );
 				myView.posts.setText( Integer.toString( link.totalMessages ) );
-				if ( link.readMessages > 0 )
+				if ( link.totalMessages > 0 )
 				{
-					myView.posts.setText( " (" + link.readMessages + ") " );
+					myView.posts.setText( " (" + link.totalMessages + ") " );
 				}
 			}
 
