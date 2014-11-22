@@ -18,12 +18,12 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.HyperStandard.llr.app.Models.BookmarkLink;
 import com.HyperStandard.llr.app.CustomTypefaceSpan;
 import com.HyperStandard.llr.app.Exceptions.LoggedOutException;
 import com.HyperStandard.llr.app.Exceptions.WaitException;
 import com.HyperStandard.llr.app.Fragment.PollFragment;
 import com.HyperStandard.llr.app.LoadPage;
+import com.HyperStandard.llr.app.Models.BookmarkLink;
 import com.HyperStandard.llr.app.Navigation.NavigationAdapter;
 import com.HyperStandard.llr.app.Navigation.NavigationDrawerFragment;
 import com.HyperStandard.llr.app.Navigation.PostDrawerFragment;
@@ -33,12 +33,16 @@ import com.HyperStandard.llr.app.PostMessage;
 import com.HyperStandard.llr.app.R;
 import com.HyperStandard.llr.app.Type;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.ArrayDeque;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -64,31 +68,31 @@ public class MainActivity extends BaseActivity implements
 
 	private static int userId;
 
-	/**
-	 * cached for performance?
-	 */
-	private static FragmentManager manager;
-
-	/**
-	 * Hold the last fragment tag
-	 */
-	private static String lastFragTag;
 	ListView mListView;
 	@Optional
 	@InjectView(R.id.leftNavigationDrawer)
 	ListView listView;
+
 	/**
 	 * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
 	 */
 	private NavigationDrawerFragment mNavigationDrawerFragment;
+
 	/**
 	 * Fragment storing the poll
 	 */
 	private PollFragment mPollFragment;
-	private PostDrawerFragment mPostDrawerFragment;
-	private int topicId;
-	private String h;
 
+	/**
+	 * Fragment used for the posting drawer
+	 */
+	private PostDrawerFragment mPostDrawerFragment;
+
+	//Used to control posting
+	private String post_topic;
+	private String post_validation;
+
+	private Queue<ImmutablePair<String, Type>> topicHistory = new ArrayDeque<>();
 
 	/**
 	 * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -176,7 +180,7 @@ public class MainActivity extends BaseActivity implements
 	{
 		//if ( types == Type.TOPICLIST )
 		//{
-			TopicList newPage = new TopicList( URL, this, getApplicationContext() );
+		TopicList newPage = new TopicList( URL, this, getApplicationContext() );
 		//}
 	}
 
@@ -305,19 +309,18 @@ public class MainActivity extends BaseActivity implements
 		restoreActionBar();
 	}
 
-	//@Override
-	public void registerTopic( String message, String h, int topicID )
-	{
-		this.h = h;
-		this.topicId = topicID;
-		mPostDrawerFragment.setUp( h, topicID, getApplicationContext() );
-	}
-
 	//fixme merge these also decide which name is better
 	@Override
 	public void setTitle( String title )
 	{
 		fixTitle( title );
+	}
+
+	@Override
+	public void registerTopic( String hTag, String topicId )
+	{
+		post_validation = hTag;
+		post_topic = topicId;
 	}
 
 	@Override
@@ -345,7 +348,7 @@ public class MainActivity extends BaseActivity implements
 		PostMessage postMessage = new PostMessage();
 		try
 		{
-			if ( postMessage.post( editText.getText().toString(), h, topicId, false ) == -2 )
+			if ( postMessage.post( editText.getText().toString(), post_validation, post_topic, false ) == -2 )
 			{
 				editText.setText( "" );
 			}
@@ -361,16 +364,37 @@ public class MainActivity extends BaseActivity implements
 	}
 
 	@Override
-	public void setView( View view )
+	public void setTopicListView( View view, String url )
 	{
 		Log.e( "View getting", "set" );
 		FrameLayout frameLayout = (FrameLayout) findViewById( R.id.container );
-		Animation animation = AnimationUtils.loadAnimation( this, android.R.anim.fade_in);
-		frameLayout.setAnimation( animation );
+		Animation animation = AnimationUtils.loadAnimation( this, android.R.anim.fade_in );
+		//frameLayout.setAnimation( animation );
 		//fixme help I can't animate T-T
-		frameLayout.removeAllViews();
-		frameLayout.setAnimation( animation );
-		frameLayout.addView( view );
-	}
 
+		if ( !topicHistory.peek().getLeft().equals( url ) )
+		{
+			frameLayout.removeAllViews();
+			frameLayout.setAnimation( animation );
+			frameLayout.addView( view );
+			topicHistory.add()
+		}
+	}
+	@Override
+	public void setTopicView( View view, String url )
+	{
+		Log.e( "View getting", "set" );
+		FrameLayout frameLayout = (FrameLayout) findViewById( R.id.container );
+		Animation animation = AnimationUtils.loadAnimation( this, android.R.anim.fade_in );
+		//frameLayout.setAnimation( animation );
+		//fixme help I can't animate T-T
+
+		if ( !topicHistory.peek().getLeft().equals( url ) )
+		{
+			frameLayout.removeAllViews();
+			frameLayout.setAnimation( animation );
+			frameLayout.addView( view );
+			//topicHistory.add()
+		}
+	}
 }

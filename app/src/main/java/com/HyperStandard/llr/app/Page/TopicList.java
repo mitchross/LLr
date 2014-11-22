@@ -67,7 +67,7 @@ public class TopicList
 			listView.setAdapter( adapter );
 
 			//todo should these be put into a single method? ? ?
-			callbacks.setView( listView );
+			callbacks.setTopicListView( listView, url );
 			callbacks.setTitle( title );
 		}
 		catch ( InterruptedException e )
@@ -90,7 +90,7 @@ public class TopicList
 		 * Sets the view for the page to be loaded
 		 * @param view
 		 */
-		public void setView( View view );
+		public void setTopicListView( View view, String url );
 
 		/**
 		 * Tells the app the page title which can then be displayed

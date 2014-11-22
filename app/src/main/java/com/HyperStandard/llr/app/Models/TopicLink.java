@@ -1,7 +1,5 @@
 package com.HyperStandard.llr.app.Models;
 
-import android.util.Log;
-
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 

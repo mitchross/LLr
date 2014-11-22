@@ -10,6 +10,7 @@ import com.HyperStandard.llr.app.Converters.TopicArray;
 import com.HyperStandard.llr.app.LoadPage;
 import com.HyperStandard.llr.app.Models.TopicPost;
 import com.HyperStandard.llr.app.R;
+import com.HyperStandard.llr.app.Type;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -40,11 +41,10 @@ public class Topic
 		{
 			Document page = request.get( 10, TimeUnit.SECONDS );
 			callbacks.setTitle( page.title() );
-			//topicID = Integer.parseInt( getArguments().getString( "URL" ) );
-			//String hTag = page.select( "input[name=h]" ).attr( "value" );
+			String hTag = page.select( "input[name=h]" ).attr( "value" );
 			//Log.e( mTag, Integer.toString( topicID ) );
 			//Log.e( mTag, hTag );
-			//callbacks.registerTopic( "", hTag, topicID );
+			callbacks.registerTopic( hTag, Integer.toString( topicId ) );
 			final Elements elements = page.select( "div.message-container" );
 
 			Future<ArrayList<TopicPost>> arrayListFuture = executor.submit( new Callable<ArrayList<TopicPost>>()
@@ -73,13 +73,20 @@ public class Topic
 		{
 			e.printStackTrace();
 		}
-		callbacks.setView(listView);
+		callbacks.setView( listView, "http://boards.endoftheinter.net/showmessages.php?topic=" + topicId );
 	}
 
 	public interface Callbacks
 	{
-		public void setView( View view );
+		public void setView( View view, String url );
 
 		public void setTitle( String title );
+
+		/**
+		 * Use this to register the current active topic for posting
+		 * @param hTag the per page validation code needed to submit posts
+		 * @param topicId the topicId number in String format to reduce conversions
+		 */
+		public void registerTopic( String hTag, String topicId, Type type );
 	}
 }
