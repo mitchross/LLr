@@ -27,16 +27,16 @@ public class PostMessage
 	/**
 	 * @param message   the message to send (includes the signature
 	 * @param h         magic number, parse this from select("input[name=h]").attr("value")
-	 * @param topicID   the topic ID number
+	 * @param topicId   the topic ID number
 	 * @param autoRetry whether to auto post when ready
 	 * @return an integer corresponding to -2 for success, -1 for failure, 0+ for number of seconds before you can repost
 	 */
-	public int post( String message, String h, int topicID, boolean autoRetry ) throws LoggedOutException, WaitException
+	public int post( String message, String h, String topicId, boolean autoRetry ) throws LoggedOutException, WaitException
 	{
 		int i = -1;
 		//TODO figure out how this performs when being called from multiple places maybe do a factory?
 		ExecutorService executors = Executors.newFixedThreadPool( 2 );
-		AsyncPost asyncPost = new AsyncPost( message, h, topicID );
+		AsyncPost asyncPost = new AsyncPost( message, h, topicId );
 		Future<Connection.Response> responseFuture = executors.submit( asyncPost );
 		try
 		{
@@ -69,20 +69,21 @@ public class PostMessage
 	{
 		String message;
 		String h;
-		int topicID;
+		String topicId;
 
-		public AsyncPost( String message, String h, int topicID )
+		public AsyncPost( String message, String h, String topicId )
 		{
 			this.message = message;
 			this.h = h;
-			this.topicID = topicID;
+			this.topicId = topicId;
 		}
 
+		//todo convert to okhttp
 		@Override
 		public Connection.Response call() throws Exception
 		{
 			return Jsoup.connect( "http://boards.endoftheinter.net/async-post.php" )
-					.data( "message", message, "h", h, "topic", Integer.toString( topicID ) )
+					.data( "message", message, "h", h, "topic", topicId )
 					.cookies( Cookies.getCookies() )
 					.method( Connection.Method.POST )
 					.execute();
