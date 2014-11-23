@@ -73,6 +73,8 @@ public class MainActivity extends BaseActivity implements
 	@InjectView(R.id.leftNavigationDrawer)
 	ListView listView;
 
+	FragmentManager manager;
+
 	/**
 	 * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
 	 */
@@ -377,7 +379,7 @@ public class MainActivity extends BaseActivity implements
 			frameLayout.removeAllViews();
 			frameLayout.setAnimation( animation );
 			frameLayout.addView( view );
-			topicHistory.add()
+			topicHistory.add( new ImmutablePair<String, Type>( url, Type.TOPICLIST ) );
 		}
 	}
 	@Override
@@ -394,7 +396,20 @@ public class MainActivity extends BaseActivity implements
 			frameLayout.removeAllViews();
 			frameLayout.setAnimation( animation );
 			frameLayout.addView( view );
-			//topicHistory.add()
+			topicHistory.add( new ImmutablePair<String, Type>( url, Type.TOPIC ) );
+		}
+	}
+
+	@Override
+	public void onBackPressed()
+	{
+		if ( topicHistory.peek().getRight().equals( Type.TOPICLIST ) )
+		{
+			new TopicList( topicHistory.poll().getLeft(), this, getApplicationContext() );
+		}
+		else
+		{
+			new Topic( Integer.parseInt( topicHistory.poll().getLeft()), this, getApplicationContext() );
 		}
 	}
 }

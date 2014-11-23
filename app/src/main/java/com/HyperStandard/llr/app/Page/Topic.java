@@ -73,12 +73,12 @@ public class Topic
 		{
 			e.printStackTrace();
 		}
-		callbacks.setView( listView, "http://boards.endoftheinter.net/showmessages.php?topic=" + topicId );
+		callbacks.setTopicView( listView, "http://boards.endoftheinter.net/showmessages.php?topic=" + topicId );
 	}
 
 	public interface Callbacks
 	{
-		public void setView( View view, String url );
+		public void setTopicView( View view, String url );
 
 		public void setTitle( String title );
 
@@ -87,6 +87,6 @@ public class Topic
 		 * @param hTag the per page validation code needed to submit posts
 		 * @param topicId the topicId number in String format to reduce conversions
 		 */
-		public void registerTopic( String hTag, String topicId, Type type );
+		public void registerTopic( String hTag, String topicId );
 	}
 }
