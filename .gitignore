@@ -18,6 +18,9 @@ local.properties
 # Windows thumbnail db
 Thumbs.db
 
+#IML files beacuse whatever ? ? ?
+*.iml
+
 # OSX files
 .DS_Store
 

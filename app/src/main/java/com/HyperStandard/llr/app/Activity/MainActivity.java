@@ -70,7 +70,7 @@ public class MainActivity extends BaseActivity implements
 
 	ListView mListView;
 	@Optional
-	@InjectView(R.id.leftNavigationDrawer)
+	@InjectView( R.id.leftNavigationDrawer )
 	ListView listView;
 
 	FragmentManager manager;
@@ -368,20 +368,21 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public void setTopicListView( View view, String url )
 	{
-		Log.e( "View getting", "set" );
 		FrameLayout frameLayout = (FrameLayout) findViewById( R.id.container );
 		Animation animation = AnimationUtils.loadAnimation( this, android.R.anim.fade_in );
 		//frameLayout.setAnimation( animation );
 		//fixme help I can't animate T-T
 
-		if ( !topicHistory.peek().getLeft().equals( url ) )
+		if ( frameLayout.getChildCount() > 0 )
 		{
 			frameLayout.removeAllViews();
-			frameLayout.setAnimation( animation );
-			frameLayout.addView( view );
-			topicHistory.add( new ImmutablePair<String, Type>( url, Type.TOPICLIST ) );
 		}
+		frameLayout.addView( view );
+		topicHistory.add( new ImmutablePair<>( url, Type.TOPICLIST ) );
+
+
 	}
+
 	@Override
 	public void setTopicView( View view, String url )
 	{
@@ -391,13 +392,13 @@ public class MainActivity extends BaseActivity implements
 		//frameLayout.setAnimation( animation );
 		//fixme help I can't animate T-T
 
-		if ( !topicHistory.peek().getLeft().equals( url ) )
-		{
-			frameLayout.removeAllViews();
-			frameLayout.setAnimation( animation );
-			frameLayout.addView( view );
-			topicHistory.add( new ImmutablePair<String, Type>( url, Type.TOPIC ) );
-		}
+
+		frameLayout.removeAllViews();
+		frameLayout.setAnimation( animation );
+		frameLayout.addView( view );
+		topicHistory.add( new ImmutablePair<>( url, Type.TOPIC ) );
+
+
 	}
 
 	@Override
@@ -405,11 +406,11 @@ public class MainActivity extends BaseActivity implements
 	{
 		if ( topicHistory.peek().getRight().equals( Type.TOPICLIST ) )
 		{
-			new TopicList( topicHistory.poll().getLeft(), this, getApplicationContext() );
+			new TopicList( topicHistory.poll().getLeft(), this, this );
 		}
 		else
 		{
-			new Topic( Integer.parseInt( topicHistory.poll().getLeft()), this, getApplicationContext() );
+			new Topic( Integer.parseInt( topicHistory.poll().getLeft() ), this, this );
 		}
 	}
 }
