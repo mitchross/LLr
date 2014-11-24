@@ -18,6 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.HyperStandard.llr.app.Cache;
 import com.HyperStandard.llr.app.CustomTypefaceSpan;
 import com.HyperStandard.llr.app.Exceptions.LoggedOutException;
 import com.HyperStandard.llr.app.Exceptions.WaitException;
@@ -32,6 +33,8 @@ import com.HyperStandard.llr.app.Page.TopicList;
 import com.HyperStandard.llr.app.PostMessage;
 import com.HyperStandard.llr.app.R;
 import com.HyperStandard.llr.app.Type;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jsoup.Connection;
@@ -40,6 +43,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -72,6 +76,12 @@ public class MainActivity extends BaseActivity implements
 	@Optional
 	@InjectView( R.id.leftNavigationDrawer )
 	ListView listView;
+
+	@InjectView( R.id.container )
+	FrameLayout container;
+
+	@InjectView( R.id.post_message_edit_text )
+	EditText messageEditText;
 
 	FragmentManager manager;
 
@@ -265,14 +275,21 @@ public class MainActivity extends BaseActivity implements
 					.putBoolean( getString( R.string.prefs_autologin ), false )
 					.commit();
 
-			//TODO switch over to OKHttp
-			//OkHttpClient client = new OkHttpClient();
-			Connection.Response response;
-			Document logoutResponse;
-			Jsoup.connect( getString( R.string.url_logout ) );
-			//TODO add logout link to strings and use that for connection
-			final Intent intent = new Intent( this, LoginScreen.class );
-			startActivity( intent );
+			Request logoutRequest = new Request.Builder().url( getString( R.string.url_logout ) ).build();
+			try
+			{
+				Response response = Cache.Web.Client().newCall( logoutRequest ).execute();
+				Log.v( mTag, "Logging out, response code: " + response.code() );
+				final Intent intent = new Intent( this, LoginScreen.class );
+				startActivity( intent );
+			}
+			catch ( IOException e )
+			{
+				Toast.makeText( this, "Failed to log out", Toast.LENGTH_LONG ).show();
+				e.printStackTrace();
+			}
+
+
 			//TODO add extra boolean value from response indicating successful logout
 		}
 		return id == R.id.action_settings || super.onOptionsItemSelected( item );
@@ -346,17 +363,21 @@ public class MainActivity extends BaseActivity implements
 
 	public void postMessage( View v )
 	{
-		EditText editText = (EditText) findViewById( R.id.post_message_edit_text );
 		PostMessage postMessage = new PostMessage();
 		try
 		{
-			if ( postMessage.post( editText.getText().toString(), post_validation, post_topic, false ) == -2 )
+			if ( postMessage.post(
+					messageEditText.getText().toString(),
+					post_validation,
+					post_topic,
+					false ).getLeft() == com.HyperStandard.llr.app.Response.SUCCEEDED )
 			{
-				editText.setText( "" );
+				messageEditText.setText( "" );
 			}
 		}
 		catch ( LoggedOutException e )
 		{
+			Toast.makeText( this, "logged out", Toast.LENGTH_LONG ).show();
 			e.printStackTrace();
 		}
 		catch ( WaitException e )
@@ -368,18 +389,18 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public void setTopicListView( View view, String url )
 	{
-		FrameLayout frameLayout = (FrameLayout) findViewById( R.id.container );
+		Log.e( "View getting", "set" );
 		Animation animation = AnimationUtils.loadAnimation( this, android.R.anim.fade_in );
 		//frameLayout.setAnimation( animation );
 		//fixme help I can't animate T-T
 
-		if ( frameLayout.getChildCount() > 0 )
+		if ( container.getChildCount() > 0 )
 		{
-			frameLayout.removeAllViews();
+			container.removeAllViews();
 		}
-		frameLayout.addView( view );
+		container.setAnimation( animation );
+		container.addView( view );
 		topicHistory.add( new ImmutablePair<>( url, Type.TOPICLIST ) );
-
 
 	}
 
@@ -387,17 +408,18 @@ public class MainActivity extends BaseActivity implements
 	public void setTopicView( View view, String url )
 	{
 		Log.e( "View getting", "set" );
-		FrameLayout frameLayout = (FrameLayout) findViewById( R.id.container );
 		Animation animation = AnimationUtils.loadAnimation( this, android.R.anim.fade_in );
 		//frameLayout.setAnimation( animation );
 		//fixme help I can't animate T-T
 
-
-		frameLayout.removeAllViews();
-		frameLayout.setAnimation( animation );
-		frameLayout.addView( view );
+		if ( container.getChildCount() > 0 )
+		{
+			container.removeAllViews();
+		}
+		container.removeAllViews();
+		container.setAnimation( animation );
+		container.addView( view );
 		topicHistory.add( new ImmutablePair<>( url, Type.TOPIC ) );
-
 
 	}
 
@@ -406,11 +428,11 @@ public class MainActivity extends BaseActivity implements
 	{
 		if ( topicHistory.peek().getRight().equals( Type.TOPICLIST ) )
 		{
-			new TopicList( topicHistory.poll().getLeft(), this, this );
+			new TopicList( topicHistory.poll().getLeft(), this, getApplicationContext() );
 		}
 		else
 		{
-			new Topic( Integer.parseInt( topicHistory.poll().getLeft() ), this, this );
+			new Topic( Integer.parseInt( topicHistory.poll().getLeft() ), this, getApplicationContext() );
 		}
 	}
 }

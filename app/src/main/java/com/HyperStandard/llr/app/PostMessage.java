@@ -1,9 +1,15 @@
 package com.HyperStandard.llr.app;
 
+import android.util.Log;
+
 import com.HyperStandard.llr.app.Data.Cookies;
 import com.HyperStandard.llr.app.Exceptions.LoggedOutException;
 import com.HyperStandard.llr.app.Exceptions.WaitException;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
@@ -31,41 +37,43 @@ public class PostMessage
 	 * @param autoRetry whether to auto post when ready
 	 * @return an integer corresponding to -2 for success, -1 for failure, 0+ for number of seconds before you can repost
 	 */
-	public int post( String message, String h, String topicId, boolean autoRetry ) throws LoggedOutException, WaitException
+	public ImmutablePair<Response, Integer> post( String message, String h, String topicId, boolean autoRetry ) throws LoggedOutException, WaitException
 	{
 		int i = -1;
 		//TODO figure out how this performs when being called from multiple places maybe do a factory?
 		ExecutorService executors = Executors.newFixedThreadPool( 2 );
 		AsyncPost asyncPost = new AsyncPost( message, h, topicId );
-		Future<Connection.Response> responseFuture = executors.submit( asyncPost );
+		Future<String> responseFuture = executors.submit( asyncPost );
 		try
 		{
-			Connection.Response response = responseFuture.get();
-			String res = response.body();
-			if ( res.equals( success ) )
+			String response = responseFuture.get();
+
+			Log.e( mTag, response );
+
+			if ( response.equals( success ) )
 			{
-				return -2;
+				return new ImmutablePair<>( Response.SUCCEEDED, 0 );
 			}
 
 		}
 		catch ( InterruptedException e )
 		{
 			e.printStackTrace();
-			return -1;
+			return new ImmutablePair<>( Response.TIMEOUT, -1 );
 		}
 		catch ( ExecutionException e )
 		{
 			e.printStackTrace();
-			return -1;
+			return new ImmutablePair<>( Response.FAILED, -1 );
 		}
-		return i;
+		return new ImmutablePair<>( Response.FAILED, -2 );
 	}
 
 
 	/**
 	 * inner class for convenience, POSTs the data and returns the response
 	 */
-	private class AsyncPost implements Callable<Connection.Response>
+	private class AsyncPost implements Callable<String>
 	{
 		String message;
 		String h;
@@ -78,15 +86,23 @@ public class PostMessage
 			this.topicId = topicId;
 		}
 
-		//todo convert to okhttp
 		@Override
-		public Connection.Response call() throws Exception
+		public String call() throws Exception
 		{
-			return Jsoup.connect( "http://boards.endoftheinter.net/async-post.php" )
-					.data( "message", message, "h", h, "topic", topicId )
-					.cookies( Cookies.getCookies() )
-					.method( Connection.Method.POST )
-					.execute();
+			//Build the form used to successfully submit an async post
+			final RequestBody formBody = new FormEncodingBuilder()
+					.add( "message", message )
+					.add( "h", h )
+					.add( "topic", topicId )
+					.build();
+
+			//put the form into the request (why is this library so verbose) who cares it's fast
+			final Request request = new Request.Builder()
+					.url( "http://boards.endoftheinter.net/async-post.php" )
+					.post( formBody )
+					.build();
+
+			return Cache.Web.Client().newCall( request ).execute().body().string();
 		}
 	}
 }
