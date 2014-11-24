@@ -36,16 +36,14 @@ import com.HyperStandard.llr.app.Type;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
-import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -83,6 +81,9 @@ public class MainActivity extends BaseActivity implements
 	@InjectView( R.id.post_message_edit_text )
 	EditText messageEditText;
 
+	@InjectView( R.id.post_message_signature_box )
+	EditText signatureEditText;
+
 	FragmentManager manager;
 
 	/**
@@ -104,6 +105,8 @@ public class MainActivity extends BaseActivity implements
 	private String post_topic;
 	private String post_validation;
 
+	private String signature;
+
 	private Queue<ImmutablePair<String, Type>> topicHistory = new ArrayDeque<>();
 
 	/**
@@ -124,7 +127,7 @@ public class MainActivity extends BaseActivity implements
 		//cache the fragment manager
 		manager = getFragmentManager();
 
-		//Who knows
+		//Inject all the views with butterknife bluh bluh
 		ButterKnife.inject( this );
 
 		//Get references to the drawer fragments that do things
@@ -147,7 +150,8 @@ public class MainActivity extends BaseActivity implements
 		 * Load the main page to get data from it i.e. bookmarks and other stuff later
 		 */
 		ExecutorService executor = Executors.newSingleThreadExecutor();
-		Future<Document> loader = executor.submit( new LoadPage( getString( R.string.ll_main ) ) );
+		//Future<Document> loader = executor.submit( new LoadPage( getString( R.string.ll_main ) ) );
+		Future<Document> loader = executor.submit( new LoadPage( "http://endoftheinter.net/profile.php?user=" + userId ) );
 		try
 		{
 			Document main = loader.get( 5, TimeUnit.SECONDS );
@@ -169,6 +173,25 @@ public class MainActivity extends BaseActivity implements
 				) );
 
 				Log.v( mTag, "loading bookmark: \"" + e.select( "span > a" ).first().ownText() + "\" @ " + e.select( "span > a" ).attr( "href" ) );
+			}
+
+			int sigloc = 0;
+			Elements sigcheck = main.select( "tr:has(td)" );
+			for ( Element e : sigcheck )
+			{
+				//todo handle edge cases where users have the string "Signature" elsewhere in their profile page
+				Log.e( mTag, e.select( "tr" ).text() );
+				if ( e.select( "tr" ).text().contains( "Signature" ) )
+				{
+					sigloc = e.siblingIndex() / 2;
+					break;
+				}
+			}
+			if ( sigloc > 0 )
+			{
+				signature = sigcheck.get( sigloc ).child( 1 ).html();
+				signature = StringEscapeUtils.unescapeHtml4( signature ).replace( "<br>", "\n" );
+				signatureEditText.setText( signature );
 			}
 
 		}
@@ -368,6 +391,7 @@ public class MainActivity extends BaseActivity implements
 		{
 			if ( postMessage.post(
 					messageEditText.getText().toString(),
+					"---\n" + signatureEditText.getText().toString(),
 					post_validation,
 					post_topic,
 					false ).getLeft() == com.HyperStandard.llr.app.Response.SUCCEEDED )

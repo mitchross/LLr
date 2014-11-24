@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
- * Posts to topics yahooooo boy howdy we are cooking with petrol now m'boy!
+ * Posts to topics, topics must be registered
  *
  * @author HyperStandard
  * @since 8/26/2014
@@ -37,13 +37,14 @@ public class PostMessage
 	 * @param autoRetry whether to auto post when ready
 	 * @return an integer corresponding to -2 for success, -1 for failure, 0+ for number of seconds before you can repost
 	 */
-	public ImmutablePair<Response, Integer> post( String message, String h, String topicId, boolean autoRetry ) throws LoggedOutException, WaitException
+	public ImmutablePair<Response, Integer> post( String message, String signature, String h, String topicId, boolean autoRetry ) throws LoggedOutException, WaitException
 	{
-		int i = -1;
-		//TODO figure out how this performs when being called from multiple places maybe do a factory?
-		ExecutorService executors = Executors.newFixedThreadPool( 2 );
-		AsyncPost asyncPost = new AsyncPost( message, h, topicId );
+		ExecutorService executors = Executors.newSingleThreadExecutor();
+
+		AsyncPost asyncPost = new AsyncPost( message + "\n" + signature, h, topicId );
+
 		Future<String> responseFuture = executors.submit( asyncPost );
+
 		try
 		{
 			String response = responseFuture.get();
