@@ -19,7 +19,6 @@
 		<activity
 				android:name=".Activity.LoginScreen"
 				android:label="LLr"
-				android:theme="@style/AppTheme.Login"
 				android:icon="@drawable/ic_egg_icon">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />

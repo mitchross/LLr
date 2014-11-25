@@ -9,9 +9,10 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.util.Log;
@@ -32,7 +33,11 @@ import com.HyperStandard.llr.app.Type;
 
 import java.util.ArrayList;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 import static com.HyperStandard.llr.app.R.layout.listview_navigation_row;
+import static com.HyperStandard.llr.app.R.layout.toolbar;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -62,12 +67,18 @@ public class NavigationDrawerFragment extends Fragment
 	 * Helper component that ties the action bar to the navigation drawer.
 	 */
 	private ActionBarDrawerToggle mDrawerToggle;
+
+	private Toolbar mToolbar;
 	private DrawerLayout mDrawerLayout;
+
+
 	private ListView mDrawerListView;
 	private View mFragmentContainerView;
 	private int mCurrentSelectedPosition = 4;
 	private boolean mFromSavedInstanceState;
 	private boolean mUserLearnedDrawer;
+
+
 	private int userId;
 	private String URL;
 	private Context context;
@@ -155,12 +166,13 @@ public class NavigationDrawerFragment extends Fragment
 	 * @param fragmentId   The android:id of this fragment in its activity's layout.
 	 * @param drawerLayout The DrawerLayout containing this fragment's UI.
 	 */
-	public void setUp( int fragmentId, DrawerLayout drawerLayout, int UserID, Context context )
+	public void setUp( int fragmentId, DrawerLayout drawerLayout, Toolbar toolbar, int UserID, Context context )
 	{
 		this.context = context;
 		mFragmentContainerView = getActivity().findViewById( fragmentId );
 		mDrawerLayout = drawerLayout;
 		this.userId = UserID;
+		mToolbar = toolbar;
 
 		// set a custom shadow that overlays the main content when the drawer opens
 		mDrawerLayout.setDrawerShadow( R.drawable.drawer_shadow, GravityCompat.START );
@@ -175,7 +187,7 @@ public class NavigationDrawerFragment extends Fragment
 		this.mDrawerToggle = new ActionBarDrawerToggle(
 				getActivity(),                    /* host Activity */
 				mDrawerLayout,                    /* DrawerLayout object */
-				R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
+				mToolbar,       /* nav drawer image to replace 'Up' caret */
 				R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
 				R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
 		)

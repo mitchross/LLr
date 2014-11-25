@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.util.Log;
@@ -146,6 +147,7 @@ public class MainActivity extends BaseActivity implements
 		mNavigationDrawerFragment.setUp(
 				R.id.left_drawer,
 				(DrawerLayout) findViewById( R.id.drawer_layout ),
+				(Toolbar) findViewById( R.id.toolbar ),
 				userId,
 				this );
 

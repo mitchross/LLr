@@ -16,6 +16,20 @@
         <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\okio-1.0.1-e4ebb02fddf5269b2e292e8f8906f574be97ec5d.jar" />
     </item>
     <item
+        jar="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\21.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.0.1"
+        sha1="95fd37732ec852e99f07eeb516a3650172f1d136">
+        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\classes-7368e5b38bffb3d33a6434dce0dbd4535a85c0b1.jar" />
+    </item>
+    <item
+        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\uk.co.chrisjenx\calligraphy\1.2.0\291c60026ceeda3d4da8daac28b0517e4dc3d159\calligraphy-1.2.0.jar"
+        jumboMode="false"
+        revision="21.0.1"
+        sha1="291c60026ceeda3d4da8daac28b0517e4dc3d159">
+        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\calligraphy-1.2.0-0edc6c80496e5797818ba9aefed6dd72b750e520.jar" />
+    </item>
+    <item
         jar="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.2\classes.jar"
         jumboMode="false"
         revision="21.0.1"
@@ -44,6 +58,13 @@
         <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\gson-2.3-9b1db27c136260b36200076938b87a4426afb80a.jar" />
     </item>
     <item
+        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\org.apache.commons\commons-lang3\3.3.2\90a3822c38ec8c996e84c16a3477ef632cbc87a3\commons-lang3-3.3.2.jar"
+        jumboMode="false"
+        revision="21.0.1"
+        sha1="90a3822c38ec8c996e84c16a3477ef632cbc87a3">
+        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\commons-lang3-3.3.2-e99d11a82b80d5c65f0ff0f19398ddbed3571cd8.jar" />
+    </item>
+    <item
         jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\com.squareup.picasso\picasso\2.4.0\f36d2d4e3a36b3259aaf9d004d29b4cdc6c1bfb2\picasso-2.4.0.jar"
         jumboMode="false"
         revision="21.0.1"
@@ -56,27 +77,6 @@
         revision="21.0.1"
         sha1="99373741f99a0556ee293c41e8faa1ca3ae8a4e6">
         <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.2-976a1d4895e523eebff73de0358ba376dbca4c73.jar" />
-    </item>
-    <item
-        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\org.apache.commons\commons-io\1.3.2\b6dde38349ba9bb5e6ea6320531eae969985dae5\commons-io-1.3.2.jar"
-        jumboMode="false"
-        revision="21.0.1"
-        sha1="b6dde38349ba9bb5e6ea6320531eae969985dae5">
-        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\commons-io-1.3.2-cfe9655bad64dff7ee2aaa2cd92be200d84d7edc.jar" />
-    </item>
-    <item
-        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\uk.co.chrisjenx\calligraphy\1.2.0\291c60026ceeda3d4da8daac28b0517e4dc3d159\calligraphy-1.2.0.jar"
-        jumboMode="false"
-        revision="21.0.1"
-        sha1="291c60026ceeda3d4da8daac28b0517e4dc3d159">
-        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\calligraphy-1.2.0-0edc6c80496e5797818ba9aefed6dd72b750e520.jar" />
-    </item>
-    <item
-        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\org.apache.commons\commons-lang3\3.3.2\90a3822c38ec8c996e84c16a3477ef632cbc87a3\commons-lang3-3.3.2.jar"
-        jumboMode="false"
-        revision="21.0.1"
-        sha1="90a3822c38ec8c996e84c16a3477ef632cbc87a3">
-        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\commons-lang3-3.3.2-e99d11a82b80d5c65f0ff0f19398ddbed3571cd8.jar" />
     </item>
     <item
         jar="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.2\libs\internal_impl-21.0.2.jar"

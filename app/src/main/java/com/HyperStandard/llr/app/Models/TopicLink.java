@@ -133,7 +133,13 @@ public class TopicLink
 			unreadMessages = Integer.parseInt( e.select( "td:has(span)" ).select( "a" ).html().replaceAll( "[^0-9]", "" ) , 10  );
 
 			//This gets the total messages
-			totalMessages = Integer.parseInt( e.select( "td:has(span)" ).first().ownText() );
+			try
+			{
+				totalMessages = Integer.parseInt( e.select( "td:has(span)" ).first().ownText() );
+			}
+			catch ( Exception e1 )
+			{
+			}
 
 		}
 
