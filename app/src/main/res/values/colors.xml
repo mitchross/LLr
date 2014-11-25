@@ -4,6 +4,11 @@
 	<color name="white_50">#88FFFFFF</color>
 	<color name="white_90">#E6FFFFFF</color>
 	<color name="dark_grey">#FF2D2D2D</color>
-	<color name="red">#FFFF0000</color>
+	<color name="red"></color>
 	<color name="black">#FF000000</color>
+
+	<!--Used in Lollipop Branding-->
+	<color name="primary">#FFFF0000</color>
+	<color name="primary_dark">#FFCC0000</color>
+	<color name="accent">#FF000066</color>
 </resources>

@@ -71,7 +71,7 @@ public class PollFragment extends Fragment
 
 	public interface Callbacks
 	{
-		public void sendTitle( String title );
+		public void setTitle( String title );
 	}
 
 	class PollElement

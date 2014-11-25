@@ -29,7 +29,7 @@ public class NavigationAdapter extends ArrayAdapter<BookmarkLink>
 {
 	private static final int NUMBER_STATIC_LINKS = 0;
 	private ArrayList<BookmarkLink> objects;
-	private NavigationDrawerCallback callback;
+	//private NavigationDrawerCallback callback;
 	private int userId;
 
 	NavigationAdapter( Context context, int textViewResourceId, ArrayList<BookmarkLink> objects, int userId )
@@ -97,7 +97,7 @@ public class NavigationAdapter extends ArrayAdapter<BookmarkLink>
 					//Log.e("Callback", i.getBookmarkTags());
 					if ( i.getBookmarkTags().contains( "showmessages.php" ) )
 					{
-						callback.changeLocation( i.getBookmarkTags() );
+						//callback.changeLocation( i.getBookmarkTags() );
 					}
 				}
 				break;
@@ -109,7 +109,7 @@ public class NavigationAdapter extends ArrayAdapter<BookmarkLink>
 
 	}
 
-	public void setCallback( NavigationDrawerCallback callback )
+	/*public void setCallback( NavigationDrawerCallback callback )
 	{
 		this.callback = callback;
 	}
@@ -117,7 +117,7 @@ public class NavigationAdapter extends ArrayAdapter<BookmarkLink>
 	public interface NavigationDrawerCallback
 	{
 		public void changeLocation( String URL );
-	}
+	}*/
 
 
 }

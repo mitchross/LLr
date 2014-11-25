@@ -58,7 +58,7 @@ import butterknife.Optional;
 
 public class MainActivity extends BaseActivity implements
 		NavigationDrawerFragment.NavigationDrawerCallbacks,
-		NavigationAdapter.NavigationDrawerCallback,
+		//NavigationAdapter.NavigationDrawerCallback,
 		PollFragment.Callbacks,
 		TopicList.Callbacks,
 		Topic.Callbacks
@@ -222,30 +222,6 @@ public class MainActivity extends BaseActivity implements
 		//}
 	}
 
-	//TODO what the hell is this I don't even know
-	public void onSectionAttached( int number )
-	{
-		switch ( number )
-		{
-			case 1:
-				mTitle = getString( R.string.title_section1 );
-				break;
-			case 2:
-				mTitle = getString( R.string.title_section2 );
-				break;
-			case 3:
-				mTitle = getString( R.string.title_section3 );
-				break;
-			//mNavigationDrawerFragment.get
-			case 4:
-				//loadPageURL("http://boards.endoftheinter.net/topics/Android");
-				break;
-			case 5:
-				//loadPageURL("http://boards.endoftheinter.net/topics/LUE");
-				break;
-		}
-	}
-
 	public void restoreActionBar()
 	{
 		ActionBar actionBar = getActionBar();
@@ -368,24 +344,13 @@ public class MainActivity extends BaseActivity implements
 		post_topic = topicId;
 	}
 
-	@Override
-	public void sendTitle( String title )
-	{
-
-	}
 
 	@Override
 	public void loadTopic( String URL )
 	{
-		//fixme implement this
 		Topic topic = new Topic( Integer.parseInt( URL ), this, getApplicationContext() );
 	}
 
-	@Override
-	public void changeLocation( String URL )
-	{
-		//TODO implement also what calls this
-	}
 
 	public void postMessage( View v )
 	{
@@ -419,14 +384,13 @@ public class MainActivity extends BaseActivity implements
 		Log.e( "View getting", "set" );
 		Animation animation = AnimationUtils.loadAnimation( this, android.R.anim.slide_in_left );
 		animation.setDuration( ANIMATION_TIME );
-		//frameLayout.setAnimation( animation );
-		//fixme help I can't animate T-T
+
+		container.setAnimation( animation );
 
 		if ( container.getChildCount() > 0 )
 		{
 			container.removeAllViews();
 		}
-		container.setAnimation( animation );
 		container.addView( view );
 		topicHistory.add( new ImmutablePair<>( url, Type.TOPICLIST ) );
 
@@ -438,15 +402,14 @@ public class MainActivity extends BaseActivity implements
 		Log.e( "View getting", "set" );
 		Animation animation = AnimationUtils.loadAnimation( this, android.R.anim.slide_in_left );
 		animation.setDuration( ANIMATION_TIME );
-		//frameLayout.setAnimation( animation );
-		//fixme help I can't animate T-T
+
+		container.setAnimation( animation );
 
 		if ( container.getChildCount() > 0 )
 		{
 			container.removeAllViews();
 		}
 		container.removeAllViews();
-		container.setAnimation( animation );
 		container.addView( view );
 		topicHistory.add( new ImmutablePair<>( url, Type.TOPIC ) );
 
