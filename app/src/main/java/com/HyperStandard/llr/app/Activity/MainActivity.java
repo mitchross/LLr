@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.ViewAnimator;
 
 import com.HyperStandard.llr.app.Cache;
 import com.HyperStandard.llr.app.CustomTypefaceSpan;
@@ -76,7 +77,7 @@ public class MainActivity extends BaseActivity implements
 	ListView listView;
 
 	@InjectView( R.id.container )
-	FrameLayout container;
+	ViewAnimator container;
 
 	@InjectView( R.id.post_message_edit_text )
 	EditText messageEditText;
@@ -113,6 +114,8 @@ public class MainActivity extends BaseActivity implements
 	 * Used to store the last screen title. For use in {@link #restoreActionBar()}.
 	 */
 	private CharSequence mTitle = "";
+
+	private int ANIMATION_TIME = 500;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -414,7 +417,8 @@ public class MainActivity extends BaseActivity implements
 	public void setTopicListView( View view, String url )
 	{
 		Log.e( "View getting", "set" );
-		Animation animation = AnimationUtils.loadAnimation( this, android.R.anim.fade_in );
+		Animation animation = AnimationUtils.loadAnimation( this, android.R.anim.slide_in_left );
+		animation.setDuration( ANIMATION_TIME );
 		//frameLayout.setAnimation( animation );
 		//fixme help I can't animate T-T
 
@@ -432,7 +436,8 @@ public class MainActivity extends BaseActivity implements
 	public void setTopicView( View view, String url )
 	{
 		Log.e( "View getting", "set" );
-		Animation animation = AnimationUtils.loadAnimation( this, android.R.anim.fade_in );
+		Animation animation = AnimationUtils.loadAnimation( this, android.R.anim.slide_in_left );
+		animation.setDuration( ANIMATION_TIME );
 		//frameLayout.setAnimation( animation );
 		//fixme help I can't animate T-T
 
