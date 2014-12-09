@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.HyperStandard.llr.app.Activity.BaseActivity;
 import com.HyperStandard.llr.app.CustomTypefaceSpan;
 import com.HyperStandard.llr.app.Models.BookmarkLink;
 import com.HyperStandard.llr.app.R;
@@ -178,7 +179,7 @@ public class NavigationDrawerFragment extends Fragment
 		mDrawerLayout.setDrawerShadow( R.drawable.drawer_shadow, GravityCompat.START );
 		// set up the drawer's list view with items and click listener
 
-		ActionBar actionBar = getActionBar();
+		android.support.v7.app.ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled( true );
 		actionBar.setHomeButtonEnabled( true );
 
@@ -357,7 +358,7 @@ public class NavigationDrawerFragment extends Fragment
 	 */
 	private void showGlobalContextActionBar()
 	{
-		ActionBar actionBar = getActionBar();
+		android.support.v7.app.ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled( true );
 		actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_STANDARD );
 		//Necessary to change font on the action bar
@@ -366,9 +367,10 @@ public class NavigationDrawerFragment extends Fragment
 		actionBar.setTitle( t );
 	}
 
-	private ActionBar getActionBar()
+	private android.support.v7.app.ActionBar getActionBar()
 	{
-		return getActivity().getActionBar();
+		return ((BaseActivity) getActivity()).getSupportActionBar();
+		//return getActivity().getActionBar();
 	}
 
 	/**

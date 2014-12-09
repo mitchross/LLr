@@ -225,6 +225,7 @@ public class LoginScreen extends BaseActivity
 			}
 			else
 			{
+				Log.e( mTag, response.body().string() );
 				Toast.makeText( this, "Login failed", Toast.LENGTH_LONG ).show();
 			}
 

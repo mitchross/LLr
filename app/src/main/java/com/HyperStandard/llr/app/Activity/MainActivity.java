@@ -151,6 +151,8 @@ public class MainActivity extends BaseActivity implements
 				userId,
 				this );
 
+
+
 		/**
 		 * Load the main page to get data from it i.e. bookmarks and other stuff later
 		 */
@@ -185,7 +187,7 @@ public class MainActivity extends BaseActivity implements
 			for ( Element e : sigcheck )
 			{
 				//todo handle edge cases where users have the string "Signature" elsewhere in their profile page
-				Log.e( mTag, e.select( "tr" ).text() );
+				//Log.e( mTag, e.select( "tr" ).text() );
 				if ( e.select( "tr" ).text().contains( "Signature" ) )
 				{
 					sigloc = e.siblingIndex() / 2;
@@ -332,7 +334,6 @@ public class MainActivity extends BaseActivity implements
 		restoreActionBar();
 	}
 
-	//fixme merge these also decide which name is better
 	@Override
 	public void setTitle( String title )
 	{

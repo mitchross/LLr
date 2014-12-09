@@ -5,9 +5,10 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:orientation="vertical"
-		android:fitsSystemWindows="true">
+		android:fitsSystemWindows="true"
+		style="@style/AppTheme.main">
 
-	<include layout="@layout/toolbar" />
+	<!--<include layout="@layout/toolbar" />-->
 
 	<!-- A DrawerLayout is intended to be used as the top-level content view using match_parent for both width and height to consume the full space available. -->
 	<android.support.v4.widget.DrawerLayout

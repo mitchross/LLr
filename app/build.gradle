@@ -2,7 +2,7 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.0.1"
+    buildToolsVersion '21.0.2'
 
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
@@ -29,8 +29,8 @@ android {
     }
     buildTypes {
         release {
-            runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -38,26 +38,19 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    // You must install or update the Support Repository through the SDK manager to use this dependency.
-    compile 'com.android.support:support-v4:21.0.2'
-
-	compile 'com.android.support:appcompat-v7:21.0.0'
-
-    compile 'com.squareup.picasso:picasso:2.4.0'
-    compile 'org.jsoup:jsoup:1.8.1'
-    compile 'com.jakewharton:butterknife:5.1.1'
-    compile 'uk.co.chrisjenx:calligraphy:1.2.0'
-    compile 'org.apache.commons:commons-lang3:3.3.2'
-
+	compile fileTree( dir: 'libs', include: ['*.jar'] )
+	// You must install or update the Support Repository through the SDK manager to use this dependency.
+	compile 'com.android.support:support-v4:21.0.2'
+	compile 'com.android.support:appcompat-v7:21.0.2'
+	compile 'com.squareup.picasso:picasso:2.4.0'
+	compile 'org.jsoup:jsoup:1.8.1'
+	compile 'com.jakewharton:butterknife:5.1.1'
+	compile 'uk.co.chrisjenx:calligraphy:1.2.0'
+	compile 'org.apache.commons:commons-lang3:3.3.2'
 	compile 'com.google.code.gson:gson:2.3'
-
-    //http stuff
-    compile 'com.squareup.okhttp:okhttp:2.0.0'
+	//http stuff
+	compile 'com.squareup.okhttp:okhttp:2.0.0'
 	compile 'com.squareup.okhttp:okhttp-urlconnection:2.1.0'
-
-
 	//needed for okhttp
-    compile 'com.squareup.okio:okio:1.0.1'
-
+	compile 'com.squareup.okio:okio:1.0.1'
 }

@@ -16,18 +16,25 @@
         <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\okio-1.0.1-e4ebb02fddf5269b2e292e8f8906f574be97ec5d.jar" />
     </item>
     <item
-        jar="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\21.0.0\classes.jar"
+        jar="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.2\classes.jar"
         jumboMode="false"
-        revision="21.0.1"
-        sha1="95fd37732ec852e99f07eeb516a3650172f1d136">
-        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\classes-7368e5b38bffb3d33a6434dce0dbd4535a85c0b1.jar" />
+        revision="21.0.2"
+        sha1="d1bf02de1c56d942e7a9d093b8610ba1ef4128e3">
+        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\classes-6b563cb08080630efc7e5878be443bfd26048839.jar" />
     </item>
     <item
-        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\uk.co.chrisjenx\calligraphy\1.2.0\291c60026ceeda3d4da8daac28b0517e4dc3d159\calligraphy-1.2.0.jar"
+        jar="C:\Users\nonex_000\AppData\Local\Android\android-sdk\extras\android\m2repository\com\android\support\support-annotations\21.0.2\support-annotations-21.0.2.jar"
         jumboMode="false"
-        revision="21.0.1"
-        sha1="291c60026ceeda3d4da8daac28b0517e4dc3d159">
-        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\calligraphy-1.2.0-0edc6c80496e5797818ba9aefed6dd72b750e520.jar" />
+        revision="21.0.2"
+        sha1="99373741f99a0556ee293c41e8faa1ca3ae8a4e6">
+        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.2-976a1d4895e523eebff73de0358ba376dbca4c73.jar" />
+    </item>
+    <item
+        jar="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.2\libs\internal_impl-21.0.2.jar"
+        jumboMode="false"
+        revision="21.0.2"
+        sha1="962e8b12569c56dbdcf8367eb4eac8bb129cd18f">
+        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.2-ddc3e0130ee63e6f23fcb613a62e0e40f8d8163b.jar" />
     </item>
     <item
         jar="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.2\classes.jar"
@@ -44,11 +51,25 @@
         <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\okhttp-2.1.0-2da81959141bba08ba8bba8833155f93281fcc6d.jar" />
     </item>
     <item
+        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\org.apache.commons\commons-lang3\3.3.2\90a3822c38ec8c996e84c16a3477ef632cbc87a3\commons-lang3-3.3.2.jar"
+        jumboMode="false"
+        revision="21.0.2"
+        sha1="90a3822c38ec8c996e84c16a3477ef632cbc87a3">
+        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\commons-lang3-3.3.2-e99d11a82b80d5c65f0ff0f19398ddbed3571cd8.jar" />
+    </item>
+    <item
         jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\org.jsoup\jsoup\1.8.1\1eb6690b0c629d7000c77a72df5e822fb974f521\jsoup-1.8.1.jar"
         jumboMode="false"
         revision="21.0.1"
         sha1="1eb6690b0c629d7000c77a72df5e822fb974f521">
         <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\jsoup-1.8.1-f49ad5625c01ca8fad9c7209362b88a9a5c52c3a.jar" />
+    </item>
+    <item
+        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\com.jakewharton\butterknife\5.1.1\b3652dfd65ca0bcf18790ff1a1f7624af4cb2bb8\butterknife-5.1.1.jar"
+        jumboMode="false"
+        revision="21.0.2"
+        sha1="b3652dfd65ca0bcf18790ff1a1f7624af4cb2bb8">
+        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\butterknife-5.1.1-d87bf2b040fdd08e943269ed1e0d1b28da2a95f0.jar" />
     </item>
     <item
         jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.3\5fc52c41ef0239d1093a1eb7c3697036183677ce\gson-2.3.jar"
@@ -58,16 +79,37 @@
         <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\gson-2.3-9b1db27c136260b36200076938b87a4426afb80a.jar" />
     </item>
     <item
-        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\org.apache.commons\commons-lang3\3.3.2\90a3822c38ec8c996e84c16a3477ef632cbc87a3\commons-lang3-3.3.2.jar"
+        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\org.jsoup\jsoup\1.8.1\1eb6690b0c629d7000c77a72df5e822fb974f521\jsoup-1.8.1.jar"
         jumboMode="false"
-        revision="21.0.1"
-        sha1="90a3822c38ec8c996e84c16a3477ef632cbc87a3">
-        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\commons-lang3-3.3.2-e99d11a82b80d5c65f0ff0f19398ddbed3571cd8.jar" />
+        revision="21.0.2"
+        sha1="1eb6690b0c629d7000c77a72df5e822fb974f521">
+        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\jsoup-1.8.1-f49ad5625c01ca8fad9c7209362b88a9a5c52c3a.jar" />
+    </item>
+    <item
+        jar="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\21.0.2\classes.jar"
+        jumboMode="false"
+        revision="21.0.2"
+        sha1="7ae2d38807a43b2f2185ff4089a92c790b579e54">
+        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\classes-6dadc2f0b3dd3c274fcb6f715d4b62b5944a3020.jar" />
+    </item>
+    <item
+        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\uk.co.chrisjenx\calligraphy\1.2.0\291c60026ceeda3d4da8daac28b0517e4dc3d159\calligraphy-1.2.0.jar"
+        jumboMode="false"
+        revision="21.0.2"
+        sha1="291c60026ceeda3d4da8daac28b0517e4dc3d159">
+        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\calligraphy-1.2.0-0edc6c80496e5797818ba9aefed6dd72b750e520.jar" />
     </item>
     <item
         jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\com.squareup.picasso\picasso\2.4.0\f36d2d4e3a36b3259aaf9d004d29b4cdc6c1bfb2\picasso-2.4.0.jar"
         jumboMode="false"
         revision="21.0.1"
+        sha1="f36d2d4e3a36b3259aaf9d004d29b4cdc6c1bfb2">
+        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\picasso-2.4.0-6820fa75b4e84cbbd36547593c09b58c4f321b80.jar" />
+    </item>
+    <item
+        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\com.squareup.picasso\picasso\2.4.0\f36d2d4e3a36b3259aaf9d004d29b4cdc6c1bfb2\picasso-2.4.0.jar"
+        jumboMode="false"
+        revision="21.0.2"
         sha1="f36d2d4e3a36b3259aaf9d004d29b4cdc6c1bfb2">
         <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\picasso-2.4.0-6820fa75b4e84cbbd36547593c09b58c4f321b80.jar" />
     </item>
@@ -79,11 +121,53 @@
         <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.2-976a1d4895e523eebff73de0358ba376dbca4c73.jar" />
     </item>
     <item
+        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\uk.co.chrisjenx\calligraphy\1.2.0\291c60026ceeda3d4da8daac28b0517e4dc3d159\calligraphy-1.2.0.jar"
+        jumboMode="false"
+        revision="21.0.1"
+        sha1="291c60026ceeda3d4da8daac28b0517e4dc3d159">
+        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\calligraphy-1.2.0-0edc6c80496e5797818ba9aefed6dd72b750e520.jar" />
+    </item>
+    <item
+        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.3\5fc52c41ef0239d1093a1eb7c3697036183677ce\gson-2.3.jar"
+        jumboMode="false"
+        revision="21.0.2"
+        sha1="5fc52c41ef0239d1093a1eb7c3697036183677ce">
+        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\gson-2.3-9b1db27c136260b36200076938b87a4426afb80a.jar" />
+    </item>
+    <item
+        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\org.apache.commons\commons-lang3\3.3.2\90a3822c38ec8c996e84c16a3477ef632cbc87a3\commons-lang3-3.3.2.jar"
+        jumboMode="false"
+        revision="21.0.1"
+        sha1="90a3822c38ec8c996e84c16a3477ef632cbc87a3">
+        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\commons-lang3-3.3.2-e99d11a82b80d5c65f0ff0f19398ddbed3571cd8.jar" />
+    </item>
+    <item
+        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp\okhttp-urlconnection\2.1.0\6025b7df8a6a4193138723ef120e7228b6a97024\okhttp-urlconnection-2.1.0.jar"
+        jumboMode="false"
+        revision="21.0.2"
+        sha1="6025b7df8a6a4193138723ef120e7228b6a97024">
+        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\okhttp-urlconnection-2.1.0-2ed59927d3c14680f29c80cf4e73a9431bdb0b05.jar" />
+    </item>
+    <item
+        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp\okhttp\2.1.0\9b51f7d0c19f179b52beab7cb433f8ba5cf786a4\okhttp-2.1.0.jar"
+        jumboMode="false"
+        revision="21.0.2"
+        sha1="9b51f7d0c19f179b52beab7cb433f8ba5cf786a4">
+        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\okhttp-2.1.0-2da81959141bba08ba8bba8833155f93281fcc6d.jar" />
+    </item>
+    <item
         jar="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.2\libs\internal_impl-21.0.2.jar"
         jumboMode="false"
         revision="21.0.1"
         sha1="962e8b12569c56dbdcf8367eb4eac8bb129cd18f">
         <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.2-ddc3e0130ee63e6f23fcb613a62e0e40f8d8163b.jar" />
+    </item>
+    <item
+        jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.0.1\39eff75ddcb987ff65888361a29f489c178429a3\okio-1.0.1.jar"
+        jumboMode="false"
+        revision="21.0.2"
+        sha1="39eff75ddcb987ff65888361a29f489c178429a3">
+        <dex dex="C:\Users\nonex_000\Documents\GitHub\LLr\app\build\intermediates\pre-dexed\debug\okio-1.0.1-e4ebb02fddf5269b2e292e8f8906f574be97ec5d.jar" />
     </item>
     <item
         jar="C:\Users\nonex_000\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp\okhttp-urlconnection\2.1.0\6025b7df8a6a4193138723ef120e7228b6a97024\okhttp-urlconnection-2.1.0.jar"
