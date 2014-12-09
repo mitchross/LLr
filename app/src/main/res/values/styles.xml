@@ -17,14 +17,8 @@
 
 	</style>
 
-	<style name="overflow_chevron">
-		<item name="android:src">@drawable/ic_chevron_down_light</item>
-	</style>
-
 	<style name="login_actionbar" parent="Theme.AppCompat.Light">
-
 		<item name="android:background">@drawable/blank</item>
-
 	</style>
 
 

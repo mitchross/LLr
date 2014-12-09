@@ -176,7 +176,8 @@ public class NavigationDrawerFragment extends Fragment
 		mToolbar = toolbar;
 
 		// set a custom shadow that overlays the main content when the drawer opens
-		mDrawerLayout.setDrawerShadow( R.drawable.drawer_shadow, GravityCompat.START );
+		//just kidding no shadow bc we're material suck it a hahaha haha a haha
+		//mDrawerLayout.setDrawerShadow( R.drawable.drawer_shadow, GravityCompat.START );
 		// set up the drawer's list view with items and click listener
 
 		android.support.v7.app.ActionBar actionBar = getActionBar();

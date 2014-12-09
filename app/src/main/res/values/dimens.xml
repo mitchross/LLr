@@ -21,4 +21,7 @@
 	<!--TODO delete all these dumb comments -->
 	<dimen name="font_small">10sp</dimen>
 	<dimen name="font_normal">16sp</dimen>
+
+	<dimen name="corner_radius">2dp</dimen>
+	<dimen name="padding_cards">2dp</dimen>
 </resources>
