@@ -74,16 +74,16 @@ public class MainActivity extends BaseActivity implements
 
 	ListView mListView;
 	@Optional
-	@InjectView( R.id.leftNavigationDrawer )
+	@InjectView(R.id.leftNavigationDrawer)
 	ListView listView;
 
-	@InjectView( R.id.container )
+	@InjectView(R.id.container)
 	ViewAnimator container;
 
-	@InjectView( R.id.post_message_edit_text )
+	@InjectView(R.id.post_message_edit_text)
 	EditText messageEditText;
 
-	@InjectView( R.id.post_message_signature_box )
+	@InjectView(R.id.post_message_signature_box)
 	EditText signatureEditText;
 
 	FragmentManager manager;
@@ -149,8 +149,7 @@ public class MainActivity extends BaseActivity implements
 				(DrawerLayout) findViewById( R.id.drawer_layout ),
 				(Toolbar) findViewById( R.id.toolbar ),
 				userId,
-				this );
-
+				getApplicationContext() );
 
 
 		/**
@@ -222,13 +221,13 @@ public class MainActivity extends BaseActivity implements
 	{
 		//if ( types == Type.TOPICLIST )
 		//{
-		TopicList newPage = new TopicList( URL, this, getApplicationContext() );
+		new TopicList( URL, this, getApplicationContext() );
 		//}
 	}
 
 	public void restoreActionBar()
 	{
-		ActionBar actionBar = getActionBar();
+		android.support.v7.app.ActionBar actionBar = getSupportActionBar();
 		if ( actionBar != null )
 		{
 			actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_STANDARD );
@@ -351,7 +350,7 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public void loadTopic( String URL )
 	{
-		Topic topic = new Topic( Integer.parseInt( URL ), this, getApplicationContext() );
+		Topic topic = new Topic(  URL , this, getApplicationContext() );
 	}
 
 
@@ -384,7 +383,7 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public void setTopicListView( View view, String url )
 	{
-		Log.e( "View getting", "set" );
+		Log.v( mTag, "Loading TopicListView @ " + url );
 		Animation animation = AnimationUtils.loadAnimation( this, android.R.anim.slide_in_left );
 		animation.setDuration( ANIMATION_TIME );
 
@@ -402,7 +401,7 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public void setTopicView( View view, String url )
 	{
-		Log.e( "View getting", "set" );
+		Log.v( mTag, "Loading TopicView @ " + url );
 		Animation animation = AnimationUtils.loadAnimation( this, android.R.anim.slide_in_left );
 		animation.setDuration( ANIMATION_TIME );
 
@@ -421,13 +420,16 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public void onBackPressed()
 	{
-		if ( topicHistory.peek().getRight().equals( Type.TOPICLIST ) )
+		if ( topicHistory.peek() != null )
 		{
-			new TopicList( topicHistory.poll().getLeft(), this, getApplicationContext() );
-		}
-		else
-		{
-			new Topic( Integer.parseInt( topicHistory.poll().getLeft() ), this, getApplicationContext() );
+			if ( topicHistory.peek().getRight().equals( Type.TOPICLIST ) )
+			{
+				new TopicList( topicHistory.poll().getLeft(), this, getApplicationContext() );
+			}
+			else
+			{
+				new Topic( topicHistory.poll().getLeft() , this, getApplicationContext() );
+			}
 		}
 	}
 }

@@ -136,13 +136,19 @@ public class NavigationDrawerFragment extends Fragment
 		//TODO put this code somewhere else maybe?
 		ArrayList<BookmarkLink> bookmarks = new ArrayList<>();
 
+		/*if ( context == null )
+		{
+			Log.e( mTag, "Context is null" );
+			return null;
+		}
 		mDrawerListView.setAdapter( new NavigationAdapter(
-						getActionBar().getThemedContext(),
+						//getActionBar().getThemedContext(),
+						context,
 						listview_navigation_row,
 						bookmarks,
 						userId
 				)
-		);
+		);*/
 		mDrawerListView.setOnItemClickListener( new AdapterView.OnItemClickListener()
 		{
 			@Override
