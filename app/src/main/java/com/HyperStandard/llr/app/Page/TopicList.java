@@ -1,7 +1,11 @@
 package com.HyperStandard.llr.app.Page;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Xml;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -14,8 +18,10 @@ import com.HyperStandard.llr.app.R;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,7 +45,12 @@ public class TopicList
 
 		Future<Document> request = executor.submit( new LoadPage( url ) );
 
-		ListView listView = new ListView( context );
+		/*XmlPullParser parser = Resources.getSystem().getXml(R.layout.topiclist_listview);
+		AttributeSet attributes = Xml.asAttributeSet( parser );
+
+		ListView listView = new ListView( context, attributes, R.style.AppTheme_TopicListView );*/
+		LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+		ListView listView = (ListView) inflater.inflate( R.layout.topiclist_listview, null, false );
 
 		try
 		{

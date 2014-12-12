@@ -30,13 +30,23 @@ import java.util.concurrent.TimeoutException;
  */
 public class Topic
 {
-	public Topic( int topicId, Callbacks callbacks, Context context )
+	public Topic( String topicId, Callbacks callbacks, Context context )
 	{
 		ListView listView = new ListView( context );
 
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 
-		Future<Document> request = executor.submit( new LoadPage( "http://boards.endoftheinter.net/showmessages.php?topic=" + topicId ) );
+		Future<Document> request;
+
+		if ( topicId.contains( "http" ) )
+		{
+			request = executor.submit( new LoadPage( topicId ) );
+
+		}
+		else
+		{
+			 request = executor.submit( new LoadPage( "http://boards.endoftheinter.net/showmessages.php?topic=" + topicId ) );
+		}
 		try
 		{
 			Document page = request.get( 10, TimeUnit.SECONDS );
@@ -44,7 +54,7 @@ public class Topic
 			String hTag = page.select( "input[name=h]" ).attr( "value" );
 			//Log.e( mTag, Integer.toString( topicID ) );
 			//Log.e( mTag, hTag );
-			callbacks.registerTopic( hTag, Integer.toString( topicId ) );
+			callbacks.registerTopic( hTag, topicId );
 			final Elements elements = page.select( "div.message-container" );
 
 			Future<ArrayList<TopicPost>> arrayListFuture = executor.submit( new Callable<ArrayList<TopicPost>>()
@@ -84,7 +94,8 @@ public class Topic
 
 		/**
 		 * Use this to register the current active topic for posting
-		 * @param hTag the per page validation code needed to submit posts
+		 *
+		 * @param hTag    the per page validation code needed to submit posts
 		 * @param topicId the topicId number in String format to reduce conversions
 		 */
 		public void registerTopic( String hTag, String topicId );

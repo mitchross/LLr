@@ -12,4 +12,12 @@
 	<color name="primary">#FF1D9F20</color>
 	<color name="primary_dark">#CC23490A</color>
 	<color name="accent">#FFCCCCCC</color>
+
+	<!-- LL type colors-->
+	<color name="default_background">#CAD2DB</color>
+	<color name="default_main1">#2E5A7F</color>
+	<color name="default_main2">#4B73AA</color>
+	<color name="default_main3">#6896D5</color>
+	<color name="default_main4">#DDE3EB</color>
+
 </resources>

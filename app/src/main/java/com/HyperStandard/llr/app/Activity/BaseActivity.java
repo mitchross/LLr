@@ -17,7 +17,7 @@ public class BaseActivity extends ActionBarActivity
 	protected void onCreate( Bundle savedInstanceState )
 	{
 		super.onCreate( savedInstanceState );
-		//Set base font
+		//TODO determine if this is necessary
 		//CalligraphyConfig.initDefault( getString( R.string.font_title ), R.attr.fontPath );
 	}
 
