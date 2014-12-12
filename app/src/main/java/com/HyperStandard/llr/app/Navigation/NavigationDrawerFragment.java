@@ -26,6 +26,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.HyperStandard.llr.app.Activity.BaseActivity;
+import com.HyperStandard.llr.app.Activity.MainActivity;
 import com.HyperStandard.llr.app.CustomTypefaceSpan;
 import com.HyperStandard.llr.app.Models.BookmarkLink;
 import com.HyperStandard.llr.app.R;
@@ -204,6 +205,8 @@ public class NavigationDrawerFragment extends Fragment
 				{
 					return;
 				}
+
+				mCallbacks.closeKeyboard();
 
 				getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
 			}
@@ -407,6 +410,8 @@ public class NavigationDrawerFragment extends Fragment
 		 * Called when an item in the navigation drawer is selected.
 		 */
 		void onNavigationDrawerItemSelected( int position, String URL, Type type );
+
+		public void closeKeyboard();
 	}
 
 }

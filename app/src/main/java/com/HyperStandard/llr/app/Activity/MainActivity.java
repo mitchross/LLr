@@ -2,6 +2,7 @@ package com.HyperStandard.llr.app.Activity;
 
 import android.app.ActionBar;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -221,6 +223,13 @@ public class MainActivity extends BaseActivity implements
 		//{
 		new TopicList( URL, this, getApplicationContext() );
 		//}
+	}
+
+	@Override
+	public void closeKeyboard()
+	{
+		InputMethodManager imm = (InputMethodManager)getSystemService( Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(messageEditText.getWindowToken(), 0);
 	}
 
 	public void restoreActionBar()

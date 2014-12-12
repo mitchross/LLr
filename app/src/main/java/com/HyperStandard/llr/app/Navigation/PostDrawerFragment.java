@@ -71,22 +71,4 @@ public class PostDrawerFragment extends Fragment
 		mPostMessage = (RelativeLayout) inflater.inflate( R.layout.post_message, container );
 		return mPostMessage;
 	}
-
-	public void postMessage(View v)
-	{
-		EditText editText = (EditText) v.findViewById( R.id.post_message_edit_text );
-		PostMessage postMessage = new PostMessage();
-		/*try
-		{
-			//postMessage.post( editText.getText().toString(), post, false );
-		}
-		catch ( LoggedOutException e )
-		{
-			e.printStackTrace();
-		}
-		catch ( WaitException e )
-		{
-			e.printStackTrace();
-		}*/
-	}
 }
