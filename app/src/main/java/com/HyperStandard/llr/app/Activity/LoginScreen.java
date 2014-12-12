@@ -26,13 +26,10 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.lang.reflect.Type;
 import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;

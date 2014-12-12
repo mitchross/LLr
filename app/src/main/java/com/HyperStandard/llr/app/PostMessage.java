@@ -2,7 +2,6 @@ package com.HyperStandard.llr.app;
 
 import android.util.Log;
 
-import com.HyperStandard.llr.app.Data.Cookies;
 import com.HyperStandard.llr.app.Exceptions.LoggedOutException;
 import com.HyperStandard.llr.app.Exceptions.WaitException;
 import com.squareup.okhttp.FormEncodingBuilder;
@@ -10,8 +9,6 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;

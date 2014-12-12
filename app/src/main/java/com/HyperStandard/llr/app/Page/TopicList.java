@@ -1,10 +1,7 @@
 package com.HyperStandard.llr.app.Page;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
@@ -18,10 +15,8 @@ import com.HyperStandard.llr.app.R;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

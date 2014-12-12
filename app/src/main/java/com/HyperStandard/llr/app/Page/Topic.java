@@ -10,7 +10,6 @@ import com.HyperStandard.llr.app.Converters.TopicArray;
 import com.HyperStandard.llr.app.LoadPage;
 import com.HyperStandard.llr.app.Models.TopicPost;
 import com.HyperStandard.llr.app.R;
-import com.HyperStandard.llr.app.Type;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;

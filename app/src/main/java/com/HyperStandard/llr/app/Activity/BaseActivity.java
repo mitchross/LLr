@@ -1,6 +1,5 @@
 package com.HyperStandard.llr.app.Activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;

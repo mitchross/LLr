@@ -9,9 +9,8 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -34,11 +33,7 @@ import com.HyperStandard.llr.app.Type;
 
 import java.util.ArrayList;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-
 import static com.HyperStandard.llr.app.R.layout.listview_navigation_row;
-import static com.HyperStandard.llr.app.R.layout.toolbar;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
