@@ -1,5 +1,7 @@
 package com.HyperStandard.llr.app.Activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -7,13 +9,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.HyperStandard.llr.app.Cache;
 import com.HyperStandard.llr.app.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -22,8 +28,10 @@ import com.squareup.okhttp.Response;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.lang.reflect.Type;
 import java.net.CookieManager;
 import java.net.HttpCookie;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -32,6 +40,7 @@ import java.util.concurrent.Future;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnLongClick;
 
 /**
  * Entry point to application, with login
@@ -53,11 +62,14 @@ public class LoginScreen extends BaseActivity
 	@InjectView( R.id.login_checkbox )
 	protected CheckBox checkBox;
 
-	private String username;
-	private String password;
+	private ArrayList<String> usernames;
+	private ArrayList<String> passwords;
 
 	private SharedPreferences prefs;
 	private OkHttpClient client;
+
+	private Gson gson;
+	private Type dataType;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -67,15 +79,18 @@ public class LoginScreen extends BaseActivity
 
 		ButterKnife.inject( this );
 
+		gson = new Gson();
+		dataType = new TypeToken<ArrayList<String>>()
+		{
+		}.getType();
+
+
 		//Get the general preferences for the application (same as the ones used by the pref activity)
 		prefs = getSharedPreferences( getString( R.string.preferences_name ), MODE_PRIVATE );
 
-		//Get values from preferences
-
-		//Usernames and passwords are stored in a single string then split by the ✓ token
-		//Because why not (I don't think it's valid for an LL name so it's prob no big deal)
-		String[] usernames = prefs.getString( "usernames", "" ).split( "✓" );
-		String[] passwords = prefs.getString( "passwords", "" ).split( "✓" );
+		//These are ArrayList<String>s if you didn't know
+		usernames = gson.fromJson( prefs.getString( "usernames", "" ), dataType );
+		passwords = gson.fromJson( prefs.getString( "passwords", "" ), dataType );
 
 		//Index for which account is preferred
 		int preferred_account = prefs.getInt( "preferred_account", 0 );
@@ -84,18 +99,41 @@ public class LoginScreen extends BaseActivity
 		boolean autoLogin = prefs.getBoolean( "auto_login", false );
 
 		//some sanity checks probably not necessary but still why not
-		if ( ( usernames.length != 0 && passwords.length != 0 ) && ( passwords.length == usernames.length ) )
+		if ( ( usernames != null && passwords != null ) && ( passwords.size() == usernames.size() ) )
 		{
-			if ( preferred_account < usernames.length )
+			if ( preferred_account < usernames.size() )
 			{
-				username = usernames[ preferred_account ];
-				password = passwords[ preferred_account ];
+
+				userNameEditText.setText( usernames.get( preferred_account ) );
+				passwordEditText.setText( passwords.get( preferred_account ) );
 			}
 		}
-		if ( autoLogin )
+		if ( autoLogin && usernames != null && passwords != null )
 		{
-			login( username, password );
+			login( usernames.get( preferred_account ), passwords.get( preferred_account ) );
 		}
+
+		/*userNameEditText.setOnLongClickListener(new View.OnLongClickListener()
+		{
+			@Override
+			public boolean onLongClick( View view )
+			{
+				Log.e( mTag, "clicked long, detected etc" );
+				AlertDialog.Builder builder = new AlertDialog.Builder( getApplicationContext() );
+				ListAdapter adapter = new ArrayAdapter<>( getApplicationContext(), android.R.layout.simple_list_item_single_choice, usernames );
+				builder.setAdapter( adapter, new DialogInterface.OnClickListener()
+				{
+					@Override
+					public void onClick( DialogInterface dialogInterface, int i )
+					{
+						Log.e( "clicked on unumber ", Integer.toString( i ) );
+					}
+				} );
+				AlertDialog dialog = builder.create();
+				dialog.show();
+				return false;
+			}
+		});*/
 
 		//Set the client and default cookies
 		//TODO make a better cookie store
@@ -149,7 +187,7 @@ public class LoginScreen extends BaseActivity
 			formBody = new FormEncodingBuilder()
 					.add( "b", username )
 					.add( "p", password )
-					//todo figure out if this is necessary
+							//todo figure out if this is necessary
 					.add( "r", "" )
 					.build();
 		}
@@ -174,33 +212,36 @@ public class LoginScreen extends BaseActivity
 			if ( response.body().string().equals( getString( R.string.successful_response ) ) )
 			{
 				if ( checkBox.isChecked() )
-				{//TODO use GSON instead
-					List<String> un = Arrays.asList( prefs.getString( "usernames", "" ).split( "✓" ) );
-					List<String> pw = Arrays.asList( prefs.getString( "passwords", "" ).split( "✓" ) );
-					for ( int i = 0; i < un.size(); i++ )
+				{
+					if ( usernames == null || passwords == null )
+					{
+						usernames = new ArrayList<>();
+						passwords = new ArrayList<>();
+					}
+					for ( int i = 0; i < usernames.size(); i++ )
 					{
 						//If the series of accounts already contains the username entered then change the password
-						if ( un.get( i ).equals( username ) )
+						if ( usernames.get( i ).equals( username ) )
 						{
-							pw.set( i, password );
+							passwords.set( i, password );
 						}
 					}
-					if ( !un.contains( username ) )
+					if ( !usernames.contains( username ) )
 					{
-						un.add( username );
-						pw.add( password );
+						usernames.add( username );
+						passwords.add( password );
 					}
 					else
 					{
-						pw.set( un.indexOf( username ), password );
+						passwords.set( usernames.indexOf( username ), password );
 					}
 
-					String uns = StringUtils.join( un.toArray(), "✓" );
-					String pws = StringUtils.join( pw.toArray(), "✓" );
+					String serializedUsernames = gson.toJson( usernames );
+					String serializedPasswords = gson.toJson( passwords );
 
 					prefs.edit()
-							.putString( "usernames", uns )
-							.putString( "passwords", pws )
+							.putString( "usernames", serializedUsernames )
+							.putString( "passwords", serializedPasswords )
 							.apply();
 				}
 
@@ -215,18 +256,18 @@ public class LoginScreen extends BaseActivity
 						Log.v( mTag, "User ID is " + userid );
 					}
 				}
-				//int userId = Integer.parseInt( ((CookieManager) client.getCookieHandler()).getCookieStore(). ) ;
-				//Log.e( "int value", " " + userId );
 
 				//Launch the main activity
 				Intent intent = new Intent( this, MainActivity.class );
 				intent.putExtra( "userId", userid );
 				startActivity( intent );
+
 			}
 			else
 			{
-				Log.e( mTag, response.body().string() );
-				Toast.makeText( this, "Login failed", Toast.LENGTH_LONG ).show();
+				//Log.e( mTag, response.body().string() );
+				Log.e( mTag, username + password );
+				alertFailure();
 			}
 
 		}
@@ -245,18 +286,47 @@ public class LoginScreen extends BaseActivity
 		if ( !username.equals( "" ) && !password.equals( "" ) )
 		{
 
-			new Thread(new Runnable() {
+			new Thread( new Runnable()
+			{
 				@Override
 				public void run()
 				{
 					login( username, password );
 				}
-			}).start();
+			} ).start();
 		}
 		else
 		{
 			Toast.makeText( getApplicationContext(), "Empty boxes", Toast.LENGTH_LONG ).show();
 		}
 	}
+
+	private void alertFailure()
+	{
+		Toast.makeText( getApplicationContext(), "Login failed", Toast.LENGTH_LONG ).show();
+
+	}
+
+	@OnLongClick( R.id.username )
+	public boolean showOptions()
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder( this );
+		ListAdapter adapter = new ArrayAdapter<>( this, android.R.layout.simple_list_item_single_choice, usernames );
+		builder.setAdapter( adapter, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick( DialogInterface dialogInterface, int i )
+			{
+				prefs.edit().putInt( "preferred_account", i ).apply();
+				userNameEditText.setText( usernames.get( i ) );
+				passwordEditText.setText( passwords.get( i ) );
+			}
+		} );
+		AlertDialog dialog = builder.create();
+		dialog.show();
+		return false;
+	}
+
+
 
 }
