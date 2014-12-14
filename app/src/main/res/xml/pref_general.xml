@@ -8,5 +8,11 @@
 			android:defaultValue="true"
 			android:title="@string/pref_use_iphone_login"
 			/>
+	<SwitchPreference
+			android:key="use_correct_case"
+			android:capitalize="sentences"
+			android:defaultValue="true"
+			android:title="@string/pref_use_correct_case"
+			/>
 
 </PreferenceScreen>

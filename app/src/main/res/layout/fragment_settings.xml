@@ -4,7 +4,8 @@
              android:orientation="vertical"
              android:layout_width="fill_parent"
              android:layout_height="fill_parent"
-             android:id="@+id/settings_container">
+             android:id="@+id/settings_container"
+             android:theme="@style/AppTheme">
 
 	<!-- this has to have the @android id for reasons -->
 	<ListView

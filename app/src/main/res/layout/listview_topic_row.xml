@@ -4,21 +4,22 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginLeft="@dimen/card_horizontal_margin"
+                android:layout_marginRight="@dimen/card_horizontal_margin"
                 android:layout_marginTop="2dp"
                 android:id="@+id/topic_listview_container"
-                android:background="@color/default_main4">
+                android:background="@drawable/rounded_corners" >
 
 	<TextView
-			android:layout_width="wrap_content"
+			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			tools:text="Title"
 			android:id="@+id/topicTitle"
 			android:layout_alignParentTop="true"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true"
-			android:textColor="@android:color/black"
+			android:textColor="@android:color/white"
+	        android:background="@color/default_main1"
 			/>
 
 	<TextView
@@ -29,7 +30,7 @@
 			android:layout_below="@+id/topicTitle"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true"
-			android:textColor="@android:color/holo_red_dark" />
+			android:textColor="@color/black" />
 
 	<TextView
 			android:layout_below="@id/topicCreator"
@@ -58,5 +59,6 @@
 			android:textColor="@android:color/holo_red_light"
 			tools:text="red tags"
 			android:id="@+id/redTags"
-			android:layout_toRightOf="@+id/topicTags" />
+			android:layout_toEndOf="@+id/topicTags"
+			android:layout_toRightOf="@+id/topicTags"/>
 </RelativeLayout>

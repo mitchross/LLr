@@ -367,7 +367,7 @@ public class NavigationDrawerFragment extends Fragment
 		actionBar.setDisplayShowTitleEnabled( true );
 		actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_STANDARD );
 		//Necessary to change font on the action bar
-		SpannableStringBuilder t = new SpannableStringBuilder( getString( R.string.app_name ) );
+		SpannableStringBuilder t = new SpannableStringBuilder( "User: " + "fixme");
 		t.setSpan( new CustomTypefaceSpan( context, getString( R.string.font_title ) ), 0, t.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE );
 		actionBar.setTitle( t );
 	}

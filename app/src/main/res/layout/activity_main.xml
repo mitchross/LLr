@@ -6,7 +6,7 @@
 		android:layout_height="match_parent"
 		android:orientation="vertical"
 		android:fitsSystemWindows="true"
-		style="@style/AppTheme.main">
+		style="@style/AppTheme">
 
 	<!--<include layout="@layout/toolbar" />-->
 

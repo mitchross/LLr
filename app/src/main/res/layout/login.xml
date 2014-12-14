@@ -8,7 +8,7 @@
                 android:orientation="vertical"
                 android:visibility="visible"
                 tools:ignore="MissingPrefix"
-				style="@style/Base.V7.Theme.AppCompat"
+				style="@style/AppTheme.Login"
 		>
 	<!--style="@style/AppTheme.Login"-->
 
