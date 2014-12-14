@@ -39,18 +39,31 @@ android {
 
 dependencies {
 	compile fileTree( dir: 'libs', include: ['*.jar'] )
-	// You must install or update the Support Repository through the SDK manager to use this dependency.
+	// Android specific stuff (must be installed locally through sdk manager)
 	compile 'com.android.support:support-v4:21.0.2'
 	compile 'com.android.support:appcompat-v7:21.0.2'
-	compile 'com.squareup.picasso:picasso:2.4.0'
+
+	//Used for HTML parsing/scraping
 	compile 'org.jsoup:jsoup:1.8.1'
-	compile 'com.jakewharton:butterknife:5.1.1'
-	compile 'uk.co.chrisjenx:calligraphy:1.2.0'
-	compile 'org.apache.commons:commons-lang3:3.3.2'
-	compile 'com.google.code.gson:gson:2.3'
-	//http stuff
-	compile 'com.squareup.okhttp:okhttp:2.0.0'
-	compile 'com.squareup.okhttp:okhttp-urlconnection:2.1.0'
-	//needed for okhttp
+
+	//Square libraries (why are there so many)
+	//Image caching/downloading
+	compile 'com.squareup.picasso:picasso:2.4.0'
+	//IO for HTTP stuff
 	compile 'com.squareup.okio:okio:1.0.1'
+	//http stuff
+	compile 'com.squareup.okhttp:okhttp:2.1.0'
+	compile 'com.squareup.okhttp:okhttp-urlconnection:2.1.0'
+
+	//Used for View injection
+	compile 'com.jakewharton:butterknife:5.1.1'
+
+	//Used for custom fonts
+	compile 'uk.co.chrisjenx:calligraphy:1.2.0'
+
+	//Used to serialize/deserialize stuff
+	compile 'com.google.code.gson:gson:2.3'
+
+	compile 'org.apache.commons:commons-lang3:3.0'
+
 }
