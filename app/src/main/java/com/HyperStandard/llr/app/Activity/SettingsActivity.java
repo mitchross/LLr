@@ -27,6 +27,7 @@ public class SettingsActivity extends BaseActivity
 	{
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.fragment_settings );
+
 		getFragmentManager().beginTransaction().replace( R.id.settings_container, new SettingsFragment() ).commit();
 
 	}
@@ -56,7 +57,7 @@ public class SettingsActivity extends BaseActivity
 		public void onCreate( Bundle savedInstanceState )
 		{
 			super.onCreate( savedInstanceState );
-			getPreferenceManager().setSharedPreferencesName( getString( R.string.pref_name ) );
+			getPreferenceManager().setSharedPreferencesName( getString( R.string.preferences_name ) );
 			addPreferencesFromResource( R.xml.pref_links );
 			addPreferencesFromResource( R.xml.pref_general );
 			addPreferencesFromResource( R.xml.pref_privacy );

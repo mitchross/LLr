@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +35,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -50,13 +52,13 @@ public class LoginScreen extends BaseActivity
 {
 	private final static String mTag = "LLr -> (LoginScreen)";
 
-	@InjectView( R.id.username )
+	@InjectView(R.id.username)
 	protected EditText userNameEditText;
-	@InjectView( R.id.password )
+	@InjectView(R.id.password)
 	protected EditText passwordEditText;
-	@InjectView( R.id.progressBar )
+	@InjectView(R.id.progressBar)
 	protected ProgressBar progressBar;
-	@InjectView( R.id.login_checkbox )
+	@InjectView(R.id.login_checkbox)
 	protected CheckBox checkBox;
 
 	private ArrayList<String> usernames;
@@ -73,6 +75,9 @@ public class LoginScreen extends BaseActivity
 	{
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.login );
+
+		//So, this is not the elegant solution but if it's done first thing should work with the cache
+		Cache.Web.Setup( getApplicationContext() );
 
 		ButterKnife.inject( this );
 
@@ -109,28 +114,6 @@ public class LoginScreen extends BaseActivity
 		{
 			login( usernames.get( preferred_account ), passwords.get( preferred_account ) );
 		}
-
-		/*userNameEditText.setOnLongClickListener(new View.OnLongClickListener()
-		{
-			@Override
-			public boolean onLongClick( View view )
-			{
-				Log.e( mTag, "clicked long, detected etc" );
-				AlertDialog.Builder builder = new AlertDialog.Builder( getApplicationContext() );
-				ListAdapter adapter = new ArrayAdapter<>( getApplicationContext(), android.R.layout.simple_list_item_single_choice, usernames );
-				builder.setAdapter( adapter, new DialogInterface.OnClickListener()
-				{
-					@Override
-					public void onClick( DialogInterface dialogInterface, int i )
-					{
-						Log.e( "clicked on unumber ", Integer.toString( i ) );
-					}
-				} );
-				AlertDialog dialog = builder.create();
-				dialog.show();
-				return false;
-			}
-		});*/
 
 		//Set the client and default cookies
 		//TODO make a better cookie store
@@ -184,7 +167,6 @@ public class LoginScreen extends BaseActivity
 			formBody = new FormEncodingBuilder()
 					.add( "b", username )
 					.add( "p", password )
-							//todo figure out if this is necessary
 					.add( "r", "" )
 					.build();
 		}
@@ -206,7 +188,17 @@ public class LoginScreen extends BaseActivity
 					return client.newCall( request ).execute();
 				}
 			} );
-			Response response = responseFuture.get();
+			Response response = responseFuture.get( 20, TimeUnit.SECONDS );
+
+			/*if ( response.body().string().equals( "" ) )
+			{
+				Log.e( mTag, "success!" );
+			}
+			else
+			{
+				Log.e( mTag, "failure ):" );
+			}*/
+
 			if ( response.body().string().equals( getString( R.string.successful_response ) ) )
 			{
 				if ( checkBox.isChecked() )
@@ -257,6 +249,7 @@ public class LoginScreen extends BaseActivity
 
 				//Launch the main activity
 				Intent intent = new Intent( this, MainActivity.class );
+				intent.putExtra( "username", username );
 				intent.putExtra( "userId", userid );
 				startActivity( intent );
 
@@ -264,7 +257,8 @@ public class LoginScreen extends BaseActivity
 			else
 			{
 				//Log.e( mTag, response.body().string() );
-				Log.e( mTag, username + password );
+				Log.e( mTag, "login failed" );
+				Log.v( mTag, response.body().string() );
 				alertFailure();
 			}
 
@@ -301,11 +295,11 @@ public class LoginScreen extends BaseActivity
 
 	private void alertFailure()
 	{
+		Looper.prepare();
 		Toast.makeText( getApplicationContext(), "Login failed", Toast.LENGTH_LONG ).show();
-
 	}
 
-	@OnLongClick( R.id.username )
+	@OnLongClick(R.id.username)
 	public boolean showOptions()
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder( this );
@@ -324,7 +318,5 @@ public class LoginScreen extends BaseActivity
 		dialog.show();
 		return false;
 	}
-
-
 
 }

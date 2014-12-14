@@ -1,9 +1,12 @@
 package com.HyperStandard.llr.app.Activity;
 
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +16,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
@@ -35,6 +40,8 @@ import com.HyperStandard.llr.app.Page.TopicList;
 import com.HyperStandard.llr.app.PostMessage;
 import com.HyperStandard.llr.app.R;
 import com.HyperStandard.llr.app.Type;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
@@ -46,12 +53,14 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.regex.Pattern;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -74,16 +83,16 @@ public class MainActivity extends BaseActivity implements
 
 	ListView mListView;
 	@Optional
-	@InjectView(R.id.leftNavigationDrawer)
+	@InjectView( R.id.leftNavigationDrawer )
 	ListView listView;
 
-	@InjectView(R.id.container)
+	@InjectView( R.id.container )
 	ViewAnimator container;
 
-	@InjectView(R.id.post_message_edit_text)
+	@InjectView( R.id.post_message_edit_text )
 	EditText messageEditText;
 
-	@InjectView(R.id.post_message_signature_box)
+	@InjectView( R.id.post_message_signature_box )
 	EditText signatureEditText;
 
 	FragmentManager manager;
@@ -109,6 +118,8 @@ public class MainActivity extends BaseActivity implements
 
 	private String signature;
 
+	private String username;
+
 	private Queue<ImmutablePair<String, Type>> topicHistory = new ArrayDeque<>();
 
 	/**
@@ -124,6 +135,17 @@ public class MainActivity extends BaseActivity implements
 		//Biolerplate stuff set the view, call super()
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_main );
+
+
+		//This should set teh color as teh status bar yay ps end the fed
+		Window window = this.getWindow();
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP )
+		{
+			window.addFlags( WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS );
+			window.clearFlags( WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS );
+			window.setStatusBarColor( this.getResources().getColor( R.color.primary ) );
+		}
+
 
 		//Get the uer ID number
 		userId = getIntent().getIntExtra( "userId", -1 );
@@ -142,7 +164,7 @@ public class MainActivity extends BaseActivity implements
 		mTitle = getTitle();
 
 		/** Because fragments get called with 0 argument constructors, you can't pass values to them
-		 *  except by adding a utility method to pass data to
+		 *  except by adding a utility method to pass data to because LOL ANDRDOID
 		 */
 		mNavigationDrawerFragment.setUp(
 				R.id.left_drawer,
@@ -166,6 +188,42 @@ public class MainActivity extends BaseActivity implements
 				mPollFragment.setCallbacks( this );
 				mPollFragment.setUp( main.select( "div.poll" ) );*///TODO implement poll after frag handling/nav problems fixed
 			Elements elements = main.select( "#bookmarks > span" );
+
+			Element usernameEl = main.select( ".userbar > a" ).first();
+
+			//todo get this dumb regex noise workin'
+			//Pattern p = Pattern.compile( "/(.+) \(.+\)$/" );
+
+			//Get the username
+			username = usernameEl.html().substring( 0, usernameEl.html().lastIndexOf( "(" ) - 1);
+
+			SharedPreferences prefs = getSharedPreferences( getString( R.string.preferences_name ), MODE_PRIVATE );
+
+
+			//see if the user even cares about cases being correct. note: this only fixes the current account, it won't fix all accounts
+			if ( prefs.getBoolean( "use_correct_case", false ) )
+			{
+				//Check if the username submitted is the same but with different capitalization
+				//If so, we can change the pref item to the correct capitalization
+				//pthhblt XP
+				String iUsername = getIntent().getStringExtra( "username" );
+				Log.e( iUsername, username );
+				if ( username.equalsIgnoreCase( iUsername ) && !username.equals( iUsername ) )
+				{
+					Gson gson = new Gson();
+					java.lang.reflect.Type dataType = new TypeToken<ArrayList<String>>()
+					{
+					}.getType();
+					ArrayList<String> usernames = gson.fromJson( prefs.getString( "usernames", "" ), dataType );
+					int i = usernames.indexOf( iUsername );
+					usernames.set( i, username );
+					prefs.edit().putString( "usernames", gson.toJson( usernames, dataType ) ).apply();
+				}
+			}
+
+			//username = p.matcher( usernameEl.html() ).group();
+
+			//Log.e( mTag, username );
 
 			/**
 			 * Get the bookmarks, to populate the Navigation drawer with links
@@ -228,8 +286,8 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public void closeKeyboard()
 	{
-		InputMethodManager imm = (InputMethodManager)getSystemService( Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(messageEditText.getWindowToken(), 0);
+		InputMethodManager imm = (InputMethodManager) getSystemService( Context.INPUT_METHOD_SERVICE );
+		imm.hideSoftInputFromWindow( messageEditText.getWindowToken(), 0 );
 	}
 
 	public void restoreActionBar()
@@ -357,7 +415,7 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public void loadTopic( String URL )
 	{
-		Topic topic = new Topic(  URL , this, getApplicationContext() );
+		Topic topic = new Topic( URL, this, getApplicationContext() );
 	}
 
 
@@ -394,10 +452,10 @@ public class MainActivity extends BaseActivity implements
 		Animation animation = AnimationUtils.loadAnimation( this, android.R.anim.slide_in_left );
 		animation.setDuration( ANIMATION_TIME );
 
-		container.setAnimation( animation );
 
 		if ( container.getChildCount() > 0 )
 		{
+			container.setAnimation( animation );
 			container.removeAllViews();
 		}
 		container.addView( view );
@@ -435,7 +493,7 @@ public class MainActivity extends BaseActivity implements
 			}
 			else
 			{
-				new Topic( topicHistory.poll().getLeft() , this, getApplicationContext() );
+				new Topic( topicHistory.poll().getLeft(), this, getApplicationContext() );
 			}
 		}
 	}
